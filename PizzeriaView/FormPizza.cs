@@ -21,7 +21,7 @@ namespace PizzeriaView
         public int Id { set { id = value; } }
         private readonly IPizzaLogic logic;
         private int? id;
-        private List<PizzaIngredientViewModel> pizzaIngr;
+        private Dictionary<int, (string, int)> pizzaIngr;
         public FormPizza(IPizzaLogic service)
         {
             InitializeComponent();
@@ -33,7 +33,10 @@ namespace PizzeriaView
             {
                 try
                 {
-                    PizzaViewModel view = logic.GetElement(id.Value);
+                    PizzaViewModel view = logic.Read(new PizzaBindingModel
+                    {
+                        Id = id.Value
+                    })?[0];
                     if (view != null)
                     {
                         textBoxName.Text = view.PizzaName;
@@ -42,14 +45,14 @@ namespace PizzeriaView
                         LoadData();
                     }
                 }
-catch (Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                pizzaIngr = new List<PizzaIngredientViewModel>();
+                pizzaIngr = new Dictionary<int, (string, int)>();
             }
         }
         private void LoadData()
@@ -58,12 +61,12 @@ catch (Exception ex)
             {
                 if (pizzaIngr != null)
                 {
-                    dataGridView.DataSource = null;
-                    dataGridView.DataSource = pizzaIngr;
-                    dataGridView.Columns[0].Visible = false;
-                    dataGridView.Columns[1].Visible = false;
-                    dataGridView.Columns[2].Visible = false;
-                    dataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    dataGridView.Rows.Clear();
+                    foreach (var pc in pizzaIngr)
+                    {
+                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value.Item1,
+pc.Value.Item2 });
+                    }
                 }
             }
             catch (Exception ex)
@@ -76,13 +79,13 @@ catch (Exception ex)
             var form = Container.Resolve<FormPizzaIngredients>();
             if (form.ShowDialog() == DialogResult.OK)
             {
-                if (form.ModelView != null)
+                if (pizzaIngr.ContainsKey(form.Id))
                 {
-                    if (id.HasValue)
-                    {
-                        form.ModelView.PizzaId = id.Value;
-                    }
-                    pizzaIngr.Add(form.ModelView);
+                    pizzaIngr[form.Id] = (form.IngredientName, form.Count);
+                }
+                else
+                {
+                    pizzaIngr.Add(form.Id, (form.IngredientName, form.Count));
                 }
                 LoadData();
             }
@@ -90,12 +93,14 @@ catch (Exception ex)
         private void buttonUpd_Click(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 1)
-        {
+            {
                 var form = Container.Resolve<FormPizzaIngredients>();
-                form.ModelView = pizzaIngr[dataGridView.SelectedRows[0].Cells[0].RowIndex];
+                int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
+                form.Id = id;
+                form.Count = pizzaIngr[id].Item2;
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    pizzaIngr[dataGridView.SelectedRows[0].Cells[0].RowIndex] = form.ModelView;
+                    pizzaIngr[form.Id] = (form.IngredientName, form.Count);
                     LoadData();
                 }
             }
@@ -104,15 +109,18 @@ catch (Exception ex)
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                if (MessageBox.Show("Удалить запись", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show("Удалить запись", "Вопрос", MessageBoxButtons.YesNo,
+               MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     try
                     {
-                        pizzaIngr.RemoveAt(dataGridView.SelectedRows[0].Cells[0].RowIndex);
+
+                        pizzaIngr.Remove(Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value));
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK,
+                       MessageBoxIcon.Error);
                     }
                     LoadData();
                 }
@@ -141,37 +149,15 @@ catch (Exception ex)
             }
             try
             {
-                List<PizzaIngredientBindingModel> productComponentBM = new List<PizzaIngredientBindingModel>();
-            for (int i = 0; i < pizzaIngr.Count; ++i)
+                logic.CreateOrUpdate(new PizzaBindingModel
                 {
-                    productComponentBM.Add(new PizzaIngredientBindingModel
-                    {
-                        Id = pizzaIngr[i].Id,
-                        PizzaId = pizzaIngr[i].PizzaId,
-                        IngredientId = pizzaIngr[i].IngredientId,
-                        Count = pizzaIngr[i].Count
-                    });
-                }
-                if (id.HasValue)
-                {
-                    logic.UpdElement(new PizzaBindingModel
-                    {
-                        Id = id.Value,
-                        PizzaName = textBoxName.Text,
-                        Price = Convert.ToDecimal(textBoxPrice.Text),
-                        PizzaIngredients = productComponentBM
-                    });
-                }
-                else
-                {
-                    logic.AddElement(new PizzaBindingModel
-                    {
-                        PizzaName = textBoxName.Text,
-                        Price = Convert.ToDecimal(textBoxPrice.Text),
-                        PizzaIngredients = productComponentBM
-                    });
-                }
-                MessageBox.Show("Сохранение прошло успешно", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Id = id,
+                    PizzaName = textBoxName.Text,
+                    Price = Convert.ToDecimal(textBoxPrice.Text),
+                    PizzaIngredients = pizzaIngr
+                });
+                MessageBox.Show("Сохранение прошло успешно", "Сообщение",
+               MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
                 Close();
             }

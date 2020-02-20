@@ -17,77 +17,54 @@ namespace PizzeriaView
     {
         [Dependency]
         public new IUnityContainer Container { get; set; }
-        public PizzaIngredientViewModel ModelView { get; set; }
-        private readonly IIngredientLogic logic;
+        public int Id
+        {
+            get { return Convert.ToInt32(comboBoxIngredient.SelectedValue); }
+            set { comboBoxIngredient.SelectedValue = value; }
+        }
+        public string IngredientName { get { return comboBoxIngredient.Text; } }
+        public int Count
+        {
+            get { return Convert.ToInt32(textBoxCount.Text); }
+            set
+            {
+                textBoxCount.Text = value.ToString();
+            }
+        }
         public FormPizzaIngredients(IIngredientLogic logic)
         {
             InitializeComponent();
-            this.logic = logic;
-        }
-        private void FormPizzaIngredients_Load(object sender, EventArgs e)
-        {
-            try
+            List<IngredientViewModel> list = logic.Read(null);
+            if (list != null)
             {
-                List<IngredientViewModel> list = logic.GetList();
-                if (list != null)
-                {
-                    comboBoxIngredient.DisplayMember = "IngredientName";
-                    comboBoxIngredient.ValueMember = "Id";
-                    comboBoxIngredient.DataSource = list;
-                    comboBoxIngredient.SelectedItem = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            if (ModelView != null)
-            {
-                comboBoxIngredient.Enabled = false;
-                comboBoxIngredient.SelectedValue = ModelView.IngredientId;
-                textBoxCount.Text = ModelView.Count.ToString();
+                comboBoxIngredient.DisplayMember = "ComponentName";
+                comboBoxIngredient.ValueMember = "Id";
+                comboBoxIngredient.DataSource = list;
+                comboBoxIngredient.SelectedItem = null;
             }
         }
-        private void buttonSave_Click(object sender, EventArgs e)
+        private void ButtonSave_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(textBoxCount.Text))
             {
-                MessageBox.Show("Заполните поле Количество", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Заполните поле Количество", "Ошибка",
+               MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (comboBoxIngredient.SelectedValue == null)
             {
-                MessageBox.Show("Выберите ингредиент", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Выберите компонент", "Ошибка", MessageBoxButtons.OK,
+               MessageBoxIcon.Error);
                 return;
             }
-            try
-            {
-                if (ModelView == null)
-                {
-                    ModelView = new PizzaIngredientViewModel
-                    {
-                        IngredientId = Convert.ToInt32(comboBoxIngredient.SelectedValue),
-                        IngredientName = comboBoxIngredient.Text,
-                    Count = Convert.ToInt32(textBoxCount.Text)
-                    };
-                }
-                else
-                {
-                    ModelView.Count = Convert.ToInt32(textBoxCount.Text);
-                }
-                MessageBox.Show("Сохранение прошло успешно", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                DialogResult = DialogResult.OK;
-                Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            DialogResult = DialogResult.OK;
+            Close();
         }
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void ButtonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
+
     }
 }

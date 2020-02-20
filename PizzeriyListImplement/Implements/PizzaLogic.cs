@@ -17,232 +17,147 @@ namespace PizzeriyListImplement.Implements
         {
             source = DataListSingleton.GetInstance();
         }
-        public List<PizzaViewModel> GetList()
+        public void CreateOrUpdate(PizzaBindingModel model)
         {
-            List<PizzaViewModel> result = new List<PizzaViewModel>();
-            for (int i = 0; i < source.Pizza.Count; ++i)
+            Pizza tempProduct = model.Id.HasValue ? null : new Pizza { Id = 1 };
+            foreach (var product in source.Pizza)
             {
-                List<PizzaIngredientViewModel> productComponents = new List<PizzaIngredientViewModel>();
-                for (int j = 0; j < source.PizzaIngredients.Count; ++j)
+                if (product.PizzaName == model.PizzaName && product.Id != model.Id)
                 {
-                    if (source.PizzaIngredients[j].PizzaId == source.Pizza[i].Id)
-                    {
-                        string componentName = string.Empty;
-                        for (int k = 0; k < source.Ingredients.Count; ++k)
-                        {
-                            if (source.PizzaIngredients[j].IngredientId == source.Ingredients[k].Id)
-                            {
-                                componentName = source.Ingredients[k].IngredientName;
-                                break;
-                            }
-                        }
-                        productComponents.Add(new PizzaIngredientViewModel
-                        {
-                            Id = source.PizzaIngredients[j].Id,
-                            PizzaId = source.PizzaIngredients[j].PizzaId,
-                            IngredientId = source.PizzaIngredients[j].IngredientId,
-                            IngredientName = componentName,
-                            Count = source.PizzaIngredients[j].Count
-                        });
-                    }
+                    throw new Exception("Уже есть изделие с таким названием");
                 }
-                result.Add(new PizzaViewModel
+                if (!model.Id.HasValue && product.Id >= tempProduct.Id)
                 {
-                    Id = source.Pizza[i].Id,
-                    PizzaName = source.Pizza[i].PizzaName,
-                    Price = source.Pizza[i].Price,
-                    PizzaIngredients = productComponents
-                });
-            }
-            return result;
-        }
-        public PizzaViewModel GetElement(int id)
-        {
-            for (int i = 0; i < source.Pizza.Count; ++i)
-            {
-                List<PizzaIngredientViewModel> productComponents = new List<PizzaIngredientViewModel>();
-                for (int j = 0; j < source.PizzaIngredients.Count; ++j)
-                {
-                    if (source.PizzaIngredients[j].PizzaId == source.Pizza[i].Id)
-                    {
-                        string componentName = string.Empty;
-                        for (int k = 0; k < source.Ingredients.Count; ++k)
-                        {
-                            if (source.PizzaIngredients[j].IngredientId == source.Ingredients[k].Id)
-                            {
-                                componentName = source.Ingredients[k].IngredientName;
-                                break;
-                            }
-                        }
-                        productComponents.Add(new PizzaIngredientViewModel
-                        {
-                            Id = source.PizzaIngredients[j].Id,
-                            PizzaId = source.PizzaIngredients[j].PizzaId,
-                            IngredientId = source.PizzaIngredients[j].IngredientId,
-                            IngredientName = componentName,
-                            Count = source.PizzaIngredients[j].Count
-                        });
-                    }
+                    tempProduct.Id = product.Id + 1;
                 }
-                if (source.Pizza[i].Id == id)
+                else if (model.Id.HasValue && product.Id == model.Id)
                 {
-                    return new PizzaViewModel
-                    {
-                        Id = source.Pizza[i].Id,
-                        PizzaName = source.Pizza[i].PizzaName,
-                        Price = source.Pizza[i].Price,
-                        PizzaIngredients = productComponents
-                    };
+                    tempProduct = product;
                 }
             }
-            throw new Exception("Элемент не найден");
-        }
-        public void AddElement(PizzaBindingModel model)
-        {
-            int maxId = 0;
-            for (int i = 0; i < source.Pizza.Count; ++i)
+            if (model.Id.HasValue)
             {
-                if (source.Pizza[i].Id > maxId)
+            if (tempProduct == null)
                 {
-                    maxId = source.Pizza[i].Id;
+                    throw new Exception("Элемент не найден");
                 }
-                if (source.Pizza[i].PizzaName == model.PizzaName)
-                {
-                    throw new Exception("Уже есть пицца с таким названием");
-                }
+                CreateModel(model, tempProduct);
             }
-            source.Pizza.Add(new Pizza
+            else
             {
-                Id = maxId + 1,
-                PizzaName = model.PizzaName,
-                Price = model.Price
-            });
-            int maxPCId = 0;
-            for (int i = 0; i < source.PizzaIngredients.Count; ++i)
-            {
-                if (source.PizzaIngredients[i].Id > maxPCId)
-                {
-                    maxPCId = source.PizzaIngredients[i].Id;
-                }
-            }
-            for (int i = 0; i < model.PizzaIngredients.Count; ++i)
-            {
-                for (int j = 1; j < model.PizzaIngredients.Count; ++j)
-                {
-                    if (model.PizzaIngredients[i].IngredientId ==
-                    model.PizzaIngredients[j].IngredientId)
-                    {
-                        model.PizzaIngredients[i].Count +=
-                        model.PizzaIngredients[j].Count;
-                        model.PizzaIngredients.RemoveAt(j--);
-                    }
-                }
-            }
-            for (int i = 0; i < model.PizzaIngredients.Count; ++i)
-            {
-                source.PizzaIngredients.Add(new PizzaIngredient
-                {
-                    Id = ++maxPCId,
-                    PizzaId = maxId + 1,
-                    IngredientId = model.PizzaIngredients[i].IngredientId,
-                    Count = model.PizzaIngredients[i].Count
-                });
+                source.Pizza.Add(CreateModel(model, tempProduct));
             }
         }
-        public void UpdElement(PizzaBindingModel model)
+        public void Delete(PizzaBindingModel model)
         {
-            int index = -1;
-            for (int i = 0; i < source.Pizza.Count; ++i)
-            {
-                if (source.Pizza[i].Id == model.Id)
-                {
-                    index = i;
-                }
-                if (source.Pizza[i].PizzaName == model.PizzaName &&
-                source.Pizza[i].Id != model.Id)
-                {
-                    throw new Exception("Уже есть пицца с таким названием");
-                }
-            }
-            if (index == -1)
-            {
-                throw new Exception("Элемент не найден");
-            }
-            source.Pizza[index].PizzaName = model.PizzaName;
-            source.Pizza[index].Price = model.Price;
-            int maxPCId = 0;
-            for (int i = 0; i < source.PizzaIngredients.Count; ++i)
-            {
-                if (source.PizzaIngredients[i].Id > maxPCId)
-                {
-                    maxPCId = source.PizzaIngredients[i].Id;
-                }
-            }
+            // удаляем записи по компонентам при удалении изделия
             for (int i = 0; i < source.PizzaIngredients.Count; ++i)
             {
                 if (source.PizzaIngredients[i].PizzaId == model.Id)
-                {
-                    bool flag = true;
-                    for (int j = 0; j < model.PizzaIngredients.Count; ++j)
-                    {
-                        if (source.PizzaIngredients[i].Id == model.PizzaIngredients[j].Id)
-                        {
-                            source.PizzaIngredients[i].Count = model.PizzaIngredients[j].Count;
-                            flag = false;
-                            break;
-                        }
-                    }
-                    if (flag)
-                    {
-                        source.PizzaIngredients.RemoveAt(i--);
-                    }
-                }
-            }
-            for (int i = 0; i < model.PizzaIngredients.Count; ++i)
-            {
-                if (model.PizzaIngredients[i].Id == 0)
-                {
-                    for (int j = 0; j < source.PizzaIngredients.Count; ++j)
-                    {
-                        if (source.PizzaIngredients[j].PizzaId == model.Id &&
-                        source.PizzaIngredients[j].IngredientId == model.PizzaIngredients[i].IngredientId)
-                        {
-                            source.PizzaIngredients[j].Count += model.PizzaIngredients[i].Count;
-                            model.PizzaIngredients[i].Id = source.PizzaIngredients[j].Id;
-                            break;
-                        }
-                    }
-                    if (model.PizzaIngredients[i].Id == 0)
-                    {
-                        source.PizzaIngredients.Add(new PizzaIngredient
-                        {
-                            Id = ++maxPCId,
-                            PizzaId = model.Id,
-                            IngredientId = model.PizzaIngredients[i].IngredientId,
-                            Count = model.PizzaIngredients[i].Count
-                        });
-                    }
-                }
-            }
-        }
-        public void DelElement(int id)
-        {
-            for (int i = 0; i < source.PizzaIngredients.Count; ++i)
-            {
-                if (source.PizzaIngredients[i].PizzaId == id)
                 {
                     source.PizzaIngredients.RemoveAt(i--);
                 }
             }
             for (int i = 0; i < source.Pizza.Count; ++i)
             {
-                if (source.Pizza[i].Id == id)
+                if (source.Pizza[i].Id == model.Id)
                 {
                     source.Pizza.RemoveAt(i);
                     return;
                 }
             }
             throw new Exception("Элемент не найден");
+        }
+        private Pizza CreateModel(PizzaBindingModel model, Pizza product)
+        {
+            product.PizzaName = model.PizzaName;
+            product.Price = model.Price;
+            //обновляем существуюущие компоненты и ищем максимальный идентификатор
+            int maxPCId = 0;
+            for (int i = 0; i < source.PizzaIngredients.Count; ++i)
+            {
+                if (source.PizzaIngredients[i].Id > maxPCId)
+                {
+                    maxPCId = source.PizzaIngredients[i].Id;
+                }
+                if (source.PizzaIngredients[i].PizzaId == product.Id)
+                {
+                    // если в модели пришла запись компонента с таким id
+                    if
+                    (model.PizzaIngredients.ContainsKey(source.PizzaIngredients[i].IngredientId))
+                    {
+                        // обновляем количество
+                        source.PizzaIngredients[i].Count =
+                        model.PizzaIngredients[source.PizzaIngredients[i].IngredientId].Item2;
+                        // из модели убираем эту запись, чтобы остались только не просмотренные
+                    
+model.PizzaIngredients.Remove(source.PizzaIngredients[i].IngredientId);
+                    }
+                    else
+                    {
+                        source.PizzaIngredients.RemoveAt(i--);
+                     }
+                }
+            }
+            // новые записи
+            foreach (var pc in model.PizzaIngredients)
+            {
+                source.PizzaIngredients.Add(new PizzaIngredient
+                {
+                    Id = ++maxPCId,
+                    PizzaId = product.Id,
+                    IngredientId = pc.Key,
+                    Count = pc.Value.Item2
+                });
+            }
+            return product;
+        }
+        public List<PizzaViewModel> Read(PizzaBindingModel model)
+        {
+            List<PizzaViewModel> result = new List<PizzaViewModel>();
+            foreach (var component in source.Pizza)
+            {
+                if (model != null)
+                {
+                    if (component.Id == model.Id)
+                    {
+                        result.Add(CreateViewModel(component));
+                        break;
+                    }
+                    continue;
+                }
+                result.Add(CreateViewModel(component));
+            }
+            return result;
+        }
+        private PizzaViewModel CreateViewModel(Pizza product)
+        {
+            // требуется дополнительно получить список компонентов для изделия с  названиями и их количество
+        Dictionary<int, (string, int)> pizzaIngredients = new Dictionary<int,
+(string, int)>();
+            foreach (var pc in source.PizzaIngredients)
+            {
+                if (pc.PizzaId == product.Id)
+                {
+                    string componentName = string.Empty;
+                    foreach (var component in source.Ingredients)
+                    {
+                        if (pc.IngredientId == component.Id)
+                        {
+                            componentName = component.IngredientName;
+                            break;
+                        }
+                    }
+                    pizzaIngredients.Add(pc.IngredientId, (componentName, pc.Count));
+                }
+            }
+            return new PizzaViewModel
+            {
+                Id = product.Id,
+                PizzaName = product.PizzaName,
+                Price = product.Price,
+                PizzaIngredients = pizzaIngredients
+            };
         }
     }
 }

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PizzeriaBusinessLogic.Interfaces;
 using Unity;
+using PizzeriaBusinessLogic.BindingModels;
+
 
 namespace PizzeriaView
 {
@@ -30,12 +32,12 @@ namespace PizzeriaView
         {
             try
             {
-                var list = logic.GetList();
+                var list = logic.Read(null);
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
                     dataGridView.Columns[0].Visible = false;
-                dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 }
             }
             catch (Exception ex)
@@ -72,7 +74,7 @@ namespace PizzeriaView
                     int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                     try
                     {
-                        logic.DelElement(id);
+                        logic.Delete(new IngredientBindingModel { Id = id });
                     }
                     catch (Exception ex)
                     {

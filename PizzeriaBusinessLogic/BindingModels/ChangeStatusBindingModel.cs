@@ -4,9 +4,9 @@ using System.Text;
 
 namespace PizzeriaBusinessLogic.BindingModels
 {
-    public class IngredientBindingModel
+    public class ChangeStatusBindingModel
     {
-        public int? Id { get; set; }
-        public string IngredientName { get; set; }
+        public int OrderId { get; set; }
     }
+
 }

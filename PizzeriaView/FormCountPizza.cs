@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PizzeriaBusinessLogic.Interfaces;
 using Unity;
+using PizzeriaBusinessLogic.BindingModels;
 
 namespace PizzeriaView
 {
@@ -30,7 +31,7 @@ namespace PizzeriaView
         {
             try
             {
-                var list = logic.GetList();
+                var list = logic.Read(null);
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
@@ -72,7 +73,7 @@ namespace PizzeriaView
                     int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                     try
                     {
-                        logic.DelElement(id);
+                        logic.Delete(new PizzaBindingModel { Id = id });
                     }
                     catch (Exception ex)
                     {

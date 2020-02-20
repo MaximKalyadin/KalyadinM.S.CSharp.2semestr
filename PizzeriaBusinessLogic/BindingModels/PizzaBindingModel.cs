@@ -6,9 +6,9 @@ namespace PizzeriaBusinessLogic.BindingModels
 {
     public class PizzaBindingModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string PizzaName { get; set; }
         public decimal Price { get; set; }
-        public List<PizzaIngredientBindingModel> PizzaIngredients { get; set; }
+        public Dictionary<int, (string, int)> PizzaIngredients { get; set; }
     }
 }

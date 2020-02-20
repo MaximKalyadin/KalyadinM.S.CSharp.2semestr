@@ -59,7 +59,7 @@
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "Отмена";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this.buttonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
             // 
             // buttonSave
             // 
@@ -69,7 +69,7 @@
             this.buttonSave.TabIndex = 3;
             this.buttonSave.Text = "Сохранить";
             this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            this.buttonSave.Click += new System.EventHandler(this.ButtonSave_Click);
             // 
             // labelIngr
             // 
@@ -102,7 +102,7 @@
             this.Controls.Add(this.comboBoxIngredient);
             this.Name = "FormPizzaIngredients";
             this.Text = "Ингредиент Пиццы";
-            this.Load += new System.EventHandler(this.FormPizzaIngredients_Load);
+            //this.Load += new System.EventHandler(this.FormPizzaIngredients_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

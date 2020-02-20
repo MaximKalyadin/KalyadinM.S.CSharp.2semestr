@@ -31,7 +31,7 @@ namespace PizzeriaView
             {
                 try
                 {
-                    var view = logic.GetElement(id.Value);
+                    var view = logic.Read(new IngredientBindingModel { Id = id })?[0];
                     if (view != null)
                     {
                         textBoxIngredientName.Text = view.IngredientName;
@@ -52,22 +52,13 @@ namespace PizzeriaView
             }
             try
             {
-                if (id.HasValue)
+                logic.CreateOrUpdate(new IngredientBindingModel
                 {
-                    logic.UpdElement(new IngredientBindingModel
-                    {
-                        Id = id.Value,
-                        IngredientName = textBoxIngredientName.Text
-                    });
-                }
-                else
-                {
-                    logic.AddElement(new IngredientBindingModel
-                    {
-                        IngredientName = textBoxIngredientName.Text
-                    });
-                }
-                MessageBox.Show("Сохранение прошло успешно", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Id = id,
+                    IngredientName = textBoxIngredientName.Text
+                });
+                MessageBox.Show("Сохранение прошло успешно", "Сообщение",
+               MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
                 Close();
             }

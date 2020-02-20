@@ -17,85 +17,83 @@ namespace PizzeriyListImplement.Implements
         {
             source = DataListSingleton.GetInstance();
         }
-        public List<IngredientViewModel> GetList()
+        public void CreateOrUpdate(IngredientBindingModel model)
         {
-            List<IngredientViewModel> result = new List<IngredientViewModel>();
-            for (int i = 0; i < source.Ingredients.Count; ++i)
+            Ingredient tempComponent = model.Id.HasValue ? null : new Ingredient
             {
-                result.Add(new IngredientViewModel
-                {
-                    Id = source.Ingredients[i].Id,
-                    IngredientName = source.Ingredients[i].IngredientName
-                });
-            }
-            return result;
-        }
-        public IngredientViewModel GetElement(int id)
-        {
-            for (int i = 0; i < source.Ingredients.Count; ++i)
+                Id = 1
+            };
+            foreach (var component in source.Ingredients)
             {
-                if (source.Ingredients[i].Id == id)
-                {
-                    return new IngredientViewModel
-                    {
-                        Id = source.Ingredients[i].Id,
-                        IngredientName = source.Ingredients[i].IngredientName
-                    };
-                }
-            }
-            throw new Exception("Элемент не найден");
-        }
-        public void AddElement(IngredientBindingModel model)
-        {
-            int maxId = 0;
-            for (int i = 0; i < source.Ingredients.Count; ++i)
-            {
-                if (source.Ingredients[i].Id > maxId)
-                {
-                    maxId = source.Ingredients[i].Id;
-                }
-                if (source.Ingredients[i].IngredientName == model.IngredientName)
+                if (component.IngredientName == model.IngredientName && component.Id !=
+               model.Id)
                 {
                     throw new Exception("Уже есть ингредиент с таким названием");
                 }
-            }
-            source.Ingredients.Add(new Ingredient
-            {
-                Id = maxId + 1,
-                IngredientName = model.IngredientName
-            });
-        }
-        public void UpdElement(IngredientBindingModel model)
-        {
-            int index = -1;
-            for (int i = 0; i < source.Ingredients.Count; ++i)
-            {
-                if (source.Ingredients[i].Id == model.Id)
+                if (!model.Id.HasValue && component.Id >= tempComponent.Id)
                 {
-                    index = i;
+                    tempComponent.Id = component.Id + 1;
                 }
-                if (source.Ingredients[i].IngredientName == model.IngredientName && source.Ingredients[i].Id != model.Id)
-                {
-                    throw new Exception("Уже есть ингредиент с таким названием");
+                else if (model.Id.HasValue && component.Id == model.Id)
+            {
+                    tempComponent = component;
                 }
             }
-            if (index == -1)
+            if (model.Id.HasValue)
             {
-                throw new Exception("Элемент не найден");
+                if (tempComponent == null)
+                {
+                    throw new Exception("Элемент не найден");
+                }
+                CreateModel(model, tempComponent);
             }
-            source.Ingredients[index].IngredientName = model.IngredientName;
+            else
+            {
+                source.Ingredients.Add(CreateModel(model, tempComponent));
+            }
         }
-        public void DelElement(int id)
+        public void Delete(IngredientBindingModel model)
         {
             for (int i = 0; i < source.Ingredients.Count; ++i)
             {
-                if (source.Ingredients[i].Id == id)
+                if (source.Ingredients[i].Id == model.Id.Value)
                 {
                     source.Ingredients.RemoveAt(i);
                     return;
                 }
             }
             throw new Exception("Элемент не найден");
+        }
+        public List<IngredientViewModel> Read(IngredientBindingModel model)
+        {
+            List<IngredientViewModel> result = new List<IngredientViewModel>();
+            foreach (var component in source.Ingredients)
+            {
+                if (model != null)
+                {
+                    if (component.Id == model.Id)
+                    {
+                        result.Add(CreateViewModel(component));
+                        break;
+                    }
+                    continue;
+                }
+                result.Add(CreateViewModel(component));
+            }
+            return result;
+        }
+        private Ingredient CreateModel(IngredientBindingModel model, Ingredient component)
+        {
+            component.IngredientName = model.IngredientName;
+            return component;
+        }
+        private IngredientViewModel CreateViewModel(Ingredient component)
+        {
+            return new IngredientViewModel
+            {
+                Id = component.Id,
+                IngredientName = component.IngredientName
+            };
         }
     }
 }

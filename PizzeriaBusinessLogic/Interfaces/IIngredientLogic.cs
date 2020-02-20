@@ -8,10 +8,8 @@ namespace PizzeriaBusinessLogic.Interfaces
 {
     public interface IIngredientLogic
     {
-        List<IngredientViewModel> GetList();
-        IngredientViewModel GetElement(int id);
-        void AddElement(IngredientBindingModel model);
-        void UpdElement(IngredientBindingModel model);
-        void DelElement(int id);
+        List<IngredientViewModel> Read(IngredientBindingModel model);
+        void CreateOrUpdate(IngredientBindingModel model);
+        void Delete(IngredientBindingModel model);
     }
 }
