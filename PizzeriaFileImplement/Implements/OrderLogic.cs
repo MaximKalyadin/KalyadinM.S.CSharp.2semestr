@@ -19,7 +19,7 @@ namespace PizzeriaFileImplement.Implements
         }
         public void CreateOrUpdate(OrderBindingModel model)
         {
-            Order element = source.Orders.FirstOrDefault(rec =>  rec.Id != model.Id && rec.PizzaId == model.PizzaId);
+            Order element = source.Orders.FirstOrDefault(rec =>  rec.Id != model.Id && rec.PizzaId == model.PizzaId && rec.Status == model.Status);
             if (model.Id.HasValue)
             {
                 element = source.Orders.FirstOrDefault(rec => rec.Id == model.Id);
@@ -35,12 +35,12 @@ namespace PizzeriaFileImplement.Implements
                 element = new Order { Id = maxId + 1 };
                 source.Orders.Add(element);
             }
-            element.Count = model.Count;
             element.Status = model.Status;
+            element.PizzaId = model.PizzaId;
+            element.Count = model.Count;
             element.Sum = model.Sum;
             element.TimeCreate = model.TimeCreate;
             element.TimeImplement = model.TimeImplement;
-
         }
         public void Delete(OrderBindingModel model)
         {

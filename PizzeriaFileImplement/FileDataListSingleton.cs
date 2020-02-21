@@ -17,7 +17,7 @@ namespace PizzeriaFileImplement
         private readonly string IngredientFileName = "Ingredient.xml";
         private readonly string OrderFileName = "Order.xml";
         private readonly string PizzaFileName = "Pizza.xml";
-        private readonly string PizzaIngredientFileName = "PizaIngredient.xml";
+        private readonly string PizzaIngredientFileName = "PizzaIngredient.xml";
         public List<Ingredient> Ingredients { get; set; }
         public List<Order> Orders { get; set; }
         public List<Pizza> Pizza { get; set; }
@@ -50,13 +50,13 @@ namespace PizzeriaFileImplement
             if (File.Exists(IngredientFileName))
             {
                 XDocument xDocument = XDocument.Load(IngredientFileName);
-                var xElements = xDocument.Root.Elements("Component").ToList();
+                var xElements = xDocument.Root.Elements("Ingredient").ToList();
                 foreach (var elem in xElements)
                 {
                     list.Add(new Ingredient
                     {
                         Id = Convert.ToInt32(elem.Attribute("Id").Value),
-                        IngredientName = elem.Element("ComponentName").Value
+                        IngredientName = elem.Element("IngredientName").Value
                     });
                 }
             }
@@ -95,7 +95,7 @@ namespace PizzeriaFileImplement
             if (File.Exists(PizzaFileName))
             {
                 XDocument xDocument = XDocument.Load(PizzaFileName);
-            var xElements = xDocument.Root.Elements("Product").ToList();
+            var xElements = xDocument.Root.Elements("Pizza").ToList();
                 foreach (var elem in xElements)
                 {
                     list.Add(new Pizza
@@ -167,7 +167,7 @@ namespace PizzeriaFileImplement
         {
             if (Pizza != null)
             {
-                var xElement = new XElement("Products");
+                var xElement = new XElement("Pizza");
                 foreach (var product in Pizza)
                 {
                     xElement.Add(new XElement("Pizza",
