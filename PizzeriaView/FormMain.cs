@@ -8,8 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
-using PizzeriaBusinessLogic.BindingModels;
+using PizzeriaBusinessLogic.BusinessLogic;
 using PizzeriaBusinessLogic.Interfaces;
+using PizzeriaBusinessLogic.BindingModels;
 
 namespace PizzeriaView
 {
@@ -31,9 +32,9 @@ namespace PizzeriaView
         }
         private void LoadData()
         {
-            /*try
+            try
             {
-                var list = logic.GetOrders();
+                var list = orderLogic.Read(null);
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
@@ -45,7 +46,7 @@ namespace PizzeriaView
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }*/
+            }
         }
         private void ингредиентыToolStripMenuItem_Click(object sender, EventArgs e)
         {

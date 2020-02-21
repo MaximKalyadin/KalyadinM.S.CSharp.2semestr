@@ -25,6 +25,11 @@ namespace PizzeriaView
         public FormPizza(IPizzaLogic service)
         {
             InitializeComponent();
+            dataGridView.Columns.Add("Id", "Id");
+            dataGridView.Columns.Add("IngredientName", "Ингредиент");
+            dataGridView.Columns.Add("Count", "Количество");
+            dataGridView.Columns[0].Visible = false;
+            dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             this.logic = service;
         }
         private void FormPizza_Load(object sender, EventArgs e)
@@ -64,8 +69,7 @@ namespace PizzeriaView
                     dataGridView.Rows.Clear();
                     foreach (var pc in pizzaIngr)
                     {
-                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value.Item1,
-pc.Value.Item2 });
+                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value.Item1, pc.Value.Item2 });
                     }
                 }
             }

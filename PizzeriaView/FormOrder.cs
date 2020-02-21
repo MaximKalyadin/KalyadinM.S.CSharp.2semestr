@@ -11,6 +11,7 @@ using Unity;
 using PizzeriaBusinessLogic.BindingModels;
 using PizzeriaBusinessLogic.Interfaces;
 using PizzeriaBusinessLogic.ViewModels;
+using PizzeriaBusinessLogic.BusinessLogic;
 
 namespace PizzeriaView
 {
@@ -28,9 +29,9 @@ namespace PizzeriaView
         }
         private void FormOrder_Load(object sender, EventArgs e)
         {
-            /*try
+           try
             {
-                var listP = logicP.Read(new OrderBindingModel { Id = id })?[0];
+                var listP = logicP.Read(null);
                 if (listP != null)
                 {
                     comboBoxPizza.DisplayMember = "PizzaName";
@@ -42,7 +43,7 @@ namespace PizzeriaView
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }*/
+            }
         }
         private void CalcSum()
         {
