@@ -39,10 +39,10 @@ namespace PizzeriaFileImplement
         }
         ~FileDataListSingleton()
         {
-            SaveComponents();
+            SaveIngredients();
             SaveOrders();
-            SaveProducts();
-            SaveProductComponents();
+            SavePizza();
+            SavePizzaIngredients();
         }
         private List<Ingredient> LoadIngredients()
         {
@@ -128,7 +128,7 @@ namespace PizzeriaFileImplement
             }
             return list;
         }
-        private void SaveComponents()
+        private void SaveIngredients()
         {
             if (Ingredients != null)
             {
@@ -163,7 +163,7 @@ namespace PizzeriaFileImplement
                 xDocument.Save(OrderFileName);
             }
         }
-        private void SaveProducts()
+        private void SavePizza()
         {
             if (Pizza != null)
             {
@@ -179,7 +179,7 @@ namespace PizzeriaFileImplement
                 xDocument.Save(PizzaFileName);
             }
         }
-        private void SaveProductComponents()
+        private void SavePizzaIngredients()
         {
             if (PizzaIngredients != null)
             {

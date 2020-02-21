@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using PizzeriaBusinessLogic.BindingModels;
-using PizzeriaBusinessLogic.Enums;
 using PizzeriaBusinessLogic.Interfaces;
+using PizzeriaBusinessLogic.Enums;
+using PizzeriaBusinessLogic.BindingModels;
 
-namespace PizzeriaBusinessLogic.Interfaces
+namespace PizzeriaBusinessLogic.BusinessLogic
 {
     public class MainLogic
     {
@@ -52,10 +52,10 @@ namespace PizzeriaBusinessLogic.Interfaces
         }
         public void FinishOrder(ChangeStatusBindingModel model)
         {
-            var order = orderLogic.Read(new OrderBindingModel{Id = model.OrderId})?[0];
+            var order = orderLogic.Read(new OrderBindingModel { Id = model.OrderId })?[0];
             if (order == null)
             {
-               throw new Exception("Не найден заказ");
+                throw new Exception("Не найден заказ");
             }
             if (order.Status != OrderStatus.Выполняется)
             {
@@ -74,7 +74,7 @@ namespace PizzeriaBusinessLogic.Interfaces
         }
         public void PayOrder(ChangeStatusBindingModel model)
         {
-            var order = orderLogic.Read(new OrderBindingModel{Id = model.OrderId})?[0];
+            var order = orderLogic.Read(new OrderBindingModel { Id = model.OrderId })?[0];
             if (order == null)
             {
                 throw new Exception("Не найден заказ");

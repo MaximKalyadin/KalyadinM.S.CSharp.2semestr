@@ -37,7 +37,7 @@ namespace PizzeriaView
             List<IngredientViewModel> list = logic.Read(null);
             if (list != null)
             {
-                comboBoxIngredient.DisplayMember = "ComponentName";
+                comboBoxIngredient.DisplayMember = "IngredientName";
                 comboBoxIngredient.ValueMember = "Id";
                 comboBoxIngredient.DataSource = list;
                 comboBoxIngredient.SelectedItem = null;
