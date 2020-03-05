@@ -148,6 +148,10 @@
       <Project>{80df8925-4fb4-484c-b821-c87205b0707a}</Project>
       <Name>PizzeriaBusinessLogic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PizzeriaFileImplement\PizzeriaFileImplement.csproj">
+      <Project>{bf98e0f6-39f9-44e3-b9e0-4260c3d32abe}</Project>
+      <Name>PizzeriaFileImplement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PizzeriyListImplement\PizzeriyListImplement.csproj">
       <Project>{4598602b-6884-4659-a34c-64ed8e22008a}</Project>
       <Name>PizzeriyListImplement</Name>

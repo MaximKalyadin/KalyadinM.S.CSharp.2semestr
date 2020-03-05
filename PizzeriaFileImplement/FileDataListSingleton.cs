@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using PizzeriaBusinessLogic.Enums;
 using PizzeriaFileImplement.Models;
-
+using System.IO;
 
 namespace PizzeriaFileImplement
 {
@@ -20,13 +19,13 @@ namespace PizzeriaFileImplement
         private readonly string PizzaIngredientFileName = "PizzaIngredient.xml";
         public List<Ingredient> Ingredients { get; set; }
         public List<Order> Orders { get; set; }
-        public List<Pizza> Pizza { get; set; }
+        public List<Pizza> Pizzas { get; set; }
         public List<PizzaIngredient> PizzaIngredients { get; set; }
         private FileDataListSingleton()
         {
             Ingredients = LoadIngredients();
             Orders = LoadOrders();
-            Pizza = LoadPizza();
+            Pizzas = LoadPizza();
             PizzaIngredients = LoadPizzaIngredients();
         }
         public static FileDataListSingleton GetInstance()
@@ -77,13 +76,9 @@ namespace PizzeriaFileImplement
                         PizzaId = Convert.ToInt32(elem.Element("PizzaId").Value),
                         Count = Convert.ToInt32(elem.Element("Count").Value),
                         Sum = Convert.ToDecimal(elem.Element("Sum").Value),
-                        Status = (OrderStatus)Enum.Parse(typeof(OrderStatus),
-                   elem.Element("Status").Value),
-                        TimeCreate =
-                   Convert.ToDateTime(elem.Element("TimeCreate").Value),
-                        TimeImplement =
-                   string.IsNullOrEmpty(elem.Element("TimeImplement").Value) ? (DateTime?)null :
-                   Convert.ToDateTime(elem.Element("TimeImplement").Value),
+                        Status = (OrderStatus)Enum.Parse(typeof(OrderStatus), elem.Element("Status").Value),
+                        TimeCreate = Convert.ToDateTime(elem.Element("TimeCreate").Value),
+                        TimeImplement = string.IsNullOrEmpty(elem.Element("TimeImplement").Value) ? (DateTime?)null : Convert.ToDateTime(elem.Element("TimeImplement").Value),
                     });
                 }
             }
@@ -95,7 +90,7 @@ namespace PizzeriaFileImplement
             if (File.Exists(PizzaFileName))
             {
                 XDocument xDocument = XDocument.Load(PizzaFileName);
-            var xElements = xDocument.Root.Elements("Pizza").ToList();
+                var xElements = xDocument.Root.Elements("Pizza").ToList();
                 foreach (var elem in xElements)
                 {
                     list.Add(new Pizza
@@ -147,7 +142,7 @@ namespace PizzeriaFileImplement
         {
             if (Orders != null)
             {
-            var xElement = new XElement("Orders");
+                var xElement = new XElement("Orders");
                 foreach (var order in Orders)
                 {
                     xElement.Add(new XElement("Order",
@@ -165,10 +160,10 @@ namespace PizzeriaFileImplement
         }
         private void SavePizza()
         {
-            if (Pizza != null)
+            if (Pizzas != null)
             {
-                var xElement = new XElement("Pizza");
-                foreach (var product in Pizza)
+                var xElement = new XElement("Pizzas");
+                foreach (var product in Pizzas)
                 {
                     xElement.Add(new XElement("Pizza",
                     new XAttribute("Id", product.Id),
@@ -197,5 +192,4 @@ namespace PizzeriaFileImplement
             }
         }
     }
-
 }

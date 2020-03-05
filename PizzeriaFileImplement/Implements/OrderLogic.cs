@@ -19,28 +19,37 @@ namespace PizzeriaFileImplement.Implements
         }
         public void CreateOrUpdate(OrderBindingModel model)
         {
-            Order element = source.Orders.FirstOrDefault(rec =>  rec.Id != model.Id && rec.PizzaId == model.PizzaId && rec.Status == model.Status);
+            Order order;
             if (model.Id.HasValue)
             {
-                element = source.Orders.FirstOrDefault(rec => rec.Id == model.Id);
-                if (element == null)
+                order = source.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+                if (order == null)
                 {
                     throw new Exception("Элемент не найден");
                 }
+                order.PizzaId = model.PizzaId;
+                order.Status = model.Status;
+                order.PizzaId = model.PizzaId;
+                order.Count = model.Count;
+                order.Sum = model.Sum;
+                order.TimeCreate = model.TimeCreate;
+                order.TimeImplement = model.TimeImplement;
             }
             else
             {
                 int maxId = source.Orders.Count > 0 ? source.Orders.Max(rec =>
                rec.Id) : 0;
-                element = new Order { Id = maxId + 1 };
-                source.Orders.Add(element);
+                order = new Order { Id = maxId + 1 };
+                order.PizzaId = model.PizzaId;
+                order.Status = model.Status;
+                order.PizzaId = model.PizzaId;
+                order.Count = model.Count;
+                order.Sum = model.Sum;
+                order.TimeCreate = model.TimeCreate;
+                order.TimeImplement = model.TimeImplement;
+                source.Orders.Add(order);
             }
-            element.Status = model.Status;
-            element.PizzaId = model.PizzaId;
-            element.Count = model.Count;
-            element.Sum = model.Sum;
-            element.TimeCreate = model.TimeCreate;
-            element.TimeImplement = model.TimeImplement;
+
         }
         public void Delete(OrderBindingModel model)
         {
