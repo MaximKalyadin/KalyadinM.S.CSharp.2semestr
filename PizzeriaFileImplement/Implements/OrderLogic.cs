@@ -74,6 +74,7 @@ namespace PizzeriaFileImplement.Implements
                 Count = rec.Count,
                 TimeCreate = rec.TimeCreate,
                 TimeImplement = rec.TimeImplement,
+                PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
                 PizzaId = rec.PizzaId,
                 Status = rec.Status,
                 Sum = rec.Sum

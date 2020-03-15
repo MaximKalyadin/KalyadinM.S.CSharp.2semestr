@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PizzeriaDatabaseImplement.Implements
 {
-    public class PizzaLogic
+    public class PizzaLogic : IPizzaLogic
     {
         public void CreateOrUpdate(PizzaBindingModel model)
         {
@@ -34,7 +34,7 @@ namespace PizzeriaDatabaseImplement.Implements
                             }
                         }
                         else
-                    {
+                        {
                             element = new Pizza();
                             context.Pizzas.Add(element);
                         }
