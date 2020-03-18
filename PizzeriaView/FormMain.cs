@@ -123,7 +123,7 @@ catch (Exception ex)
         }
         private void пополнитьскладToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormSkladIngredients>();
+            var form = Container.Resolve<FormSkladAddIngredients>();
             form.ShowDialog();
         }
     }

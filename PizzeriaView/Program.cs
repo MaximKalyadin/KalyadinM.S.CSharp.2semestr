@@ -34,6 +34,7 @@ namespace PizzeriaView
             currentContainer.RegisterType<IPizzaLogic, PizzaLogic>(new
            HierarchicalLifetimeManager());
             currentContainer.RegisterType<MainLogic>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<ISkladLogic, SkladLogic>(new HierarchicalLifetimeManager());
             return currentContainer;
         }
     }

@@ -17,38 +17,38 @@ namespace PizzeriyListImplement.Implements
         {
             source = DataListSingleton.GetInstance();
         }
-        public void CreateOrUpdate(SkladBindingModel storage)
+        public void CreateOrUpdate(SkladBindingModel sklad)
         {
-            Sklad tempStorage = storage.Id.HasValue ? null : new Sklad
+            Sklad tempSklad = sklad.Id.HasValue ? null : new Sklad
             {
                 Id = 1
             };
             foreach (var s in source.Sklads)
             {
-                if (s.SkladName == storage.SkladName && s.Id != storage.Id)
+                if (s.SkladName == sklad.SkladName && s.Id != sklad.Id)
                 {
                     throw new Exception("Уже есть склад с таким названием");
                 }
-                if (!storage.Id.HasValue && s.Id >= tempStorage.Id)
+                if (!sklad.Id.HasValue && s.Id >= tempSklad.Id)
                 {
-                    tempStorage.Id = s.Id + 1;
+                    tempSklad.Id = s.Id + 1;
                 }
-                else if (storage.Id.HasValue && s.Id == storage.Id)
+                else if (sklad.Id.HasValue && s.Id == sklad.Id)
                 {
-                    tempStorage = s;
+                    tempSklad = s;
                 }
             }
-            if (storage.Id.HasValue)
+            if (sklad.Id.HasValue)
             {
-                if (tempStorage == null)
+                if (tempSklad == null)
                 {
                     throw new Exception("Элемент не найден");
                 }
-                CreateModel(storage, tempStorage);
+                CreateModel(sklad, tempSklad);
             }
             else
             {
-                source.Sklads.Add(CreateModel(storage, tempStorage));
+                source.Sklads.Add(CreateModel(sklad, tempSklad));
             }
         }
         public void Delete(SkladBindingModel model)
