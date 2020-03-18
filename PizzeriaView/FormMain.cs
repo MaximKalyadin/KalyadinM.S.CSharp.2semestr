@@ -116,5 +116,15 @@ catch (Exception ex)
         {
             LoadData();
         }
+        private void складыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormSklad>();
+            form.ShowDialog();
+        }
+        private void пополнитьскладToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormSkladAddIngredients>();
+            form.ShowDialog();
+        }
     }
 }
