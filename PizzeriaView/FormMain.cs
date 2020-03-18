@@ -32,8 +32,7 @@ namespace PizzeriaView
         }
         private void LoadData()
         {
-            try
-            {
+            
                 var list = orderLogic.Read(null);
                 if (list != null)
                 {
@@ -42,11 +41,8 @@ namespace PizzeriaView
                     dataGridView.Columns[1].Visible = false;
                     dataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            dataGridView.Update();
+
         }
         private void ингредиентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -74,7 +70,7 @@ namespace PizzeriaView
                     logic.TakeOrderInWork(new ChangeStatusBindingModel { OrderId = id });
                     LoadData();
                 }
-catch (Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }

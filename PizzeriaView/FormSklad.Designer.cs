@@ -64,7 +64,7 @@
             this.buttonRef.TabIndex = 2;
             this.buttonRef.Text = "Изменить";
             this.buttonRef.UseVisualStyleBackColor = true;
-            this.buttonRef.Click += new System.EventHandler(this.ButtonRef_Click);
+            this.buttonRef.Click += new System.EventHandler(this.ButtonUpd_Click);
             // 
             // buttonDel
             // 
@@ -84,7 +84,7 @@
             this.buttonUp.TabIndex = 4;
             this.buttonUp.Text = "Обновить";
             this.buttonUp.UseVisualStyleBackColor = true;
-            this.buttonUp.Click += new System.EventHandler(this.ButtonUpd_Click);
+            this.buttonUp.Click += new System.EventHandler(this.ButtonRef_Click);
             // 
             // FormSklad
             // 
