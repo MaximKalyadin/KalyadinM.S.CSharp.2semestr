@@ -15,6 +15,7 @@ namespace PizzeriaBusinessLogic.BindingModels
         public OrderStatus Status { get; set; }
         public DateTime TimeCreate { get; set; }
         public DateTime? TimeImplement { get; set; }
-
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
     }
 }
