@@ -102,7 +102,6 @@
             this.Controls.Add(this.comboBoxIngredient);
             this.Name = "FormPizzaIngredients";
             this.Text = "Ингредиент Пиццы";
-            //this.Load += new System.EventHandler(this.FormPizzaIngredients_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

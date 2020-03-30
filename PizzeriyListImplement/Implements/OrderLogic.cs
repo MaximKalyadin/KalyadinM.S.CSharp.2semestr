@@ -28,11 +28,6 @@ namespace PizzeriyListImplement.Implements
             };
             foreach (var order in source.Orders)
             {
-                if (order.TimeCreate == model.TimeCreate && order.Count == model.Count && order.PizzaId == model.PizzaId
-                    && order.Sum == model.Sum && order.Status == model.Status && order.Id != model.Id)
-                {
-                    throw new Exception("Уже есть такой заказ");
-                }
                 if (!model.Id.HasValue && order.Id >= tempOrder.Id)
                 {
                     tempOrder.Id = order.Id + 1;
