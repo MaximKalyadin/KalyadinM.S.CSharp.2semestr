@@ -11,7 +11,7 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSetOrders">
+    <DataSet Name="DataSetPizzaIngredient">
       <Query>
         <DataSourceName>PizzeriaBusinessLogicViewModels</DataSourceName>
         <CommandText>/* Local Query */</CommandText>
@@ -291,7 +291,7 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSetOrders</DataSetName>
+            <DataSetName>DataSetPizzaIngredient</DataSetName>
             <Top>1.7272cm</Top>
             <Height>2.01084cm</Height>
             <Width>16.47612cm</Width>

@@ -6,22 +6,24 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Reporting.WinForms;
 using System.Windows.Forms;
 using Unity;
-using PizzeriaBusinessLogic.BusinessLogic;
 using PizzeriaBusinessLogic.BindingModels;
+using PizzeriaBusinessLogic.BusinessLogic;
+using Microsoft.Reporting.WinForms;
 
 namespace PizzeriaView
 {
-    public partial class FormReportOrders : Form
+    public partial class FormReportPizzaIngredient : Form
     {
         [Dependency]
         public new IUnityContainer Container { get; set; }
+
         private readonly ReportLogic logic;
-        public FormReportOrders()
+        public FormReportPizzaIngredient(ReportLogic logic)
         {
             InitializeComponent();
+            this.logic = logic;
         }
         private void ButtonToPdf_Click(object sender, EventArgs e)
         {
@@ -45,12 +47,13 @@ namespace PizzeriaView
                 }
             }
         }
-        private void reportViewer_Load(object sender, EventArgs e)
+
+        private void FormReportPizzaIngredient_Load(object sender, EventArgs e)
         {
             try
             {
                 var dataSource = logic.GetProductComponent();
-                ReportDataSource source = new ReportDataSource("DataSetPizzaIngredient", dataSource);
+                ReportDataSource source = new ReportDataSource("DataSetPizaIngredient", dataSource);
                 reportViewer.LocalReport.DataSources.Add(source);
                 reportViewer.RefreshReport();
             }
@@ -58,11 +61,6 @@ namespace PizzeriaView
             {
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-        private void FormReportOrders_Load(object sender, EventArgs e)
-        {
-
-            this.reportViewer.RefreshReport();
         }
     }
 }
