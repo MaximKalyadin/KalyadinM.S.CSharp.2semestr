@@ -100,10 +100,10 @@ namespace PizzeriyListImplement.Implements
                 }
                 if (source.SkladIngredients[i].SkladId == storage.Id)
                 {
-                    if (model.SkladIngredients.ContainsKey(source.SkladIngredients[i].IngredientId))
+                    if (model.SkladIngredients.ContainsKey(source.SkladIngredients[i].Ingredientid))
                     {
-                        source.SkladIngredients[i].Count = model.SkladIngredients[source.SkladIngredients[i].IngredientId].Item2;
-                        model.SkladIngredients.Remove(source.SkladIngredients[i].IngredientId);
+                        source.SkladIngredients[i].Count = model.SkladIngredients[source.SkladIngredients[i].Ingredientid].Item2;
+                        model.SkladIngredients.Remove(source.SkladIngredients[i].Ingredientid);
                     }
                     else
                     {
@@ -117,7 +117,7 @@ namespace PizzeriyListImplement.Implements
                 {
                     Id = ++maxSMId,
                     SkladId = storage.Id,
-                    IngredientId = sm.Key,
+                    Ingredientid = sm.Key,
                     Count = sm.Value.Item2
                 });
             }
@@ -133,13 +133,13 @@ namespace PizzeriyListImplement.Implements
                     string componentName = string.Empty;
                     foreach (var component in source.Ingredients)
                     {
-                        if (sm.IngredientId == component.Id)
+                        if (sm.Ingredientid == component.Id)
                         {
                             componentName = component.IngredientName;
                             break;
                         }
                     }
-                    storageMaterials.Add(sm.IngredientId, (componentName, sm.Count));
+                    storageMaterials.Add(sm.Ingredientid, (componentName, sm.Count));
                 }
             }
             return new SkladViewModel

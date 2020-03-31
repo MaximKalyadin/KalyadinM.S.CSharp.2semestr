@@ -16,50 +16,74 @@ namespace PizzeriaDatabaseImplement.Implements
         {
             using (var context = new PizzeriaDatabase())
             {
-                Order order = context.Orders.FirstOrDefault(rec => rec.Id != model.Id);
-                if (model.Id.HasValue)
+                using (var transaction = context.Database.BeginTransaction())
                 {
-                    order = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
-                    if (order == null)
+                    try
                     {
-                        throw new Exception("Элемент не найден");
+                        Order order;
+                        if (model.Id.HasValue)
+                        {
+                            order = context.Orders.ToList().FirstOrDefault(rec => rec.Id == model.Id);
+                            if (order == null)
+                            {
+                                throw new Exception("Элемент не найден");
+                            }
+                            order.PizzaId = model.PizzaId;
+                            order.Status = model.Status;
+                            order.PizzaId = model.PizzaId;
+                            order.Count = model.Count;
+                            order.Sum = model.Sum;
+                            order.TimeCreate = model.TimeCreate;
+                            order.TimeImplement = model.TimeImplement;
+                        }
+                        else
+                        {
+                            order = new Order();
+                            order.PizzaId = model.PizzaId;
+                            order.Status = model.Status;
+                            order.PizzaId = model.PizzaId;
+                            order.Count = model.Count;
+                            order.Sum = model.Sum;
+                            order.TimeCreate = model.TimeCreate;
+                            order.TimeImplement = model.TimeImplement;
+                            context.Orders.Add(order);
+                        }
+                        context.SaveChanges();
+                        transaction.Commit();
                     }
-                    order.PizzaId = model.PizzaId;
-                    order.Status = model.Status;
-                    order.PizzaId = model.PizzaId;
-                    order.Count = model.Count;
-                    order.Sum = model.Sum;
-                    order.TimeCreate = model.TimeCreate;
-                    order.TimeImplement = model.TimeImplement;
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
-                else
-                {
-                    order = new Order();
-                    order.PizzaId = model.PizzaId;
-                    order.Status = model.Status;
-                    order.PizzaId = model.PizzaId;
-                    order.Count = model.Count;
-                    order.Sum = model.Sum;
-                    order.TimeCreate = model.TimeCreate;
-                    order.TimeImplement = model.TimeImplement;
-                    context.Orders.Add(order);
-                }
-                context.SaveChanges();
             }
         }
         public void Delete(OrderBindingModel model)
         {
             using (var context = new PizzeriaDatabase())
             {
-                Order element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
-                if (element != null)
+                using (var transaction = context.Database.BeginTransaction())
                 {
-                    context.Orders.Remove(element);
-                    context.SaveChanges();
-                }
-                else
-                {
-                    throw new Exception("Элемент не найден");
+                    try
+                    {
+                        Order element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+                        if (element != null)
+                        {
+                            context.Orders.Remove(element);
+                        }
+                        else
+                        {
+                            throw new Exception("Элемент не найден");
+                        }
+                        context.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }

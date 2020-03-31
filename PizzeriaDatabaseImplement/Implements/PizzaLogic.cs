@@ -23,7 +23,7 @@ namespace PizzeriaDatabaseImplement.Implements
                         Pizza element = context.Pizzas.FirstOrDefault(rec => rec.PizzaName == model.PizzaName && rec.Id != model.Id);
                         if (element != null)
                         {
-                            throw new Exception("Уже есть изделие с таким названием");
+                            throw new Exception("Уже есть пицца с таким названием");
                         }
                         if (model.Id.HasValue)
                         {
