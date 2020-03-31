@@ -43,12 +43,12 @@ namespace PizzeriaDatabaseImplement.Implements
                         if (model.Id.HasValue)
                         {
                             var skladComponents = context.SkladIngredients.Where(rec => rec.SkladId == model.Id.Value).ToList();
-                            context.SkladIngredients.RemoveRange(skladComponents.Where(rec => !model.SkladIngredients.ContainsKey(rec.Ingredientid)).ToList());
+                            context.SkladIngredients.RemoveRange(skladComponents.Where(rec => !model.SkladIngredients.ContainsKey(rec.IngredientId)).ToList());
                             context.SaveChanges();
                             foreach (var updateComponent in skladComponents)
                             {
-                                updateComponent.Count = model.SkladIngredients[updateComponent.Ingredientid].Item2;
-                                model.SkladIngredients.Remove(updateComponent.Ingredientid);
+                                updateComponent.Count = model.SkladIngredients[updateComponent.IngredientId].Item2;
+                                model.SkladIngredients.Remove(updateComponent.IngredientId);
                             }
                             context.SaveChanges();
                         }
@@ -57,7 +57,7 @@ namespace PizzeriaDatabaseImplement.Implements
                             context.SkladIngredients.Add(new SkladIngredient
                             {
                                 SkladId = element.Id,
-                                Ingredientid = pc.Key,
+                                IngredientId = pc.Key,
                                 Count = pc.Value.Item2
                             });
                             context.SaveChanges();
@@ -115,7 +115,7 @@ namespace PizzeriaDatabaseImplement.Implements
                     SkladName = rec.SkladName,
                     SkladIngredients = context.SkladIngredients.Include(recSM => recSM.Ingredient)
                     .Where(recSM => recSM.SkladId == rec.Id)
-                    .ToDictionary(recSM => recSM.Ingredientid, recSM => (recSM.Ingredient?.IngredientName, recSM.Count))
+                    .ToDictionary(recSM => recSM.IngredientId, recSM => (recSM.Ingredient?.IngredientName, recSM.Count))
                 }).ToList();
             }
         }
@@ -135,14 +135,14 @@ namespace PizzeriaDatabaseImplement.Implements
                             var ingredientCount = ingredient.Count * count;
                             foreach (var sm in skladIngredientss)
                             {
-                                if (sm.Ingredientid == ingredient.IngredientId && sm.Count >= ingredientCount)
+                                if (sm.IngredientId == ingredient.IngredientId && sm.Count >= ingredientCount)
                                 {
                                     sm.Count -= ingredientCount;
                                     ingredientCount = 0;
                                     context.SaveChanges();
                                     break;
                                 }
-                                else if (sm.Ingredientid == ingredient.IngredientId && sm.Count < ingredientCount)
+                                else if (sm.IngredientId == ingredient.IngredientId && sm.Count < ingredientCount)
                                 {
                                     ingredientCount -= sm.Count;
                                     sm.Count = 0;

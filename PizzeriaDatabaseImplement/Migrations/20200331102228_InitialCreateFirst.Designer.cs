@@ -10,8 +10,8 @@ using PizzeriaDatabaseImplement;
 namespace PizzeriaDatabaseImplement.Migrations
 {
     [DbContext(typeof(PizzeriaDatabase))]
-    [Migration("20200331094520_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200331102228_InitialCreateFirst")]
+    partial class InitialCreateFirst
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -142,10 +142,7 @@ namespace PizzeriaDatabaseImplement.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IngredientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Ingredientid")
+                    b.Property<int>("IngredientId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SkaldId")
@@ -189,7 +186,9 @@ namespace PizzeriaDatabaseImplement.Migrations
                 {
                     b.HasOne("PizzeriaDatabaseImplement.Models.Ingredient", "Ingredient")
                         .WithMany("SkladMaterials")
-                        .HasForeignKey("IngredientId");
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PizzeriaDatabaseImplement.Models.Sklad", "Sklad")
                         .WithMany("SkladIngredients")

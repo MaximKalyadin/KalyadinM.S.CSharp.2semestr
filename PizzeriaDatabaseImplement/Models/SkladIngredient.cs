@@ -9,7 +9,7 @@ namespace PizzeriaDatabaseImplement.Models
     {
         public int Id { set; get; }
         public int SkladId { set; get; }
-        public int Ingredientid { set; get; }
+        public int IngredientId { set; get; }
         [Required]
         public int Count { set; get; }
         public virtual Sklad Sklad { set; get; }

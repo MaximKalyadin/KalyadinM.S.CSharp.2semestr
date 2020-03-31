@@ -140,10 +140,7 @@ namespace PizzeriaDatabaseImplement.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IngredientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Ingredientid")
+                    b.Property<int>("IngredientId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SkaldId")
@@ -187,7 +184,9 @@ namespace PizzeriaDatabaseImplement.Migrations
                 {
                     b.HasOne("PizzeriaDatabaseImplement.Models.Ingredient", "Ingredient")
                         .WithMany("SkladMaterials")
-                        .HasForeignKey("IngredientId");
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PizzeriaDatabaseImplement.Models.Sklad", "Sklad")
                         .WithMany("SkladIngredients")

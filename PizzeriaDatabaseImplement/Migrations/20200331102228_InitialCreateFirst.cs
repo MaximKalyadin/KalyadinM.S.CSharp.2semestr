@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PizzeriaDatabaseImplement.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialCreateFirst : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -106,10 +106,9 @@ namespace PizzeriaDatabaseImplement.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SkladId = table.Column<int>(nullable: false),
-                    Ingredientid = table.Column<int>(nullable: false),
+                    IngredientId = table.Column<int>(nullable: false),
                     Count = table.Column<int>(nullable: false),
-                    SkaldId = table.Column<int>(nullable: true),
-                    IngredientId = table.Column<int>(nullable: true)
+                    SkaldId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -119,7 +118,7 @@ namespace PizzeriaDatabaseImplement.Migrations
                         column: x => x.IngredientId,
                         principalTable: "Ingredients",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SkladIngredients_Sklads_SkaldId",
                         column: x => x.SkaldId,
