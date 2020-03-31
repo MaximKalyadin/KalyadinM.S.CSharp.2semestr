@@ -94,7 +94,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Ingredient Name</Value>
+                                  <Value>Пицца</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -124,7 +124,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Pizza Name</Value>
+                                  <Value>Ингредиенты</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -154,7 +154,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Count</Value>
+                                  <Value>Количество</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -182,21 +182,21 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="IngredientName">
+                        <Textbox Name="PizzaName1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!IngredientName.Value</Value>
+                                  <Value>=Fields!PizzaName.Value</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>IngredientName</rd:DefaultName>
+                          <rd:DefaultName>PizzaName1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -212,21 +212,21 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="PizzaName">
+                        <Textbox Name="IngredientName">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!PizzaName.Value</Value>
+                                  <Value>=Fields!IngredientName.Value</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>PizzaName</rd:DefaultName>
+                          <rd:DefaultName>IngredientName</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>

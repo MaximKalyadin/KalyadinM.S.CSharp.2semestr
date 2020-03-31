@@ -11,46 +11,60 @@ namespace PizzeriaBusinessLogic.BusinessLogic
 {
     public class ReportLogic
     {
-        private readonly IIngredientLogic componentLogic;
-        private readonly IPizzaLogic productLogic;
+        private readonly IIngredientLogic ingredientLogic;
+        private readonly IPizzaLogic pizzaLogic;
         private readonly IOrderLogic orderLogic;
-        public ReportLogic(IPizzaLogic productLogic, IIngredientLogic componentLogic, IOrderLogic orderLLogic)
+        public ReportLogic(IPizzaLogic pizzaLogic, IIngredientLogic ingredientLogic, IOrderLogic orderLLogic)
         {
-            this.productLogic = productLogic;
-            this.componentLogic = componentLogic;
+            this.pizzaLogic = pizzaLogic;
+            this.ingredientLogic = ingredientLogic;
             this.orderLogic = orderLLogic;
         }
 
-        public List<ReportPizzaIngredientViewModel> GetProductComponent()
+        public List<ReportIngredientPizzaViewModel> GetProductComponent()
         {
-            var components = componentLogic.Read(null);
-            var products = productLogic.Read(null);
-            var list = new List<ReportPizzaIngredientViewModel>();
-
-            foreach (var product in products)
+            var components = ingredientLogic.Read(null);
+            var products = pizzaLogic.Read(null);
+            var list = new List<ReportIngredientPizzaViewModel>();
+            foreach (var component in components)
             {
-                foreach (var component in components)
+                var record = new ReportIngredientPizzaViewModel
+                {
+                    IngredientName = component.IngredientName,
+                    Pizzas = new List<Tuple<string, int>>(),
+                    TotalCount = 0
+                };
+                foreach (var product in products)
                 {
                     if (product.PizzaIngredients.ContainsKey(component.Id))
                     {
-                        var record = new ReportPizzaIngredientViewModel
-                        {
-                            PizzaName = product.PizzaName,
-                            IngredientName = component.IngredientName,
-                            Count = product.PizzaIngredients[component.Id].Item2
-                        };
-
-                        list.Add(record);
+                        record.Pizzas.Add(new Tuple<string, int>(product.PizzaName, product.PizzaIngredients[component.Id].Item2));
+                        record.TotalCount += product.PizzaIngredients[component.Id].Item2;
                     }
                 }
+                list.Add(record);
             }
             return list;
         }
-        /// <summary>
-        /// Получение списка заказов за определенный период
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+
+        public List<ReportPizzaIngredientViewModel> GetPizzaIngredients()
+        {
+            List<ReportPizzaIngredientViewModel> reports = new List<ReportPizzaIngredientViewModel>();
+            foreach (var pizza in pizzaLogic.Read(null))
+            {
+                foreach (var ingredient in pizza.PizzaIngredients)
+                {
+                    reports.Add(new ReportPizzaIngredientViewModel()
+                    {
+                        PizzaName = pizza.PizzaName,
+                        IngredientName = ingredient.Value.Item1,
+                        Count = ingredient.Value.Item2
+                    });
+                }
+            }
+            return reports;
+        }
+
         public List<ReportOrdersViewModel> GetOrders(ReportBindingModel model)
         {
             return orderLogic.Read(new OrderBindingModel
@@ -66,37 +80,50 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Sum = x.Sum,
                 Status = x.Status
             })
-            .ToList();
+           .ToList();
         }
-        public void SaveProductsToWordFile(ReportBindingModel model)
+
+        public List<ReportOrdersViewModel> GetOrders()
+        {
+            return orderLogic.Read(null)
+            .Select(x => new ReportOrdersViewModel
+            {
+                DateCreate = x.TimeCreate,
+                PizzaName = x.PizzaName,
+                Count = x.Count,
+                Sum = x.Sum,
+                Status = x.Status
+            })
+           .ToList();
+        }
+
+        public void SavePizzaToWordFile(ReportBindingModel model)
         {
             SaveToWord.CreateDoc(new WordInfo
             {
                 FileName = model.FileName,
-                Title = "Список изделий",
-                Pizzas = productLogic.Read(null)
+                Title = "Пиццы",
+                Pizzas = pizzaLogic.Read(null)
             });
         }
 
-        public void SaveOrdersToExcelFile(ReportBindingModel model)
+        public void SaveProductComponentToExcelFile(ReportBindingModel model)
         {
-            var a = GetOrders(model);
-
             SaveToExcel.CreateDoc(new ExcelInfo
             {
                 FileName = model.FileName,
-                Title = "Список заказов",
-                Orders = GetOrders(model)
+                Title = "Заказы",
+                Orders = GetOrders()
             });
         }
 
-        public void SaveProductComponentsToPdfFile(ReportBindingModel model)
+        public void SavePizzaIngredientsToPdfFile(ReportBindingModel model)
         {
             SaveToPdf.CreateDoc(new PdfInfo
             {
                 FileName = model.FileName,
-                Title = "Список издлий с компонентами",
-                PizzaIngredients = GetProductComponent()
+                Title = "Пицца",
+                Pizzas = GetPizzaIngredients()
             });
         }
     }

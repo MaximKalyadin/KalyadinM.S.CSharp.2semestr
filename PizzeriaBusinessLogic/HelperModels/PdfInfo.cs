@@ -9,6 +9,6 @@ namespace PizzeriaBusinessLogic.HelperModels
     {
         public string FileName { get; set; }
         public string Title { get; set; }
-        public List<ReportPizzaIngredientViewModel> PizzaIngredients { get; set; }
+        public List<ReportPizzaIngredientViewModel> Pizzas { get; set; }
     }
 }

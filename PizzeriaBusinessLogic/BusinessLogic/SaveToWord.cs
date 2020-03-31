@@ -29,14 +29,13 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     }
                 }));
 
-                foreach (var product in info.Pizzas)
+                foreach (var pizza in info.Pizzas)
                 {
                     docBody.AppendChild(CreateParagraph(new WordParagraph
                     {
-                        Texts = new List<string> { product.PizzaName, " - " + product.Price.ToString() },
+                        Texts = new List<string> { pizza.PizzaName, " - " + pizza.Price.ToString() },
                         TextProperties = new WordParagraphProperties
                         {
-                            Bold = true,
                             Size = "24",
                             JustificationValues = JustificationValues.Both
                         }
@@ -71,21 +70,29 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             if (paragraph != null)
             {
                 Paragraph docParagraph = new Paragraph();
+
                 docParagraph.AppendChild(CreateParagraphProperties(paragraph.TextProperties));
-                foreach (var run in paragraph.Texts)
+                for (int i = 0; i < paragraph.Texts.Count; i++)
                 {
-                    Run docRun = new Run();
-                    RunProperties properties = new RunProperties();
-                    properties.AppendChild(new FontSize { Val = paragraph.TextProperties.Size });
-                    if (paragraph.TextProperties.Bold)
                     {
-                        properties.AppendChild(new Bold());
+                        Run docRun = new Run();
+                        RunProperties properties = new RunProperties();
+                        properties.AppendChild(new FontSize
+                        {
+                            Val = paragraph.TextProperties.Size
+                        });
+                        if (i == 0)
+                            properties.AppendChild(new Bold());
+                        docRun.AppendChild(properties);
+                        docRun.AppendChild(new Text
+                        {
+                            Text = paragraph.Texts[i],
+                            Space = SpaceProcessingModeValues.Preserve
+                        });
+                        docParagraph.AppendChild(docRun);
                     }
-                    docRun.AppendChild(properties);
-                    docRun.AppendChild(new Text { Text = run, Space = SpaceProcessingModeValues.Preserve });
-                    docParagraph.AppendChild(docRun);
                 }
-            return docParagraph;
+                return docParagraph;
             }
             return null;
         }

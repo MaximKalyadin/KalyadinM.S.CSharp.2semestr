@@ -37,17 +37,12 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 ParagraphAlignment = ParagraphAlignment.Center
             });
 
-            foreach (var pc in info.PizzaIngredients)
+            foreach (var pizza in info.Pizzas)
             {
                 CreateRow(new PdfRowParameters
                 {
                     Table = table,
-                    Texts = new List<string>
-                    {
-                        pc.PizzaName,
-                        pc.IngredientName,
-                        pc.Count.ToString()
-                    },
+                    Texts = new List<string> { pizza.PizzaName, pizza.IngredientName, pizza.Count.ToString() },
                     Style = "Normal",
                     ParagraphAlignment = ParagraphAlignment.Left
                 });

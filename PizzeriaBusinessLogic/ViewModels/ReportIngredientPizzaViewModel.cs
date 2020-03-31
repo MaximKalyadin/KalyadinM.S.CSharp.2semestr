@@ -4,11 +4,10 @@ using System.Text;
 
 namespace PizzeriaBusinessLogic.ViewModels
 {
-    public class ReportPizzaIngredientViewModel
+    public class ReportIngredientPizzaViewModel
     {
         public string IngredientName { get; set; }
-        public string PizzaName { set; get; }
-        public int Count { set; get; }
-
+        public int TotalCount { get; set; }
+        public List<Tuple<string, int>> Pizzas { get; set; }
     }
 }

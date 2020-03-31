@@ -124,21 +124,25 @@ catch (Exception ex)
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    reportLogic.SaveProductsToWordFile(new ReportBindingModel { FileName = dialog.FileName });
-                    MessageBox.Show("Выполнено", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    reportLogic.SavePizzaToWordFile(new ReportBindingModel
+                    {
+                        FileName = dialog.FileName
+                    });
+                    MessageBox.Show("Выполнено", "Успех", MessageBoxButtons.OK,
+                   MessageBoxIcon.Information);
                 }
             }
         }
 
         private void ингредиентыПоПиццамToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormReportPizzaIngredient>();
+            var form = Container.Resolve<FormReportIngredientPizza>();
             form.ShowDialog();
         }
 
         private void списокПиццToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormReportOrder>();
+            var form = Container.Resolve<FormReportPizzaIngredient>();
             form.ShowDialog();
         }
     }
