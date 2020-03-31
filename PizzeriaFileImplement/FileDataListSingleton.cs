@@ -17,16 +17,22 @@ namespace PizzeriaFileImplement
         private readonly string OrderFileName = "Order.xml";
         private readonly string PizzaFileName = "Pizza.xml";
         private readonly string PizzaIngredientFileName = "PizzaIngredient.xml";
+        private readonly string SkladFileName = "Sklad.xml";
+        private readonly string SkladIngredientFileName = "SkladIngredient.xml";
         public List<Ingredient> Ingredients { get; set; }
         public List<Order> Orders { get; set; }
         public List<Pizza> Pizzas { get; set; }
         public List<PizzaIngredient> PizzaIngredients { get; set; }
+        public List<Sklad> Sklads { set; get; }
+        public List<SkladIngredient> SkladIngredients { set; get; }
         private FileDataListSingleton()
         {
             Ingredients = LoadIngredients();
             Orders = LoadOrders();
             Pizzas = LoadPizza();
             PizzaIngredients = LoadPizzaIngredients();
+            Sklads = LoadSklads();
+            SkladIngredients = LoadSkladIngredients();
         }
         public static FileDataListSingleton GetInstance()
         {
@@ -42,6 +48,8 @@ namespace PizzeriaFileImplement
             SaveOrders();
             SavePizza();
             SavePizzaIngredients();
+            SaveSkladIngredients();
+            SaveSklads();
         }
         private List<Ingredient> LoadIngredients()
         {
@@ -123,6 +131,44 @@ namespace PizzeriaFileImplement
             }
             return list;
         }
+        private List<Sklad> LoadSklads()
+        {
+            var list = new List<Sklad>();
+            if (File.Exists(SkladFileName))
+            {
+                XDocument xDocument = XDocument.Load(SkladFileName);
+                var xElements = xDocument.Root.Elements("Sklad").ToList();
+                foreach (var elem in xElements)
+                {
+                    list.Add(new Sklad()
+                    {
+                        Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                        SkladName = elem.Element("SkladName").Value.ToString()
+                    });
+                }
+            }
+            return list;
+        }
+        private List<SkladIngredient> LoadSkladIngredients()
+        {
+            var list = new List<SkladIngredient>();
+            if (File.Exists(SkladIngredientFileName))
+            {
+                XDocument xDocument = XDocument.Load(SkladIngredientFileName);
+                var xElements = xDocument.Root.Elements("SkladIngredient").ToList();
+                foreach (var elem in xElements)
+                {
+                    list.Add(new SkladIngredient()
+                    {
+                        Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                        IngredientId = Convert.ToInt32(elem.Element("IngredientId").Value),
+                        SkladId = Convert.ToInt32(elem.Element("SkladId").Value),
+                        Count = Convert.ToInt32(elem.Element("Count").Value)
+                    });
+                }
+            }
+            return list;
+        }
         private void SaveIngredients()
         {
             if (Ingredients != null)
@@ -189,6 +235,38 @@ namespace PizzeriaFileImplement
                 }
                 XDocument xDocument = new XDocument(xElement);
                 xDocument.Save(PizzaIngredientFileName);
+            }
+        }
+        private void SaveSklads()
+        {
+            if (Sklads != null)
+            {
+                var xElement = new XElement("Sklads");
+                foreach (var elem in Sklads)
+                {
+                    xElement.Add(new XElement("Sklad",
+                        new XAttribute("Id", elem.Id),
+                        new XElement("SkladName", elem.SkladName)));
+                }
+                XDocument xDocument = new XDocument(xElement);
+                xDocument.Save(SkladFileName);
+            }
+        }
+        private void SaveSkladIngredients()
+        {
+            if (SkladIngredients != null)
+            {
+                var xElement = new XElement("SkladIngredients");
+                foreach (var elem in SkladIngredients)
+                {
+                    xElement.Add(new XElement("SkladIngredient",
+                        new XAttribute("Id", elem.Id),
+                        new XElement("IngredientId", elem.IngredientId),
+                        new XElement("SkladId", elem.SkladId),
+                        new XElement("Count", elem.Count)));
+                }
+                XDocument xDocument = new XDocument(xElement);
+                xDocument.Save(SkladIngredientFileName);
             }
         }
     }
