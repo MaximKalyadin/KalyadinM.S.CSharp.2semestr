@@ -64,7 +64,7 @@
             this.buttonRef.TabIndex = 7;
             this.buttonRef.Text = "Изменить";
             this.buttonRef.UseVisualStyleBackColor = true;
-            this.buttonRef.Click += new System.EventHandler(this.buttonRef_Click);
+            this.buttonRef.Click += new System.EventHandler(this.buttonUpd_Click);
             // 
             // buttonAdd
             // 
