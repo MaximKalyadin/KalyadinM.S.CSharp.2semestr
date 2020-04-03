@@ -72,7 +72,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     ShareStringPart = shareStringPart,
                     ColumnName = "B",
                     RowIndex = 2,
-                    Text = "Платье",
+                    Text = "Пицца",
                     StyleIndex = 0U
                 });
                 InsertCellInWorksheet(new ExcelCellParameters
@@ -89,8 +89,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Dictionary<string, List<ReportOrdersViewModel>> dictOrders = new Dictionary<string, List<ReportOrdersViewModel>>();
                 foreach (var elem in info.Orders)
                 {
-                    if (elem.Status == Enums.OrderStatus.Оплачен)
-                    {
                         if (!dictOrders.ContainsKey(elem.DateCreate.ToShortDateString()))
                         {
                             dictOrders.Add(elem.DateCreate.ToShortDateString(), new List<ReportOrdersViewModel>() { elem });
@@ -99,7 +97,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                         {
                             dictOrders[elem.DateCreate.ToShortDateString()].Add(elem);
                         }
-                    }
                 }
                 foreach (var order in dictOrders)
                 {

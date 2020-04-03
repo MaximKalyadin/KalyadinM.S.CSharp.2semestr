@@ -40,8 +40,6 @@ namespace PizzeriaView
                     dataGridView.Rows.Clear();
                     foreach (var elem in dict)
                     {
-                        if (elem.Status == PizzeriaBusinessLogic.Enums.OrderStatus.Оплачен)
-                        {
                             if (!dictOrders.ContainsKey(elem.DateCreate.ToShortDateString()))
                             {
                                 dictOrders.Add(elem.DateCreate.ToShortDateString(), new List<ReportOrdersViewModel>() { elem });
@@ -50,7 +48,6 @@ namespace PizzeriaView
                             {
                                 dictOrders[elem.DateCreate.ToShortDateString()].Add(elem);
                             }
-                        }
                     }
                     foreach (var order in dictOrders)
                     {
