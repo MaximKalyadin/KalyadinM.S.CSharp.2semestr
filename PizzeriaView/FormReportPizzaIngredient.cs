@@ -29,7 +29,7 @@ namespace PizzeriaView
         {
             try
             {
-                var dataSource = logic.GetIngredientSklads();
+                var dataSource = logic.GetPizzaIngredients();
                 ReportDataSource source = new ReportDataSource("DataSetPizzaIngredient", dataSource);
                 reportViewer.LocalReport.DataSources.Add(source);
                 reportViewer.RefreshReport();
@@ -63,6 +63,7 @@ namespace PizzeriaView
         }
         private void FormReportPizzaIngredient_Load(object sender, EventArgs e)
         {
+
             this.reportViewer.RefreshReport();
         }
     }
