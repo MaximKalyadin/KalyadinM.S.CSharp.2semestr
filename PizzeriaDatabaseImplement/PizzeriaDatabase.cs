@@ -12,7 +12,7 @@ namespace PizzeriaDatabaseImplement
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-GDNE8QD\MYSQLDATABASE;Initial Catalog=PizzeriaDatabase;Integrated Security=True;MultipleActiveResultSets=True;");
+                optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-GDNE8QD;Initial Catalog=PizzeriaDatabase;Integrated Security=True;MultipleActiveResultSets=True;");
             }
             base.OnConfiguring(optionsBuilder);
         }
@@ -20,5 +20,7 @@ namespace PizzeriaDatabaseImplement
         public virtual DbSet<Pizza> Pizzas { set; get; }
         public virtual DbSet<PizzaIngredient> PizzaIngredients { set; get; }
         public virtual DbSet<Order> Orders { set; get; }
+        public virtual DbSet<Sklad> Sklads { set; get; }
+        public virtual DbSet<SkladIngredient> SkladIngredients { set; get; }
     }
 }

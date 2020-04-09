@@ -4,17 +4,21 @@ using System.Text;
 using PizzeriaBusinessLogic.Interfaces;
 using PizzeriaBusinessLogic.Enums;
 using PizzeriaBusinessLogic.BindingModels;
+using PizzeriaBusinessLogic.ViewModels;
 
 namespace PizzeriaBusinessLogic.BusinessLogic
 {
     public class MainLogic
     {
         private readonly IOrderLogic orderLogic;
+        private readonly ISkladLogic skladLogic;
+        public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic)
         private readonly IIngredientLogic ingredientLogic;
         public MainLogic(IOrderLogic orderLogic, IIngredientLogic ingredientLogic)
         {
             this.orderLogic = orderLogic;
             this.ingredientLogic = ingredientLogic;
+            this.skladLogic = skladLogic;
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {
@@ -37,6 +41,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             {
                 throw new Exception("Не найден заказ");
             }
+            (skladLogic as ISkladLigicRemove).RemoveIngredients(order.PizzaId, order.Count);
             if (order.Status != OrderStatus.Принят)
             {
                 throw new Exception("Заказ не в статусе \"Принят\"");
@@ -94,6 +99,23 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 TimeCreate = order.TimeCreate,
                 TimeImplement = order.TimeImplement,
                 Status = OrderStatus.Оплачен
+            });
+        }
+        public void AddIngredients(SkladViewModel sklad, int count, IngredientViewModel material)
+        {
+            if (sklad.SkladIngredients.ContainsKey(material.Id))
+            {
+                sklad.SkladIngredients[material.Id] = (sklad.SkladIngredients[material.Id].Item1, sklad.SkladIngredients[material.Id].Item2 + count);
+            }
+            else
+            {
+                sklad.SkladIngredients.Add(material.Id, (material.IngredientName, count));
+            }
+            skladLogic.CreateOrUpdate(new SkladBindingModel()
+            {
+                Id = sklad.Id,
+                SkladName = sklad.SkladName,
+                SkladIngredients = sklad.SkladIngredients
             });
         }
     }

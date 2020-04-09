@@ -111,6 +111,8 @@
             this.menuStripSpravochnik.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStripSpravochnik.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.справочникToolStripMenuItem,
+            this.пополнитьСкладToolStripMenuItem});
+            this.справочникToolStripMenuItem,
             this.отчетыToolStripMenuItem});
             this.menuStripSpravochnik.Location = new System.Drawing.Point(0, 0);
             this.menuStripSpravochnik.Name = "menuStripSpravochnik";
@@ -122,7 +124,8 @@
             // 
             this.справочникToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ингредиентыToolStripMenuItem,
-            this.пиццаToolStripMenuItem});
+            this.пиццаToolStripMenuItem,
+            this.складыToolStripMenuItem});
             this.справочникToolStripMenuItem.Name = "справочникToolStripMenuItem";
             this.справочникToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
             this.справочникToolStripMenuItem.Text = "Справочник";
@@ -207,6 +210,8 @@
         private System.Windows.Forms.ToolStripMenuItem справочникToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ингредиентыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem пиццаToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem складыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem пополнитьСкладToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem отчетыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem списокИнгредиентовToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ингредиентыПоПиццамToolStripMenuItem;
