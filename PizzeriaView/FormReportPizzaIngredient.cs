@@ -63,7 +63,6 @@ namespace PizzeriaView
         }
         private void FormReportPizzaIngredient_Load(object sender, EventArgs e)
         {
-
             this.reportViewer.RefreshReport();
         }
     }
