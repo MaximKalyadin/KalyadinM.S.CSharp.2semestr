@@ -46,10 +46,78 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 wordDocument.MainDocumentPart.Document.Save();
             }
         }
-        /// <summary>
-        /// Настройки страницы
-        /// </summary>
-        /// <returns></returns>
+
+        public static void CreateDoc(WordInfoSklad info)
+        {
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(info.FileName, WordprocessingDocumentType.Document))
+            {
+                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+                mainPart.Document = new Document();
+                Body docBody = mainPart.Document.AppendChild(new Body());
+                docBody.AppendChild(CreateParagraph(new WordParagraph
+                {
+                    Texts = new List<string> { info.Title },
+                    TextProperties = new WordParagraphProperties
+                    {
+                        Bold = true,
+                        Size = "24",
+                        JustificationValues = JustificationValues.Center
+                    }
+                }));
+                Table table = docBody.AppendChild(new Table());
+                TableProperties tblProperties = new TableProperties();
+
+                TableBorders tblBorders = new TableBorders();
+                TopBorder topBorder = new TopBorder();
+                topBorder.Val = new EnumValue<BorderValues>(BorderValues.Thick);
+                topBorder.Color = "CC0000";
+                tblBorders.AppendChild(topBorder);
+
+                BottomBorder bottomBorder = new BottomBorder();
+                bottomBorder.Val = new EnumValue<BorderValues>(BorderValues.Thick);
+                bottomBorder.Color = "CC0000";
+                tblBorders.AppendChild(bottomBorder);
+
+                RightBorder rightBorder = new RightBorder();
+                rightBorder.Val = new EnumValue<BorderValues>(BorderValues.Thick);
+                rightBorder.Color = "CC0000";
+                tblBorders.AppendChild(rightBorder);
+
+                LeftBorder leftBorder = new LeftBorder();
+                leftBorder.Val = new EnumValue<BorderValues>(BorderValues.Thick);
+                leftBorder.Color = "CC0000";
+                tblBorders.AppendChild(leftBorder);
+
+                InsideHorizontalBorder insideHBorder = new InsideHorizontalBorder();
+                insideHBorder.Val = new EnumValue<BorderValues>(BorderValues.Thick);
+                insideHBorder.Color = "CC0000";
+                tblBorders.AppendChild(insideHBorder);
+
+                InsideVerticalBorder insideVBorder = new InsideVerticalBorder();
+                insideVBorder.Val = new EnumValue<BorderValues>(BorderValues.Thick);
+                insideVBorder.Color = "CC0000";
+                tblBorders.AppendChild(insideVBorder);
+
+                tblProperties.AppendChild(tblBorders);
+                table.AppendChild(tblProperties);
+                foreach (var sklad in info.Sklads)
+                {
+                    table.AppendChild(new TableRow(new TableCell(CreateParagraph(new WordParagraph
+                    {
+                        Texts = new List<string> { sklad.SkladName },
+                        TextProperties = new WordParagraphProperties
+                        {
+                            Bold = false,
+                            Size = "24",
+                            JustificationValues = JustificationValues.Center
+                        }
+                    }))));
+                }
+                docBody.AppendChild(CreateSectionProperties());
+                wordDocument.MainDocumentPart.Document.Save();
+            }
+        }
+
         private static SectionProperties CreateSectionProperties()
         {
             SectionProperties properties = new SectionProperties();
@@ -60,11 +128,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             properties.AppendChild(pageSize);
             return properties;
         }
-        /// <summary>
-        /// Создание абзаца с текстом
-        /// </summary>
-        /// <param name="paragraph"></param>
-        /// <returns></returns>
+
         private static Paragraph CreateParagraph(WordParagraph paragraph)
         {
             if (paragraph != null)
@@ -96,11 +160,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             }
             return null;
         }
-        /// <summary>
-        /// Задание форматирования для абзаца
-        /// </summary>
-        /// <param name="paragraphProperties"></param>
-        /// <returns></returns>
+
         private static ParagraphProperties CreateParagraphProperties(WordParagraphProperties paragraphProperties)
         {
             if (paragraphProperties != null)

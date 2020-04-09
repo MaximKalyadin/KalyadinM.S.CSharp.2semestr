@@ -1,6 +1,4 @@
-﻿
-using PizzeriaBusinessLogic.BusinessLogic;
-using PizzeriaBusinessLogic.BindingModels;
+﻿using PizzeriaBusinessLogic.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,15 +10,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
 using Microsoft.Reporting.WinForms;
+using PizzeriaBusinessLogic.BindingModels;
 
 namespace PizzeriaView
 {
-    public partial class FormReportPizzaIngredient : Form
+    public partial class FormReportIngredientSklad : Form
     {
         [Dependency]
         public new IUnityContainer Container { get; set; }
         private readonly ReportLogic logic;
-        public FormReportPizzaIngredient(ReportLogic logic)
+        public FormReportIngredientSklad(ReportLogic logic)
         {
             InitializeComponent();
             this.logic = logic;
@@ -30,7 +29,7 @@ namespace PizzeriaView
             try
             {
                 var dataSource = logic.GetIngredientSklads();
-                ReportDataSource source = new ReportDataSource("DataSetPizzaIngredient", dataSource);
+                ReportDataSource source = new ReportDataSource("DataSetSklad", dataSource);
                 reportViewer.LocalReport.DataSources.Add(source);
                 reportViewer.RefreshReport();
             }
@@ -48,7 +47,7 @@ namespace PizzeriaView
                 {
                     try
                     {
-                        logic.SavePizzaIngredientsToPdfFile(new ReportBindingModel
+                        logic.SaveIngredientSkladsToPdfFile(new ReportBindingModel
                         {
                             FileName = dialog.FileName
                         });
@@ -61,9 +60,10 @@ namespace PizzeriaView
                 }
             }
         }
-        private void FormReportPizzaIngredient_Load(object sender, EventArgs e)
+        private void FormReportIngredientSklad_Load(object sender, EventArgs e)
         {
 
+            this.reportViewer.RefreshReport();
             this.reportViewer.RefreshReport();
         }
     }

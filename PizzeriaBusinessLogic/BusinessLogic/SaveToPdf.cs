@@ -52,10 +52,57 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             renderer.RenderDocument();
             renderer.PdfDocument.Save(info.FileName);
         }
-        /// <summary>
-        /// Создание стилей для документа
-        /// </summary>
-        /// <param name="document"></param>
+
+        public static void CreateDoc(PdfInfoIngredientSklad info)
+        {
+            Document document = new Document();
+            DefineStyles(document);
+            Section section = document.AddSection();
+            Paragraph paragraph = section.AddParagraph(info.Title);
+            paragraph.Format.SpaceAfter = "1cm";
+            paragraph.Format.Alignment = ParagraphAlignment.Center;
+            paragraph.Style = "Normal";
+            var table = document.LastSection.AddTable();
+            table.Format.Alignment = ParagraphAlignment.Center;
+            List<string> columns = new List<string> { "8cm", "6cm", "3cm" };
+            foreach (var elem in columns)
+            {
+                table.AddColumn(elem);
+            }
+            CreateRow(new PdfRowParameters
+            {
+                Table = table,
+                Texts = new List<string> { "Ингредиент", "Склад", "Количество" },
+                Style = "NormalTitle",
+                ParagraphAlignment = ParagraphAlignment.Center
+            });
+            int totalCount = 0;
+            foreach (var ms in info.IngredientSklads)
+            {
+                CreateRow(new PdfRowParameters
+                {
+                    Table = table,
+                    Texts = new List<string> { ms.IngredientName, ms.SkladName, ms.Count.ToString() },
+                    Style = "Normal",
+                    ParagraphAlignment = ParagraphAlignment.Left
+                });
+                totalCount += ms.Count;
+            }
+            CreateRow(new PdfRowParameters
+            {
+                Table = table,
+                Texts = new List<string> { "Всего", "", totalCount.ToString() },
+                Style = "Normal",
+                ParagraphAlignment = ParagraphAlignment.Left
+            });
+            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always)
+            {
+                Document = document
+            };
+            renderer.RenderDocument();
+            renderer.PdfDocument.Save(info.FileName);
+        }
+
         private static void DefineStyles(Document document)
         {
             Style style = document.Styles["Normal"];
@@ -64,10 +111,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             style = document.Styles.AddStyle("NormalTitle", "Normal");
             style.Font.Bold = true;
         }
-        /// <summary>
-        /// Создание и заполнение строки
-        /// </summary>
-        /// <param name="rowParameters"></param>
+
         private static void CreateRow(PdfRowParameters rowParameters)
         {
             Row row = rowParameters.Table.AddRow();

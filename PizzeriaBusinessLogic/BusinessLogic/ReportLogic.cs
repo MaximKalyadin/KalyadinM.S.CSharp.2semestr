@@ -14,11 +14,13 @@ namespace PizzeriaBusinessLogic.BusinessLogic
         private readonly IIngredientLogic ingredientLogic;
         private readonly IPizzaLogic pizzaLogic;
         private readonly IOrderLogic orderLogic;
-        public ReportLogic(IPizzaLogic pizzaLogic, IIngredientLogic ingredientLogic, IOrderLogic orderLLogic)
+        private readonly ISkladLogic skladLogic;
+        public ReportLogic(IPizzaLogic pizzaLogic, IIngredientLogic ingredientLogic, IOrderLogic orderLLogic, ISkladLogic skladLogic)
         {
             this.pizzaLogic = pizzaLogic;
             this.ingredientLogic = ingredientLogic;
             this.orderLogic = orderLLogic;
+            this.skladLogic = skladLogic;
         }
 
         public List<ReportIngredientPizzaViewModel> GetProductComponent()
@@ -83,6 +85,34 @@ namespace PizzeriaBusinessLogic.BusinessLogic
            .ToList();
         }
 
+        public List<ReportSkladViewModel> GetSklads()
+        {
+            return skladLogic.Read(null).Select(s => new ReportSkladViewModel()
+            {
+                SkladName = s.SkladName,
+                Ingredients = s.SkladIngredients
+            }).ToList();
+        }
+
+        public List<ReportIngredientSkladViewModel> GetIngredientSklads()
+        {
+            var storages = skladLogic.Read(null);
+            List<ReportIngredientSkladViewModel> reportMaterialStorages = new List<ReportIngredientSkladViewModel>();
+            foreach (var storage in storages)
+            {
+                foreach (var material in storage.SkladIngredients)
+                {
+                    reportMaterialStorages.Add(new ReportIngredientSkladViewModel()
+                    {
+                        SkladName = storage.SkladName,
+                        IngredientName = material.Value.Item1,
+                        Count = material.Value.Item2
+                    });
+                }
+            }
+            return reportMaterialStorages;
+        }
+
         public List<ReportOrdersViewModel> GetOrders()
         {
             return orderLogic.Read(null)
@@ -107,6 +137,16 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             });
         }
 
+        public void SaveSkladToWordFile(ReportBindingModel model)
+        {
+            SaveToWord.CreateDoc(new WordInfoSklad
+            {
+                FileName = model.FileName,
+                Title = "Хранилища",
+                Sklads = skladLogic.Read(null)
+            });
+        }
+
         public void SaveProductComponentToExcelFile(ReportBindingModel model)
         {
             SaveToExcel.CreateDoc(new ExcelInfo
@@ -117,6 +157,16 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             });
         }
 
+        public void SaveSkladToExcelFile(ReportBindingModel model)
+        {
+            SaveToExcel.CreateDoc(new ExcelInfoSklad
+            {
+                FileName = model.FileName,
+                Title = "Cклад",
+                Sklads = GetSklads()
+            });
+        }
+
         public void SavePizzaIngredientsToPdfFile(ReportBindingModel model)
         {
             SaveToPdf.CreateDoc(new PdfInfo
@@ -124,6 +174,16 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 FileName = model.FileName,
                 Title = "Пицца",
                 Pizzas = GetPizzaIngredients()
+            });
+        }
+
+        public void SaveIngredientSkladsToPdfFile(ReportBindingModel model)
+        {
+            SaveToPdf.CreateDoc(new PdfInfoIngredientSklad
+            {
+                FileName = model.FileName,
+                Title = "Ингредиент на складах",
+                IngredientSklads = GetIngredientSklads()
             });
         }
     }
