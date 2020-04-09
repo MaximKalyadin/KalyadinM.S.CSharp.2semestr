@@ -12,12 +12,10 @@ namespace PizzeriaBusinessLogic.BusinessLogic
     {
         private readonly IOrderLogic orderLogic;
         private readonly ISkladLogic skladLogic;
-        private readonly IIngredientLogic ingredientLogic;
-        public MainLogic(IOrderLogic orderLogic, IIngredientLogic ingredientLogic, ISkladLogic skladLogic)
+        public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic)
         {
             this.orderLogic = orderLogic;
             this.skladLogic = skladLogic;
-            this.ingredientLogic = ingredientLogic;
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {
@@ -99,22 +97,9 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Status = OrderStatus.Оплачен
             });
         }
-        public void AddIngredients(SkladViewModel storage, int count, IngredientViewModel material)
+        public void AddIngredients(AddIngredientInSkladBindingModel model)
         {
-            if (storage.SkladIngredients.ContainsKey(material.Id))
-            {
-                storage.SkladIngredients[material.Id] = (storage.SkladIngredients[material.Id].Item1, storage.SkladIngredients[material.Id].Item2 + count);
-            }
-            else
-            {
-                storage.SkladIngredients.Add(material.Id, (material.IngredientName, count));
-            }
-            skladLogic.CreateOrUpdate(new SkladBindingModel()
-            {
-                Id = storage.Id,
-                SkladName = storage.SkladName,
-                SkladIngredients = storage.SkladIngredients
-            });
+            skladLogic.AddIngredientToSklad(model);
         }
     }
 }

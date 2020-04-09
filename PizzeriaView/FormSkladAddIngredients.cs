@@ -11,6 +11,7 @@ using Unity;
 using PizzeriaBusinessLogic.Interfaces;
 using PizzeriaBusinessLogic.ViewModels;
 using PizzeriaBusinessLogic.BusinessLogic;
+using PizzeriaBusinessLogic.BindingModels;
 
 namespace PizzeriaView
 {
@@ -47,9 +48,15 @@ namespace PizzeriaView
         private void ButtonSave_Click(object sender, EventArgs e)
         {
             if (textBoxKol.Text == string.Empty)
+            {
                 throw new Exception("Введите количество ингредиентов");
-
-            mainLogic.AddIngredients(comboBoxSklad.SelectedItem as SkladViewModel, Convert.ToInt32(textBoxKol.Text), comboBoxIngredient.SelectedItem as IngredientViewModel);
+            }
+            mainLogic.AddIngredients(new AddIngredientInSkladBindingModel()
+            {
+                SkladId = (comboBoxSklad.SelectedItem as SkladViewModel).Id,
+                IngredientId = (comboBoxIngredient.SelectedItem as IngredientViewModel).Id,
+                Count = Convert.ToInt32(textBoxKol.Text)
+            });
             DialogResult = DialogResult.OK;
             Close();
         }
