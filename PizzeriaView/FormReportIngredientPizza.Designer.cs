@@ -62,7 +62,7 @@
             this.Controls.Add(this.buttonSaveToExcel);
             this.Name = "FormReportIngredientPizza";
             this.Text = "Ингредиенты по пиццам";
-            this.Load += new System.EventHandler(this.FormReportMaterialsToDresses_Load);
+            this.Load += new System.EventHandler(this.FormReportMaterialsToPizza_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 

@@ -29,7 +29,7 @@ namespace PizzeriaView
             dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView.Columns.Add("Сумма заказа", "Сумма заказа");
         }
-        private void FormReportMaterialsToDresses_Load(object sender, EventArgs e)
+        private void FormReportMaterialsToPizza_Load(object sender, EventArgs e)
         {
             try
             {
