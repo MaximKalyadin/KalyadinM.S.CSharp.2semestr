@@ -132,6 +132,7 @@ namespace PizzeriyListImplement.Implements
                 }
                 else
                     ingredient.Count += model.Count;
+
             }
         }
     }
