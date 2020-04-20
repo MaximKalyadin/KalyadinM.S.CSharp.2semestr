@@ -4,15 +4,18 @@ using System.Text;
 using PizzeriaBusinessLogic.BindingModels;
 using PizzeriaBusinessLogic.Enums;
 using PizzeriaBusinessLogic.Interfaces;
+using PizzeriaBusinessLogic.ViewModels;
 
 namespace PizzeriaBusinessLogic.BusinessLogic
 {
     public class MainLogic
     {
         private readonly IOrderLogic orderLogic;
-        public MainLogic(IOrderLogic orderLogic)
+        private readonly ISkladLogic skladLogic;
+        public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic)
         {
             this.orderLogic = orderLogic;
+            this.skladLogic = skladLogic;
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {
@@ -93,6 +96,10 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 TimeImplement = order.TimeImplement,
                 Status = OrderStatus.Оплачен
             });
+        }
+        public void AddIngredients(AddIngredientInSkladBindingModel model)
+        {
+            skladLogic.AddIngredientToSklad(model);
         }
     }
 }
