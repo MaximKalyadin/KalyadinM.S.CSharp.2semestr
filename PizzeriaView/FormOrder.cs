@@ -29,7 +29,7 @@ namespace PizzeriaView
         }
         private void FormOrder_Load(object sender, EventArgs e)
         {
-           try
+            try
             {
                 var listP = logicP.Read(null);
                 if (listP != null)

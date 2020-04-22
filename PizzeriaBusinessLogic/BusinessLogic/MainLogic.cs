@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using PizzeriaBusinessLogic.BindingModels;
-using PizzeriaBusinessLogic.Enums;
 using PizzeriaBusinessLogic.Interfaces;
+using PizzeriaBusinessLogic.Enums;
+using PizzeriaBusinessLogic.BindingModels;
+
 
 namespace PizzeriaBusinessLogic.BusinessLogic
 {
