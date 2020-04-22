@@ -58,8 +58,6 @@ namespace PizzeriaFileImplement.Implements
         }
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
-            if (source != null)
-            {
                 return source.Orders
                 .Where(rec => model == null || rec.Id == model.Id)
                 .Select(rec => new OrderViewModel
@@ -68,16 +66,12 @@ namespace PizzeriaFileImplement.Implements
                     Count = rec.Count,
                     TimeCreate = rec.TimeCreate,
                     TimeImplement = rec.TimeImplement,
-                    PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
+                    PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId)?.PizzaName,
                     PizzaId = rec.PizzaId,
                     Status = rec.Status,
                     Sum = rec.Sum
                 })
                 .ToList();
-            } else
-            {
-                return null;
-            }
         }
     }
 }
