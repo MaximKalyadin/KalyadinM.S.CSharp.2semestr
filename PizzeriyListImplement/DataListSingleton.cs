@@ -14,12 +14,14 @@ namespace PizzeriyListImplement
         public List<Order> Orders { get; set; }
         public List<Pizza> Pizza { get; set; }
         public List<PizzaIngredient> PizzaIngredients { get; set; }
+        public List<Client> Clients { set; get; }
         private DataListSingleton()
         {
             Ingredients = new List<Ingredient>();
             Orders = new List<Order>();
             Pizza = new List<Pizza>();
             PizzaIngredients = new List<PizzaIngredient>();
+            Clients = new List<Client>();
         }
         public static DataListSingleton GetInstance()
         {

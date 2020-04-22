@@ -27,11 +27,6 @@ namespace PizzeriyListImplement.Implements
             };
             foreach (var order in source.Orders)
             {
-                if (order.TimeCreate == model.TimeCreate && order.Count == model.Count && order.PizzaId == model.PizzaId
-                    && order.Sum == model.Sum && order.Status == model.Status && order.Id != model.Id)
-                {
-                    throw new Exception("Уже есть такой заказ");
-                }
                 if (!model.Id.HasValue && order.Id >= tempOrder.Id)
                 {
                     tempOrder.Id = order.Id + 1;
@@ -95,6 +90,8 @@ namespace PizzeriyListImplement.Implements
             order.PizzaId = model.PizzaId;
             order.Status = model.Status;
             order.Sum = model.Sum;
+            order.ClientId = model.ClientId;
+            order.ClientFIO = model.ClientFIO;
             return order;
         }
 
@@ -110,7 +107,9 @@ namespace PizzeriyListImplement.Implements
                 PizzaName = pizzaName,
                 PizzaId = order.PizzaId,
                 Status = order.Status,
-                Sum = order.Sum
+                Sum = order.Sum,
+                ClientId = order.ClientId,
+                ClientFIO = order.ClientFIO
             };
         }
     }

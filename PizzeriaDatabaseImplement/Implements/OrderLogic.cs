@@ -24,26 +24,21 @@ namespace PizzeriaDatabaseImplement.Implements
                     {
                         throw new Exception("Элемент не найден");
                     }
-                    order.PizzaId = model.PizzaId;
-                    order.Status = model.Status;
-                    order.PizzaId = model.PizzaId;
-                    order.Count = model.Count;
-                    order.Sum = model.Sum;
-                    order.TimeCreate = model.TimeCreate;
-                    order.TimeImplement = model.TimeImplement;
                 }
                 else
                 {
                     order = new Order();
-                    order.PizzaId = model.PizzaId;
-                    order.Status = model.Status;
-                    order.PizzaId = model.PizzaId;
-                    order.Count = model.Count;
-                    order.Sum = model.Sum;
-                    order.TimeCreate = model.TimeCreate;
-                    order.TimeImplement = model.TimeImplement;
                     context.Orders.Add(order);
                 }
+                order.ClientFIO = model.ClientFIO;
+                order.ClientId = model.ClientId;
+                order.PizzaId = model.PizzaId;
+                order.Status = model.Status;
+                order.PizzaId = model.PizzaId;
+                order.Count = model.Count;
+                order.Sum = model.Sum;
+                order.TimeCreate = model.TimeCreate;
+                order.TimeImplement = model.TimeImplement;
                 context.SaveChanges();
             }
         }
@@ -55,32 +50,34 @@ namespace PizzeriaDatabaseImplement.Implements
                 if (element != null)
                 {
                     context.Orders.Remove(element);
-                    context.SaveChanges();
                 }
                 else
                 {
                     throw new Exception("Элемент не найден");
                 }
+                context.SaveChanges();
             }
         }
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
             using (var context = new PizzeriaDatabase())
             {
-                return context.Orders
-                .Where(rec => model == null || rec.Id == model.Id)
-                .Select(rec => new OrderViewModel
+                return context.Orders.Where(rec => model == null || rec.Id == model.Id || (rec.TimeCreate >= model.DateFrom)
+                && (rec.TimeCreate <= model.DateTo) || model.ClientId == rec.ClientId)
+                .Include(ord => ord.Pizza)
+                .Select(rec => new OrderViewModel()
                 {
                     Id = rec.Id,
+                    PizzaId = rec.PizzaId,
+                    ClientFIO = rec.ClientFIO,
+                    ClientId = rec.ClientId,
+                    PizzaName = rec.Pizza.PizzaName,
                     Count = rec.Count,
                     TimeCreate = rec.TimeCreate,
                     TimeImplement = rec.TimeImplement,
-                    PizzaName = context.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
-                    PizzaId = rec.PizzaId,
                     Status = rec.Status,
                     Sum = rec.Sum
-                })
-                .ToList();
+                }).ToList();
             }
         }
     }
