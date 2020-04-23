@@ -145,5 +145,11 @@ catch (Exception ex)
             var form = Container.Resolve<FormReportPizzaIngredient>();
             form.ShowDialog();
         }
+
+        private void KлиентыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormClient>();
+            form.ShowDialog();
+        }
     }
 }

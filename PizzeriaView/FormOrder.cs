@@ -21,11 +21,13 @@ namespace PizzeriaView
         public new IUnityContainer Container { get; set; }
         private readonly IPizzaLogic logicP;
         private readonly MainLogic logicM;
-        public FormOrder(IPizzaLogic logicP, MainLogic logicM)
+        private readonly IClientLogic logicC;
+        public FormOrder(IPizzaLogic logicP, MainLogic logicM, IClientLogic logicC)
         {
             InitializeComponent();
             this.logicP = logicP;
             this.logicM = logicM;
+            this.logicC = logicC;
         }
         private void FormOrder_Load(object sender, EventArgs e)
         {
@@ -38,6 +40,13 @@ namespace PizzeriaView
                     comboBoxPizza.ValueMember = "Id";
                     comboBoxPizza.DataSource = listP;
                     comboBoxPizza.SelectedItem = null;
+                }
+                var listClients = logicC.Read(null);
+                if (listClients != null)
+                {
+                    comboBoxClient.DisplayMember = "ClientFIO";
+                    comboBoxClient.DataSource = listClients;
+                    comboBoxClient.SelectedItem = null;
                 }
             }
             catch (Exception ex)
@@ -93,7 +102,9 @@ namespace PizzeriaView
                 {
                     PizzaId = Convert.ToInt32(comboBoxPizza.SelectedValue),
                     Count = Convert.ToInt32(textBoxCount.Text),
-                    Sum = Convert.ToDecimal(textBoxSum.Text)
+                    Sum = Convert.ToDecimal(textBoxSum.Text),
+                    ClientId = (comboBoxClient.SelectedItem as ClientViewModel).Id,
+                    ClientFIO = (comboBoxClient.SelectedItem as ClientViewModel).ClientFIO
                 });
                 MessageBox.Show("Сохранение прошло успешно", "Сообщение",
                MessageBoxButtons.OK, MessageBoxIcon.Information);

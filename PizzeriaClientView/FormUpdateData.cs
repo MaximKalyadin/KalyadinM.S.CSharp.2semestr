@@ -33,7 +33,7 @@ namespace PizzeriaClientView
                     });
                     MessageBox.Show("Обновление прошло успешно", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Program.Client.ClientFIO = textBoxFIO.Text;
-                    Program.Client.Email = textBoxLogin.Text;
+                    Program.Client.Login = textBoxLogin.Text;
                     Program.Client.Password = textBoxPassword.Text;
                     Close();
                 }

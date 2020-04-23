@@ -36,12 +36,14 @@
             this.textBoxSum = new System.Windows.Forms.TextBox();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.labelClient = new System.Windows.Forms.Label();
+            this.comboBoxClient = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // labelpizza
             // 
             this.labelpizza.AutoSize = true;
-            this.labelpizza.Location = new System.Drawing.Point(12, 14);
+            this.labelpizza.Location = new System.Drawing.Point(12, 44);
             this.labelpizza.Name = "labelpizza";
             this.labelpizza.Size = new System.Drawing.Size(54, 17);
             this.labelpizza.TabIndex = 0;
@@ -50,7 +52,7 @@
             // labelcount
             // 
             this.labelcount.AutoSize = true;
-            this.labelcount.Location = new System.Drawing.Point(12, 51);
+            this.labelcount.Location = new System.Drawing.Point(12, 83);
             this.labelcount.Name = "labelcount";
             this.labelcount.Size = new System.Drawing.Size(90, 17);
             this.labelcount.TabIndex = 1;
@@ -59,7 +61,7 @@
             // labelsum
             // 
             this.labelsum.AutoSize = true;
-            this.labelsum.Location = new System.Drawing.Point(12, 88);
+            this.labelsum.Location = new System.Drawing.Point(12, 123);
             this.labelsum.Name = "labelsum";
             this.labelsum.Size = new System.Drawing.Size(54, 17);
             this.labelsum.TabIndex = 2;
@@ -68,7 +70,7 @@
             // comboBoxPizza
             // 
             this.comboBoxPizza.FormattingEnabled = true;
-            this.comboBoxPizza.Location = new System.Drawing.Point(115, 11);
+            this.comboBoxPizza.Location = new System.Drawing.Point(115, 44);
             this.comboBoxPizza.Name = "comboBoxPizza";
             this.comboBoxPizza.Size = new System.Drawing.Size(356, 24);
             this.comboBoxPizza.TabIndex = 3;
@@ -76,7 +78,7 @@
             // 
             // textBoxCount
             // 
-            this.textBoxCount.Location = new System.Drawing.Point(115, 51);
+            this.textBoxCount.Location = new System.Drawing.Point(115, 83);
             this.textBoxCount.Name = "textBoxCount";
             this.textBoxCount.Size = new System.Drawing.Size(356, 22);
             this.textBoxCount.TabIndex = 4;
@@ -84,14 +86,14 @@
             // 
             // textBoxSum
             // 
-            this.textBoxSum.Location = new System.Drawing.Point(115, 88);
+            this.textBoxSum.Location = new System.Drawing.Point(115, 123);
             this.textBoxSum.Name = "textBoxSum";
             this.textBoxSum.Size = new System.Drawing.Size(356, 22);
             this.textBoxSum.TabIndex = 5;
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(251, 133);
+            this.buttonSave.Location = new System.Drawing.Point(251, 172);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(100, 35);
             this.buttonSave.TabIndex = 6;
@@ -101,7 +103,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(371, 133);
+            this.buttonCancel.Location = new System.Drawing.Point(371, 172);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(100, 35);
             this.buttonCancel.TabIndex = 7;
@@ -109,11 +111,30 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // labelClient
+            // 
+            this.labelClient.AutoSize = true;
+            this.labelClient.Location = new System.Drawing.Point(12, 9);
+            this.labelClient.Name = "labelClient";
+            this.labelClient.Size = new System.Drawing.Size(56, 17);
+            this.labelClient.TabIndex = 8;
+            this.labelClient.Text = "Клиент";
+            // 
+            // comboBoxClient
+            // 
+            this.comboBoxClient.FormattingEnabled = true;
+            this.comboBoxClient.Location = new System.Drawing.Point(115, 5);
+            this.comboBoxClient.Name = "comboBoxClient";
+            this.comboBoxClient.Size = new System.Drawing.Size(356, 24);
+            this.comboBoxClient.TabIndex = 9;
+            // 
             // FormOrder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(493, 192);
+            this.ClientSize = new System.Drawing.Size(493, 228);
+            this.Controls.Add(this.comboBoxClient);
+            this.Controls.Add(this.labelClient);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.textBoxSum);
@@ -140,5 +161,7 @@
         private System.Windows.Forms.TextBox textBoxSum;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Label labelClient;
+        private System.Windows.Forms.ComboBox comboBoxClient;
     }
 }

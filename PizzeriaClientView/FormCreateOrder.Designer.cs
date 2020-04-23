@@ -111,6 +111,7 @@
             this.Controls.Add(this.labelpizza);
             this.Name = "FormCreateOrder";
             this.Text = "Заказ";
+            this.Load += new System.EventHandler(this.FormCreateOrder_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
         }
