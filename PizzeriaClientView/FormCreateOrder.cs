@@ -20,7 +20,7 @@ namespace PizzeriaClientView
         {
             try
             {
-                comboBoxPizza.DisplayMember = "ProductName";
+                comboBoxPizza.DisplayMember = "PizzaName";
                 comboBoxPizza.ValueMember = "Id";
                 comboBoxPizza.DataSource = APIClient.GetRequest<List<PizzaViewModel>>("api/main/getproductlist");
                 comboBoxPizza.SelectedItem = null;
@@ -64,7 +64,7 @@ namespace PizzeriaClientView
             }
             if (comboBoxPizza.SelectedValue == null)
             {
-                MessageBox.Show("Выберите изделие", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Выберите byuhtlbtyn", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             try
@@ -72,6 +72,7 @@ namespace PizzeriaClientView
                 APIClient.PostRequest("api/main/createorder", new CreateOrderBindingModel
                 {
                     ClientId = Program.Client.Id,
+                    ClientFIO = Program.Client.ClientFIO,
                     PizzaId = Convert.ToInt32(comboBoxPizza.SelectedValue),
                     Count = Convert.ToInt32(textBoxCount.Text),
                     Sum = Convert.ToDecimal(textBoxSum.Text)

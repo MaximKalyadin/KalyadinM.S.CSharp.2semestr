@@ -112,8 +112,7 @@
             this.menuStripSpravochnik.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStripSpravochnik.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.справочникToolStripMenuItem,
-            this.отчетыToolStripMenuItem,
-            this.клиентыToolStripMenuItem});
+            this.отчетыToolStripMenuItem});
             this.menuStripSpravochnik.Location = new System.Drawing.Point(0, 0);
             this.menuStripSpravochnik.Name = "menuStripSpravochnik";
             this.menuStripSpravochnik.Size = new System.Drawing.Size(1101, 28);
@@ -124,7 +123,8 @@
             // 
             this.справочникToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ингредиентыToolStripMenuItem,
-            this.пиццаToolStripMenuItem});
+            this.пиццаToolStripMenuItem,
+            this.клиентыToolStripMenuItem});
             this.справочникToolStripMenuItem.Name = "справочникToolStripMenuItem";
             this.справочникToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
             this.справочникToolStripMenuItem.Text = "Справочник";
@@ -132,14 +132,14 @@
             // ингредиентыToolStripMenuItem
             // 
             this.ингредиентыToolStripMenuItem.Name = "ингредиентыToolStripMenuItem";
-            this.ингредиентыToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            this.ингредиентыToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.ингредиентыToolStripMenuItem.Text = "Ингредиенты";
             this.ингредиентыToolStripMenuItem.Click += new System.EventHandler(this.ингредиентыToolStripMenuItem_Click);
             // 
             // пиццаToolStripMenuItem
             // 
             this.пиццаToolStripMenuItem.Name = "пиццаToolStripMenuItem";
-            this.пиццаToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            this.пиццаToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.пиццаToolStripMenuItem.Text = "Пицца";
             this.пиццаToolStripMenuItem.Click += new System.EventHandler(this.пиццыToolStripMenuItem_Click);
             // 
@@ -177,7 +177,7 @@
             // клиентыToolStripMenuItem
             // 
             this.клиентыToolStripMenuItem.Name = "клиентыToolStripMenuItem";
-            this.клиентыToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
+            this.клиентыToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.клиентыToolStripMenuItem.Text = "Клиенты";
             this.клиентыToolStripMenuItem.Click += new System.EventHandler(this.KлиентыToolStripMenuItem_Click);
             // 

@@ -31,6 +31,7 @@ namespace PizzeriaBusinessLogic.ViewModels
         [DataMember]
         [DisplayName("Время выполнения")]
         public DateTime? TimeImplement { get; set; }
+        [DisplayName("№ Клиента")]
         [DataMember]
         public int ClientId { set; get; }
         [DataMember]

@@ -16,10 +16,10 @@ namespace PizzeriaDatabaseImplement.Implements
         {
             using (var context = new PizzeriaDatabase())
             {
-                Order order = context.Orders.FirstOrDefault(rec => rec.Id != model.Id);
+                Order order;
                 if (model.Id.HasValue)
                 {
-                    order = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+                    order = context.Orders.ToList().FirstOrDefault(rec => rec.Id == model.Id);
                     if (order == null)
                     {
                         throw new Exception("Элемент не найден");
@@ -34,7 +34,6 @@ namespace PizzeriaDatabaseImplement.Implements
                 order.ClientId = model.ClientId;
                 order.PizzaId = model.PizzaId;
                 order.Status = model.Status;
-                order.PizzaId = model.PizzaId;
                 order.Count = model.Count;
                 order.Sum = model.Sum;
                 order.TimeCreate = model.TimeCreate;
@@ -71,7 +70,7 @@ namespace PizzeriaDatabaseImplement.Implements
                     PizzaId = rec.PizzaId,
                     ClientFIO = rec.ClientFIO,
                     ClientId = rec.ClientId,
-                    PizzaName = rec.Pizza.PizzaName,
+                    PizzaName = context.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
                     Count = rec.Count,
                     TimeCreate = rec.TimeCreate,
                     TimeImplement = rec.TimeImplement,
