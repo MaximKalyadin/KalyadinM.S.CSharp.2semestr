@@ -39,6 +39,7 @@ namespace PizzeriaDatabaseImplement.Implements
                 context.SaveChanges();
             }
         }
+
         public void Delete(OrderBindingModel model)
         {
             using (var context = new PizzeriaDatabase())
@@ -55,6 +56,7 @@ namespace PizzeriaDatabaseImplement.Implements
                 }
             }
         }
+
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
             using (var context = new PizzeriaDatabase())
