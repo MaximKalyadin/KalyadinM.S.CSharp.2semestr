@@ -13,7 +13,6 @@ namespace PizzeriyListImplement.Implements
     public class OrderLogic : IOrderLogic
     {
         private readonly DataListSingleton source;
-
         public OrderLogic()
         {
             source = DataListSingleton.GetInstance();
@@ -97,7 +96,6 @@ namespace PizzeriyListImplement.Implements
             order.Sum = model.Sum;
             return order;
         }
-
         private OrderViewModel CreateViewModel(Order order)
         {
             var pizzaName = source.Pizza.FirstOrDefault((n) => n.Id == order.PizzaId).PizzaName;
