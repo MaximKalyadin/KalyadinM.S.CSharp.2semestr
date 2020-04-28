@@ -10,6 +10,6 @@ namespace PizzeriaBusinessLogic.ViewModels
         public int Id { set; get; }
         [DisplayName("Склад")]
         public string SkladName { set; get; }
-        public Dictionary<int, (string, int)> SkladIngredients { get; set; }
+        public Dictionary<string, int> SkladIngredients { get; set; }
     }
 }

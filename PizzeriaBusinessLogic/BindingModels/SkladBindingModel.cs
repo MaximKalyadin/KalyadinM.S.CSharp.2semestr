@@ -8,6 +8,6 @@ namespace PizzeriaBusinessLogic.BindingModels
     {
         public int? Id { set; get; }
         public string SkladName { set; get; }
-        public Dictionary<int, (string, int)> SkladIngredients { get; set; }
+        public Dictionary<string, int> SkladIngredients { get; set; }
     }
 }
