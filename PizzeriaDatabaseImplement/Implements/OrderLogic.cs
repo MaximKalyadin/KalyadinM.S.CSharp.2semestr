@@ -24,26 +24,18 @@ namespace PizzeriaDatabaseImplement.Implements
                     {
                         throw new Exception("Элемент не найден");
                     }
-                    order.PizzaId = model.PizzaId;
-                    order.Status = model.Status;
-                    order.PizzaId = model.PizzaId;
-                    order.Count = model.Count;
-                    order.Sum = model.Sum;
-                    order.TimeCreate = model.TimeCreate;
-                    order.TimeImplement = model.TimeImplement;
                 }
                 else
                 {
                     order = new Order();
-                    order.PizzaId = model.PizzaId;
-                    order.Status = model.Status;
-                    order.PizzaId = model.PizzaId;
-                    order.Count = model.Count;
-                    order.Sum = model.Sum;
-                    order.TimeCreate = model.TimeCreate;
-                    order.TimeImplement = model.TimeImplement;
                     context.Orders.Add(order);
                 }
+                order.Status = model.Status;
+                order.PizzaId = model.PizzaId;
+                order.Count = model.Count;
+                order.Sum = model.Sum;
+                order.TimeCreate = model.TimeCreate;
+                order.TimeImplement = model.TimeImplement;
                 context.SaveChanges();
             }
         }
@@ -69,13 +61,14 @@ namespace PizzeriaDatabaseImplement.Implements
             {
                 return context.Orders
                 .Where(rec => model == null || rec.Id == model.Id)
+                .Include(ord => ord.Pizza)
                 .Select(rec => new OrderViewModel
                 {
                     Id = rec.Id,
                     Count = rec.Count,
                     TimeCreate = rec.TimeCreate,
                     TimeImplement = rec.TimeImplement,
-                    PizzaName = context.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
+                    PizzaName = rec.Pizza.PizzaName,
                     PizzaId = rec.PizzaId,
                     Status = rec.Status,
                     Sum = rec.Sum
