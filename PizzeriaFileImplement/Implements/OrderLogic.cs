@@ -6,6 +6,7 @@ using PizzeriaBusinessLogic.ViewModels;
 using PizzeriaFileImplement.Models;
 using PizzeriaBusinessLogic.BindingModels;
 using System.Linq;
+using PizzeriaBusinessLogic.Enums;
 
 namespace PizzeriaFileImplement.Implements
 {
@@ -44,6 +45,8 @@ namespace PizzeriaFileImplement.Implements
             order.TimeImplement = model.TimeImplement;
             order.ClientFIO = model.ClientFIO;
             order.ClientId = model.ClientId;
+            order.ImplementerFIO = model.ImplementerFIO;
+            order.ImplementerId = model.ImplementerId;
         }
         public void Delete(OrderBindingModel model)
         {
@@ -61,21 +64,26 @@ namespace PizzeriaFileImplement.Implements
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
             return source.Orders
-            .Where(rec => model == null || rec.Id == model.Id)
+            .Where(rec => model == null || model.Id.HasValue && rec.Id == model.Id && rec.ClientId == model.ClientId ||
+            (model.DateTo.HasValue && model.DateFrom.HasValue && rec.TimeCreate >= model.DateFrom && rec.TimeCreate <= model.DateTo) ||
+            (model.ClientId.HasValue && rec.ClientId == model.ClientId) ||
+            (model.FreeOrders.HasValue && model.FreeOrders.Value && !(rec.ImplementerFIO != null)) ||
+                (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId.Value && rec.Status == OrderStatus.Выполняется))
             .Select(rec => new OrderViewModel
             {
                 Id = rec.Id,
+                PizzaId = rec.PizzaId,
+                PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
+                ClientFIO = rec.ClientFIO,
+                ClientId = rec.ClientId,
+                ImplementerId = rec.ImplementerId,
+                ImplementerFIO = !string.IsNullOrEmpty(rec.ImplementerFIO) ? rec.ImplementerFIO : string.Empty,
                 Count = rec.Count,
                 TimeCreate = rec.TimeCreate,
                 TimeImplement = rec.TimeImplement,
-                PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
-                PizzaId = rec.PizzaId,
                 Status = rec.Status,
-                ClientFIO = rec.ClientFIO,
-                ClientId = rec.ClientId,
                 Sum = rec.Sum
-            })
-            .ToList();
+            }).ToList();
         }
     }
 }

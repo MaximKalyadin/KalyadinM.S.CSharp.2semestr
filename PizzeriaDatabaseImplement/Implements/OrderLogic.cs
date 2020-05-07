@@ -7,6 +7,7 @@ using PizzeriaBusinessLogic.Interfaces;
 using PizzeriaBusinessLogic.BindingModels;
 using PizzeriaBusinessLogic.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using PizzeriaBusinessLogic.Enums;
 
 namespace PizzeriaDatabaseImplement.Implements
 {
@@ -36,6 +37,8 @@ namespace PizzeriaDatabaseImplement.Implements
                 order.Status = model.Status;
                 order.Count = model.Count;
                 order.Sum = model.Sum;
+                order.ImplementerFIO = model.ImplementerFIO;
+                order.ImplementerId = model.ImplementerId;
                 order.TimeCreate = model.TimeCreate;
                 order.TimeImplement = model.TimeImplement;
                 context.SaveChanges();
@@ -62,7 +65,9 @@ namespace PizzeriaDatabaseImplement.Implements
             using (var context = new PizzeriaDatabase())
             {
                 return context.Orders.Where(rec => model == null || rec.Id == model.Id || (rec.TimeCreate >= model.DateFrom)
-                && (rec.TimeCreate <= model.DateTo) || model.ClientId == rec.ClientId)
+                && (rec.TimeCreate <= model.DateTo) || (model.ClientId == rec.ClientId) ||
+                (model.FreeOrders.HasValue && model.FreeOrders.Value && !(rec.ImplementerFIO != null)) ||
+                (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId.Value && rec.Status == OrderStatus.Выполняется))
                 .Include(ord => ord.Pizza)
                 .Select(rec => new OrderViewModel()
                 {
@@ -70,7 +75,9 @@ namespace PizzeriaDatabaseImplement.Implements
                     PizzaId = rec.PizzaId,
                     ClientFIO = rec.ClientFIO,
                     ClientId = rec.ClientId,
-                    PizzaName = context.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
+                    PizzaName = rec.Pizza.PizzaName,
+                    ImplementerId = rec.ImplementerId,
+                    ImplementerFIO = !string.IsNullOrEmpty(rec.ImplementerFIO) ? rec.ImplementerFIO : string.Empty,
                     Count = rec.Count,
                     TimeCreate = rec.TimeCreate,
                     TimeImplement = rec.TimeImplement,

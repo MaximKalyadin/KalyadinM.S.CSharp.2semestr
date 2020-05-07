@@ -22,6 +22,8 @@ namespace PizzeriaBusinessLogic.ViewModels
         [DataMember]
         [DisplayName("Сумма")]
         public decimal Sum { get; set; }
+        [DisplayName("Рабочий")]
+        public string ImplementerFIO { set; get; }
         [DataMember]
         [DisplayName("Статус")]
         public OrderStatus Status { get; set; }
@@ -33,9 +35,11 @@ namespace PizzeriaBusinessLogic.ViewModels
         public DateTime? TimeImplement { get; set; }
         [DisplayName("№ Клиента")]
         [DataMember]
-        public int ClientId { set; get; }
+        public int? ClientId { set; get; }
         [DataMember]
         [DisplayName("ФИО клиента")]
         public string ClientFIO { set; get; }
+
+        public int? ImplementerId { set; get; }
     }
 }
