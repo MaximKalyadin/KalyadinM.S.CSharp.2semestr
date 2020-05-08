@@ -75,7 +75,7 @@ namespace PizzeriaDatabaseImplement.Implements
                     PizzaId = rec.PizzaId,
                     ClientFIO = rec.ClientFIO,
                     ClientId = rec.ClientId,
-                    PizzaName = rec.Pizza.PizzaName,
+                    PizzaName = context.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName, 
                     ImplementerId = rec.ImplementerId,
                     ImplementerFIO = !string.IsNullOrEmpty(rec.ImplementerFIO) ? rec.ImplementerFIO : string.Empty,
                     Count = rec.Count,

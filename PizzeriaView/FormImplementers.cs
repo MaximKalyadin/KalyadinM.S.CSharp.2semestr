@@ -20,7 +20,7 @@ namespace PizzeriaView
         [Dependency]
         public new IUnityContainer Container { set; get; }
         private readonly IImplementerLogic implementerLogic;
-        public FormImplementers(IImplementerLogic implementerLogi)
+        public FormImplementers(IImplementerLogic implementerLogic)
         {
             this.implementerLogic = implementerLogic;
             InitializeComponent();
@@ -28,8 +28,13 @@ namespace PizzeriaView
 
         private void LoadData()
         {
-            dataGridView.DataSource = implementerLogic.Read(null);
-            dataGridView.Columns[0].Visible = false;
+            var list = implementerLogic.Read(null);
+            if (list != null)
+            {
+                dataGridView.DataSource = list;
+                dataGridView.Columns[0].Visible = false;
+                dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
