@@ -167,5 +167,11 @@ catch (Exception ex)
             var form = Container.Resolve<FormImplementers>();
             form.ShowDialog();
         }
+
+        private void письмаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormMessage>();
+            form.ShowDialog();
+        }
     }
 }

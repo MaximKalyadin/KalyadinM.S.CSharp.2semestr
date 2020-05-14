@@ -10,8 +10,8 @@ using PizzeriaDatabaseImplement;
 namespace PizzeriaDatabaseImplement.Migrations
 {
     [DbContext(typeof(PizzeriaDatabase))]
-    [Migration("20200507202811_Lab6")]
-    partial class Lab6
+    [Migration("20200514083816_Lab7")]
+    partial class Lab7
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,6 +80,33 @@ namespace PizzeriaDatabaseImplement.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Ingredients");
+                });
+
+            modelBuilder.Entity("PizzeriaDatabaseImplement.Models.MessageInfo", b =>
+                {
+                    b.Property<string>("MessageId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateDelivery")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SenderName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("MessageInfos");
                 });
 
             modelBuilder.Entity("PizzeriaDatabaseImplement.Models.Order", b =>
@@ -177,6 +204,13 @@ namespace PizzeriaDatabaseImplement.Migrations
                     b.HasIndex("PizzaId");
 
                     b.ToTable("PizzaIngredients");
+                });
+
+            modelBuilder.Entity("PizzeriaDatabaseImplement.Models.MessageInfo", b =>
+                {
+                    b.HasOne("PizzeriaDatabaseImplement.Models.Client", "Client")
+                        .WithMany("MessageInfos")
+                        .HasForeignKey("ClientId");
                 });
 
             modelBuilder.Entity("PizzeriaDatabaseImplement.Models.Order", b =>
