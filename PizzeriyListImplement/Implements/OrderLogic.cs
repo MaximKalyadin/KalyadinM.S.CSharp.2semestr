@@ -13,7 +13,6 @@ namespace PizzeriyListImplement.Implements
     public class OrderLogic : IOrderLogic
     {
         private readonly DataListSingleton source;
-
         public OrderLogic()
         {
             source = DataListSingleton.GetInstance();
@@ -105,7 +104,6 @@ namespace PizzeriyListImplement.Implements
             order.ClientFIO = model.ClientFIO;
             return order;
         }
-
         private OrderViewModel CreateViewModel(Order order)
         {
             var pizzaName = source.Pizza.FirstOrDefault((n) => n.Id == order.PizzaId).PizzaName;
