@@ -38,21 +38,23 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             {
                 throw new Exception("Не найден заказ");
             }
-            (skladLogic as ISkladLigicRemove).RemoveIngredients(order.PizzaId, order.Count);
-            if (order.Status != OrderStatus.Принят)
+            if (skladLogic.RemoveIngredients(order))
             {
-                throw new Exception("Заказ не в статусе \"Принят\"");
+                if (order.Status != OrderStatus.Принят)
+                {
+                    throw new Exception("Заказ не в статусе \"Принят\"");
+                }
+                orderLogic.CreateOrUpdate(new OrderBindingModel
+                {
+                    Id = order.Id,
+                    PizzaId = order.PizzaId,
+                    Count = order.Count,
+                    Sum = order.Sum,
+                    TimeCreate = order.TimeCreate,
+                    TimeImplement = DateTime.Now,
+                    Status = OrderStatus.Выполняется
+                });
             }
-            orderLogic.CreateOrUpdate(new OrderBindingModel
-            {
-                Id = order.Id,
-                PizzaId = order.PizzaId,
-                Count = order.Count,
-                Sum = order.Sum,
-                TimeCreate = order.TimeCreate,
-                TimeImplement = DateTime.Now,
-                Status = OrderStatus.Выполняется
-            });
         }
         public void FinishOrder(ChangeStatusBindingModel model)
         {
@@ -98,22 +100,9 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Status = OrderStatus.Оплачен
             });
         }
-        public void AddIngredients(SkladViewModel sklad, int count, IngredientViewModel material)
+        public void AddIngredients(AddIngredientSklad model)
         {
-            if (sklad.SkladIngredients.ContainsKey(material.Id))
-            {
-                sklad.SkladIngredients[material.Id] = (sklad.SkladIngredients[material.Id].Item1, sklad.SkladIngredients[material.Id].Item2 + count);
-            }
-            else
-            {
-                sklad.SkladIngredients.Add(material.Id, (material.IngredientName, count));
-            }
-            skladLogic.CreateOrUpdate(new SkladBindingModel()
-            {
-                Id = sklad.Id,
-                SkladName = sklad.SkladName,
-                SkladIngredients = sklad.SkladIngredients
-            });
+            skladLogic.AddIngredients(model);
         }
     }
 }

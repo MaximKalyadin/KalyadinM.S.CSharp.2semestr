@@ -89,7 +89,7 @@ namespace PizzeriyListImplement.Implements
                             Id = sklad.Id,
                             SkladName = sklad.SkladName,
                             SkladIngredients = source.SkladIngredients.Where(sm => sm.SkladId == sklad.Id)
-                            .ToDictionary(sm => source.Ingredients.FirstOrDefault(c => c.Id == sm.IngredientId).IngredientName, sm => sm.Count)
+                            .ToDictionary(sm => source.Ingredients.FirstOrDefault(c => c.Id == sm.Ingredientid).IngredientName, sm => sm.Count)
                         });
                         break;
                     }
@@ -111,51 +111,29 @@ namespace PizzeriyListImplement.Implements
             {
                 source.SkladIngredients.Add(new SkladIngredients()
                 {
-                    maxSMId = source.SkladIngredients[i].Id;
-                }
-                if (source.SkladIngredients[i].SkladId == storage.Id)
-                {
-                    if (model.SkladIngredients.ContainsKey(source.SkladIngredients[i].Ingredientid))
-                    {
-                        source.SkladIngredients[i].Count = model.SkladIngredients[source.SkladIngredients[i].Ingredientid].Item2;
-                        model.SkladIngredients.Remove(source.SkladIngredients[i].Ingredientid);
-                    }
-                    else
-                    {
-                        source.SkladIngredients.RemoveAt(i--);
-                    }
-                }
-            }
-            foreach (var sm in model.SkladIngredients)
-            {
-                source.SkladIngredients.Add(new SkladIngredients
-                {
-                    Id = ++maxSMId,
-                    SkladId = storage.Id,
-                    Ingredientid = sm.Key,
-                    Count = sm.Value.Item2
+                    Id = 1,
+                    Ingredientid = model.IngredientId,
+                    SkladId = model.SkladId,
+                    Count = model.Count
                 });
             }
             else
             {
-                var ingredient = source.SkladIngredients.FirstOrDefault(sm => sm.SkladId == model.SkladId && sm.IngredientId == model.IngredientId);
-                if (ingredient == null)
+                var Ingr = source.SkladIngredients.FirstOrDefault(sm => sm.SkladId == model.SkladId && sm.Ingredientid == model.IngredientId);
+                if (Ingr == null)
                 {
                     source.SkladIngredients.Add(new SkladIngredients()
                     {
-                        if (sm.Ingredientid == component.Id)
-                        {
-                            componentName = component.IngredientName;
-                            break;
-                        }
-                    }
-                    storageMaterials.Add(sm.Ingredientid, (componentName, sm.Count));
+                        Id = source.SkladIngredients.Max(sm => sm.Id) + 1,
+                        Ingredientid = model.IngredientId,
+                        SkladId = model.SkladId,
+                        Count = model.Count
+                    });
                 }
                 else
-                    ingredient.Count += model.Count;
+                    Ingr.Count += model.Count;
             }
         }
-
         bool ISkladLogic.RemoveIngredients(OrderViewModel order)
         {
             throw new NotImplementedException();
