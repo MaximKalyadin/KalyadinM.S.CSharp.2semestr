@@ -22,5 +22,6 @@ namespace PizzeriaBusinessLogic.ViewModels
         public DateTime TimeCreate { get; set; }
         [DisplayName("Время выполнения")]
         public DateTime? TimeImplement { get; set; }
+
     }
 }
