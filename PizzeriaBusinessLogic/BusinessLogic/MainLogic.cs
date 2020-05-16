@@ -40,7 +40,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             {
                 throw new Exception("Не найден заказ");
             }
-            if (checkSklad(order.PizzaId, order.Count))
+            if (skladLogic.RemoveIngredients(order))
             {
                 if (order.Status != OrderStatus.Принят)
                 {
@@ -56,7 +56,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     TimeImplement = DateTime.Now,
                     Status = OrderStatus.Выполняется
                 });
-                Remove(order.PizzaId, order.Count);
             }
             else
             {
@@ -107,82 +106,10 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Status = OrderStatus.Оплачен
             });
         }
-        private bool checkSklad(int PizzaId, int Count)
+       
+        public void AddIngredients(AddIngredientSklad model)
         {
-            var sklads = skladLogic.Read(null);
-            var pizzaIngredients = pizzaLogic.Read(new PizzaBindingModel() { Id = PizzaId })[0].PizzaIngredients;
-            var ingredientsklad = new Dictionary<int, int>();
-            foreach (var sklad in sklads)
-            {
-                foreach (var sm in sklad.SkladIngredients)
-                {
-                    if (ingredientsklad.ContainsKey(sm.Key))
-                    {
-                        ingredientsklad[sm.Key] += sm.Value.Item2;
-                    }
-                    else
-                    {
-                        ingredientsklad.Add(sm.Key, sm.Value.Item2);
-                    }
-                }
-            }
-
-            foreach (var dm in pizzaIngredients)
-            {
-                if (!ingredientsklad.ContainsKey(dm.Key) || ingredientsklad[dm.Key] < dm.Value.Item2 * Count)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        private void Remove(int PizzaId, int Count)
-        {
-            var sklads = skladLogic.Read(null);
-            var pizzaIngredients = pizzaLogic.Read(new PizzaBindingModel() { Id = PizzaId })[0].PizzaIngredients;
-            foreach (var dm in pizzaIngredients)
-            {
-                int ingredientCount = dm.Value.Item2 * Count;
-                foreach (var sklad in sklads)
-                {
-                    if (sklad.SkladIngredients[dm.Key].Item2 >= ingredientCount)
-                    {
-                        sklad.SkladIngredients[dm.Key] = (sklad.SkladIngredients[dm.Key].Item1, sklad.SkladIngredients[dm.Key].Item2 - ingredientCount);
-                        break;
-                    }
-                    else if (sklad.SkladIngredients[dm.Key].Item2 < ingredientCount)
-                    {
-                        ingredientCount -= sklad.SkladIngredients[dm.Key].Item2;
-                        sklad.SkladIngredients[dm.Key] = (sklad.SkladIngredients[dm.Key].Item1, 0);
-                    }
-                }
-                foreach (var storage in sklads)
-                {
-                    skladLogic.CreateOrUpdate(new SkladBindingModel()
-                    {
-                        Id = storage.Id,
-                        SkladName = storage.SkladName,
-                        SkladIngredients = storage.SkladIngredients
-                    });
-                }
-            }
-        }
-        public void AddIngredients(SkladViewModel sklad, int count, IngredientViewModel material)
-        {
-            if (sklad.SkladIngredients.ContainsKey(material.Id))
-            {
-                sklad.SkladIngredients[material.Id] = (sklad.SkladIngredients[material.Id].Item1, sklad.SkladIngredients[material.Id].Item2 + count);
-            }
-            else
-            {
-                sklad.SkladIngredients.Add(material.Id, (material.IngredientName, count));
-            }
-            skladLogic.CreateOrUpdate(new SkladBindingModel()
-            {
-                Id = sklad.Id,
-                SkladName = sklad.SkladName,
-                SkladIngredients = sklad.SkladIngredients
-            });
+            skladLogic.AddIngredients(model);
         }
     }
 }
