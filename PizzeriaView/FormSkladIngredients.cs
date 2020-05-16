@@ -21,7 +21,7 @@ namespace PizzeriaView
         public int Id { set { id = value; } }
         private readonly ISkladLogic logic;
         private int? id;
-        private Dictionary<int, (string, int)> skladIngredients;
+        private Dictionary<string, int> skladIngredients;
         public FormSkladIngredients(ISkladLogic service)
         {
             InitializeComponent();
@@ -53,7 +53,7 @@ namespace PizzeriaView
             }
             else
             {
-                skladIngredients = new Dictionary<int, (string, int)>();
+                skladIngredients = new Dictionary<string, int>();
             }
         }
         private void LoadData()
@@ -65,13 +65,13 @@ namespace PizzeriaView
                     dataGridView.Rows.Clear();
                     foreach (var pc in skladIngredients)
                     {
-                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value.Item1, pc.Value.Item2 });
+                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value });
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка tyta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void ButtonSave_Click(object sender, EventArgs e)

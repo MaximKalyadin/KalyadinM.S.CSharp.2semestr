@@ -44,11 +44,15 @@ namespace PizzeriyListImplement.Implements
                 {
                     throw new Exception("Элемент не найден");
                 }
-                CreateModel(sklad, tempSklad);
+                tempSklad.SkladName = sklad.SkladName;
             }
             else
             {
-                source.Sklads.Add(CreateModel(sklad, tempSklad));
+                source.Sklads.Add(new Sklad()
+                {
+                    Id = tempSklad.Id,
+                    SkladName = sklad.SkladName
+                });
             }
         }
         public void Delete(SkladBindingModel model)
@@ -70,31 +74,42 @@ namespace PizzeriyListImplement.Implements
             }
             throw new Exception("Элемент не найден");
         }
+
         public List<SkladViewModel> Read(SkladBindingModel model)
         {
             List<SkladViewModel> result = new List<SkladViewModel>();
-            foreach (var storage in source.Sklads)
+            foreach (var sklad in source.Sklads)
             {
                 if (model != null)
                 {
-                    if (storage.Id == model.Id)
+                    if (sklad.Id == model.Id)
                     {
-                        result.Add(CreateViewModel(storage));
+                        result.Add(new SkladViewModel()
+                        {
+                            Id = sklad.Id,
+                            SkladName = sklad.SkladName,
+                            SkladIngredients = source.SkladIngredients.Where(sm => sm.SkladId == sklad.Id)
+                            .ToDictionary(sm => source.Ingredients.FirstOrDefault(c => c.Id == sm.IngredientId).IngredientName, sm => sm.Count)
+                        });
                         break;
                     }
                     continue;
                 }
-                result.Add(CreateViewModel(storage));
+                result.Add(new SkladViewModel()
+                {
+                    Id = sklad.Id,
+                    SkladName = sklad.SkladName,
+                    SkladIngredients = source.SkladIngredients.Where(sm => sm.SkladId == sklad.Id)
+                           .ToDictionary(sm => source.Ingredients.FirstOrDefault(c => c.Id == sm.SkladId).IngredientName, sm => sm.Count)
+                });
             }
             return result;
         }
-        private Sklad CreateModel(SkladBindingModel model, Sklad storage)
+        public void AddIngredients(AddIngredientSklad model)
         {
-            storage.SkladName = model.SkladName;
-            int maxSMId = 0;
-            for (int i = 0; i < source.SkladIngredients.Count; ++i)
+            if (source.SkladIngredients.Count == 0)
             {
-                if (source.SkladIngredients[i].Id > maxSMId)
+                source.SkladIngredients.Add(new SkladIngredients()
                 {
                     maxSMId = source.SkladIngredients[i].Id;
                 }
@@ -121,17 +136,12 @@ namespace PizzeriyListImplement.Implements
                     Count = sm.Value.Item2
                 });
             }
-            return storage;
-        }
-        private SkladViewModel CreateViewModel(Sklad storage)
-        {
-            Dictionary<int, (string, int)> storageMaterials = new Dictionary<int, (string, int)>();
-            foreach (var sm in source.SkladIngredients)
+            else
             {
-                if (sm.SkladId == storage.Id)
+                var ingredient = source.SkladIngredients.FirstOrDefault(sm => sm.SkladId == model.SkladId && sm.IngredientId == model.IngredientId);
+                if (ingredient == null)
                 {
-                    string componentName = string.Empty;
-                    foreach (var component in source.Ingredients)
+                    source.SkladIngredients.Add(new SkladIngredients()
                     {
                         if (sm.Ingredientid == component.Id)
                         {
@@ -141,13 +151,14 @@ namespace PizzeriyListImplement.Implements
                     }
                     storageMaterials.Add(sm.Ingredientid, (componentName, sm.Count));
                 }
+                else
+                    ingredient.Count += model.Count;
             }
-            return new SkladViewModel
-            {
-                Id = storage.Id,
-                SkladName = storage.SkladName,
-                SkladIngredients = storageMaterials
-            };
+        }
+
+        bool ISkladLogic.RemoveIngredients(OrderViewModel order)
+        {
+            throw new NotImplementedException();
         }
     }
 }
