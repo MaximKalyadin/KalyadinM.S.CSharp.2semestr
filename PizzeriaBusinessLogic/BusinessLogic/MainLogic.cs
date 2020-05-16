@@ -12,13 +12,10 @@ namespace PizzeriaBusinessLogic.BusinessLogic
     {
         private readonly IOrderLogic orderLogic;
         private readonly ISkladLogic skladLogic;
-        private readonly IPizzaLogic pizzaLogic;
-        public MainLogic(IOrderLogic orderLogic, IPizzaLogic pizzaLogic, ISkladLogic skladLogic)
+        public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic)
         {
             this.orderLogic = orderLogic;
             this.skladLogic = skladLogic;
-            this.pizzaLogic = pizzaLogic;
-
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {
@@ -57,10 +54,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     TimeImplement = DateTime.Now,
                     Status = OrderStatus.Выполняется
                 });
-            }
-            else
-            {
-                throw new Exception("Не хватает ингредиентов на складах!");
             }
         }
         public void FinishOrder(ChangeStatusBindingModel model)
@@ -107,7 +100,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Status = OrderStatus.Оплачен
             });
         }
-       
         public void AddIngredients(AddIngredientSklad model)
         {
             skladLogic.AddIngredients(model);

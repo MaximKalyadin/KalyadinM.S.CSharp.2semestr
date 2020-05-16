@@ -8,7 +8,7 @@ namespace PizzeriyListImplement.Models
     {
         public int Id { set; get; }
         public int SkladId { set; get; }
-        public int IngredientId { set; get; }
+        public int Ingredientid { set; get; }
         public int Count { set; get; }
     }
 }

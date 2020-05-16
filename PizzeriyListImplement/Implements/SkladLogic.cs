@@ -89,7 +89,7 @@ namespace PizzeriyListImplement.Implements
                             Id = sklad.Id,
                             SkladName = sklad.SkladName,
                             SkladIngredients = source.SkladIngredients.Where(sm => sm.SkladId == sklad.Id)
-                            .ToDictionary(sm => source.Ingredients.FirstOrDefault(c => c.Id == sm.IngredientId).IngredientName, sm => sm.Count)
+                            .ToDictionary(sm => source.Ingredients.FirstOrDefault(c => c.Id == sm.Ingredientid).IngredientName, sm => sm.Count)
                         });
                         break;
                     }
@@ -112,29 +112,28 @@ namespace PizzeriyListImplement.Implements
                 source.SkladIngredients.Add(new SkladIngredients()
                 {
                     Id = 1,
-                    IngredientId = model.IngredientId,
+                    Ingredientid = model.IngredientId,
                     SkladId = model.SkladId,
                     Count = model.Count
                 });
             }
             else
             {
-                var ingredient = source.SkladIngredients.FirstOrDefault(sm => sm.SkladId == model.SkladId && sm.IngredientId == model.IngredientId);
-                if (ingredient == null)
+                var Ingr = source.SkladIngredients.FirstOrDefault(sm => sm.SkladId == model.SkladId && sm.Ingredientid == model.IngredientId);
+                if (Ingr == null)
                 {
                     source.SkladIngredients.Add(new SkladIngredients()
                     {
                         Id = source.SkladIngredients.Max(sm => sm.Id) + 1,
-                        IngredientId = model.IngredientId,
+                        Ingredientid = model.IngredientId,
                         SkladId = model.SkladId,
                         Count = model.Count
                     });
                 }
                 else
-                    ingredient.Count += model.Count;
+                    Ingr.Count += model.Count;
             }
         }
-
         bool ISkladLogic.RemoveIngredients(OrderViewModel order)
         {
             throw new NotImplementedException();

@@ -1,6 +1,6 @@
 ﻿using PizzeriaBusinessLogic.BusinessLogic;
 using PizzeriaBusinessLogic.Interfaces;
-using PizzeriaFileImplement.Implements;
+using PizzeriaDatabaseImplement.Implements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,8 +32,7 @@ namespace PizzeriaView
            HierarchicalLifetimeManager());
             currentContainer.RegisterType<IOrderLogic, OrderLogic>(new
            HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IPizzaLogic, PizzaLogic>(new
-           HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IPizzaLogic, PizzaLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<MainLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<ISkladLogic, SkladLogic>(new HierarchicalLifetimeManager());
             return currentContainer;
