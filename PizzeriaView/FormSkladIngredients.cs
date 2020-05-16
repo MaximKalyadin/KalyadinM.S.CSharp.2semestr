@@ -65,13 +65,13 @@ namespace PizzeriaView
                     dataGridView.Rows.Clear();
                     foreach (var pc in skladIngredients)
                     {
-                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value});
+                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value });
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка tyta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void ButtonSave_Click(object sender, EventArgs e)

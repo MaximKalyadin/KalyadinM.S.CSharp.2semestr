@@ -49,7 +49,6 @@ namespace PizzeriaView
         {
             if (textBoxKol.Text == string.Empty)
                 throw new Exception("Введите количество ингредиентов");
-
             mainLogic.AddIngredients(new AddIngredientSklad()
             {
                 SkladId = (comboBoxSklad.SelectedItem as SkladViewModel).Id,

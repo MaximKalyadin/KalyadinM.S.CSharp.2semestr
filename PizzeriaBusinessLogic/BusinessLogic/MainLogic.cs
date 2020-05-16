@@ -18,6 +18,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             this.orderLogic = orderLogic;
             this.skladLogic = skladLogic;
             this.pizzaLogic = pizzaLogic;
+
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {

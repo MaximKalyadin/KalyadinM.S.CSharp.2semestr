@@ -52,8 +52,7 @@ namespace PizzeriyListImplement.Implements
                 {
                     Id = tempSklad.Id,
                     SkladName = sklad.SkladName
-                }
-                );
+                });
             }
         }
         public void Delete(SkladBindingModel model)
@@ -106,7 +105,6 @@ namespace PizzeriyListImplement.Implements
             }
             return result;
         }
-
         public void AddIngredients(AddIngredientSklad model)
         {
             if (source.SkladIngredients.Count == 0)
