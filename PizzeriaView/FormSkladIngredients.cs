@@ -65,7 +65,7 @@ namespace PizzeriaView
                     dataGridView.Rows.Clear();
                     foreach (var pc in skladIngredients)
                     {
-                        dataGridView.Rows.Add(new object[] { "", pc.Key, pc.Value });
+                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value });
                     }
                 }
             }

@@ -74,6 +74,7 @@ namespace PizzeriyListImplement.Implements
             }
             throw new Exception("Элемент не найден");
         }
+
         public List<SkladViewModel> Read(SkladBindingModel model)
         {
             List<SkladViewModel> result = new List<SkladViewModel>();
@@ -99,13 +100,12 @@ namespace PizzeriyListImplement.Implements
                     Id = sklad.Id,
                     SkladName = sklad.SkladName,
                     SkladIngredients = source.SkladIngredients.Where(sm => sm.SkladId == sklad.Id)
-                    .ToDictionary(sm => source.Ingredients.FirstOrDefault(c => c.Id == sm.IngredientId).IngredientName, sm => sm.Count)
+                           .ToDictionary(sm => source.Ingredients.FirstOrDefault(c => c.Id == sm.SkladId).IngredientName, sm => sm.Count)
                 });
             }
             return result;
         }
-        
-        public void AddIngredientToSklad(AddIngredientInSkladBindingModel model)
+        public void AddIngredients(AddIngredientSklad model)
         {
             if (source.SkladIngredients.Count == 0)
             {
@@ -132,8 +132,12 @@ namespace PizzeriyListImplement.Implements
                 }
                 else
                     ingredient.Count += model.Count;
-
             }
+        }
+
+        bool ISkladLogic.RemoveIngredients(OrderViewModel order)
+        {
+            throw new NotImplementedException();
         }
     }
 }

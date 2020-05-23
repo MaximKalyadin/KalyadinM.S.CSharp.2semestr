@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using PizzeriaBusinessLogic.BindingModels;
-using PizzeriaBusinessLogic.Enums;
 using PizzeriaBusinessLogic.Interfaces;
+using PizzeriaBusinessLogic.Enums;
+using PizzeriaBusinessLogic.BindingModels;
 using PizzeriaBusinessLogic.ViewModels;
 
 namespace PizzeriaBusinessLogic.BusinessLogic
@@ -12,10 +12,13 @@ namespace PizzeriaBusinessLogic.BusinessLogic
     {
         private readonly IOrderLogic orderLogic;
         private readonly ISkladLogic skladLogic;
-        public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic)
+        private readonly IPizzaLogic pizzaLogic;
+        public MainLogic(IOrderLogic orderLogic, IPizzaLogic pizzaLogic, ISkladLogic skladLogic)
         {
             this.orderLogic = orderLogic;
             this.skladLogic = skladLogic;
+            this.pizzaLogic = pizzaLogic;
+
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {
@@ -38,20 +41,27 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             {
                 throw new Exception("Не найден заказ");
             }
-            if (order.Status != OrderStatus.Принят)
+            if (skladLogic.RemoveIngredients(order))
             {
-                throw new Exception("Заказ не в статусе \"Принят\"");
+                if (order.Status != OrderStatus.Принят)
+                {
+                    throw new Exception("Заказ не в статусе \"Принят\"");
+                }
+                orderLogic.CreateOrUpdate(new OrderBindingModel
+                {
+                    Id = order.Id,
+                    PizzaId = order.PizzaId,
+                    Count = order.Count,
+                    Sum = order.Sum,
+                    TimeCreate = order.TimeCreate,
+                    TimeImplement = DateTime.Now,
+                    Status = OrderStatus.Выполняется
+                });
             }
-            orderLogic.CreateOrUpdate(new OrderBindingModel
+            else
             {
-                Id = order.Id,
-                PizzaId = order.PizzaId,
-                Count = order.Count,
-                Sum = order.Sum,
-                TimeCreate = order.TimeCreate,
-                TimeImplement = DateTime.Now,
-                Status = OrderStatus.Выполняется
-            });
+                throw new Exception("Не хватает ингредиентов на складах!");
+            }
         }
         public void FinishOrder(ChangeStatusBindingModel model)
         {
@@ -97,9 +107,10 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Status = OrderStatus.Оплачен
             });
         }
-        public void AddIngredients(AddIngredientInSkladBindingModel model)
+       
+        public void AddIngredients(AddIngredientSklad model)
         {
-            skladLogic.AddIngredientToSklad(model);
+            skladLogic.AddIngredients(model);
         }
     }
 }

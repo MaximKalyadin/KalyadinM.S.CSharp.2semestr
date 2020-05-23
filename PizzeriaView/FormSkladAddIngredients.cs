@@ -48,10 +48,8 @@ namespace PizzeriaView
         private void ButtonSave_Click(object sender, EventArgs e)
         {
             if (textBoxKol.Text == string.Empty)
-            {
                 throw new Exception("Введите количество ингредиентов");
-            }
-            mainLogic.AddIngredients(new AddIngredientInSkladBindingModel()
+            mainLogic.AddIngredients(new AddIngredientSklad()
             {
                 SkladId = (comboBoxSklad.SelectedItem as SkladViewModel).Id,
                 IngredientId = (comboBoxIngredient.SelectedItem as IngredientViewModel).Id,
