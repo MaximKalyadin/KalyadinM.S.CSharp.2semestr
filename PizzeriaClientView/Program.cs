@@ -17,7 +17,7 @@ namespace PizzeriaClientView
         static void Main()
         {
             APIClient.Connect();
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var form = new FormEnter();
