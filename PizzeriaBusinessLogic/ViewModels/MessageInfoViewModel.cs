@@ -6,6 +6,7 @@ using System.Text;
 
 namespace PizzeriaBusinessLogic.ViewModels
 {
+    [DataContract]
     public class MessageInfoViewModel
     {
         [DataMember]

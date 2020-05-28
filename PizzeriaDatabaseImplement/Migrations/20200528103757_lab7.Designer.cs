@@ -10,8 +10,8 @@ using PizzeriaDatabaseImplement;
 namespace PizzeriaDatabaseImplement.Migrations
 {
     [DbContext(typeof(PizzeriaDatabase))]
-    [Migration("20200514083816_Lab7")]
-    partial class Lab7
+    [Migration("20200528103757_lab7")]
+    partial class lab7
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

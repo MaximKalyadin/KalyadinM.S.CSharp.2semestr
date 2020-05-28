@@ -5,6 +5,7 @@ using System.Text;
 
 namespace PizzeriaBusinessLogic.BindingModels
 {
+    [DataContract]
     public class MessageInfoBindingModel
     {
         [DataMember]

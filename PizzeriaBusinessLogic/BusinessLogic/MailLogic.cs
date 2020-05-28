@@ -54,7 +54,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                         objSmtpClient.EnableSsl = true;
                     objSmtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                         objSmtpClient.Credentials = new NetworkCredential(mailLogin, mailPassword);
-                        await Task.Run(() => objSmtpClient.SendAsync(objMailMessage, null));
+                        await Task.Run(() => objSmtpClient.Send(objMailMessage));
                     }
                     catch (Exception)
                     {
@@ -86,17 +86,21 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     for (int i = 0; i < client.Count; i++)
                     {
                         var message = client.GetMessage(i);
-                        foreach (var mail in message.From.Mailboxes)
+                        try
                         {
-                            info.Logic.Create(new MessageInfoBindingModel
+                            foreach (var mail in message.From.Mailboxes)
                             {
-                                DateDelivery = message.Date.DateTime,
-                                MessageId = message.MessageId,
-                                FromMailAddress = mail.Address,
-                                Subject = message.Subject,
-                                Body = message.TextBody
-                            });
+                                info.Logic.Create(new MessageInfoBindingModel
+                                {
+                                    DateDelivery = message.Date.DateTime,
+                                    MessageId = message.MessageId,
+                                    FromMailAddress = mail.Address,
+                                    Subject = message.Subject,
+                                    Body = message.HtmlBody.Substring(5, message.HtmlBody.Length - 13)
+                                });
+                            }
                         }
+                        catch (Exception) { }
                     }
                     client.Disconnect(true);
                 });

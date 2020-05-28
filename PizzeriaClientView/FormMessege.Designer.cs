@@ -28,27 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.SuspendLayout();
             // 
             // dataGridView
             // 
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Location = new System.Drawing.Point(-1, 0);
+            this.dataGridView.Location = new System.Drawing.Point(2, 3);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.RowHeadersWidth = 51;
-            this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(691, 450);
+            this.dataGridView.Size = new System.Drawing.Size(500, 345);
             this.dataGridView.TabIndex = 0;
 
-            this.components = new System.ComponentModel.Container();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(691, 450);
-            this.Text = "FormMessege";
+            this.ClientSize = new System.Drawing.Size(500, 351);
+            this.Controls.Add(this.dataGridView);
+            this.Name = "FormMessege";
             this.Text = "Письма";
-            this.Load += new System.EventHandler(this.FormMessage_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
         }
-        private System.Windows.Forms.DataGridView dataGridView;
+
+
         #endregion
+        private System.Windows.Forms.DataGridView dataGridView;
     }
 }

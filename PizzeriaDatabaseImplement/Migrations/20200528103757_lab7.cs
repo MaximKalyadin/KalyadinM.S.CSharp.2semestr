@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PizzeriaDatabaseImplement.Migrations
 {
-    public partial class Lab7 : Migration
+    public partial class lab7 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
