@@ -14,6 +14,10 @@ namespace PizzeriaClientView
         public FormMessege()
         {
             InitializeComponent();
+        }
+
+        private void FormMessage_Load(object sender, EventArgs e)
+        {
             LoadData();
         }
 
@@ -21,11 +25,14 @@ namespace PizzeriaClientView
         {
             try
             {
-                    dataGridView.DataSource =
-                    APIClient.GetRequest<List<MessageInfoViewModel>>($"api/client/getmessages?clientid={Program.Client.Id}");
-                    dataGridView.Columns[0].Visible = false;
-                    dataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                var list = APIClient.GetRequest<List<MessageInfoViewModel>>($"api/client/getmessages?clientId={Program.Client.Id}");
 
+                if (list != null)
+                {
+                    dataGridView.DataSource = list;
+                    dataGridView.Columns[0].Visible = false;
+                    dataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                }
             }
             catch (Exception ex)
             {

@@ -46,6 +46,7 @@
             this.Controls.Add(this.dataGridView);
             this.Name = "FormMessege";
             this.Text = "Письма";
+            this.Load += new System.EventHandler(this.FormMessage_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
         }
