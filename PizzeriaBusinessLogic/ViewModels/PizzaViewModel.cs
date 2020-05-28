@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using PizzeriaBusinessLogic.Attributes;
 
 namespace PizzeriaBusinessLogic.ViewModels
 {
     [DataContract]
-    public class PizzaViewModel
+    public class PizzaViewModel : BaseViewModel
     {
         [DataMember]
-        public int Id { get; set; }
-        [DataMember]
-        [DisplayName("Название пиццы")]
+        [Column(title: "Пицца", gridViewAutoSize: GridViewAutoSize.Fill)]
         public string PizzaName { get; set; }
         [DataMember]
-        [DisplayName("Цена")]
+        [Column(title: "Цена", width: 50)]
         public decimal Price { get; set; }
         [DataMember]
         public Dictionary<int, (string, int)> PizzaIngredients { get; set; }
+        public override List<string> Properties() => new List<string> { "Id", "PizzaName", "Price" };
     }
 }

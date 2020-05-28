@@ -34,7 +34,8 @@ namespace PizzeriaView
         {
             try
             {
-                var clients = logic.Read(null);
+                Program.ConfigGrid(logic.Read(null), dataGridView);
+                /*var clients = logic.Read(null);
                 if (clients != null)
                 {
                     dataGridView.DataSource = clients;
@@ -42,7 +43,7 @@ namespace PizzeriaView
                     dataGridView.Columns[2].Visible = false;
                     dataGridView.Columns[3].Visible = false;
                     dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                }
+                }*/
             }
             catch (Exception ex)
             {

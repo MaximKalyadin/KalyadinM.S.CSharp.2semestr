@@ -22,6 +22,7 @@ namespace PizzeriaView
         private readonly IOrderLogic orderLogic;
         private readonly ReportLogic reportLogic;
         private readonly WorkModeling modeling;
+        private readonly BackUpAbstractLogic backUpAbstractLogic;
         public FormMain(MainLogic logic, IOrderLogic orderLogic, ReportLogic reportLogic, WorkModeling modeling)
         {
             InitializeComponent();
@@ -38,7 +39,8 @@ namespace PizzeriaView
         {
             try
             {
-                var list = orderLogic.Read(null);
+                Program.ConfigGrid(orderLogic.Read(null), dataGridView);
+                /*var list = orderLogic.Read(null);
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
@@ -47,7 +49,7 @@ namespace PizzeriaView
                     dataGridView.Columns[9].Visible = false;
                     dataGridView.Columns[11].Visible = false;
                     dataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                }
+                }*/
                 dataGridView.Update();
             }
             catch (Exception ex)
@@ -172,6 +174,26 @@ catch (Exception ex)
         {
             var form = Container.Resolve<FormMessage>();
             form.ShowDialog();
+        }
+
+        private void создатьБекапToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (backUpAbstractLogic != null)
+                {
+                    var fbd = new FolderBrowserDialog();
+                    if (fbd.ShowDialog() == DialogResult.OK)
+                    {
+                        backUpAbstractLogic.CreateArchive(fbd.SelectedPath);
+                        MessageBox.Show("Бекап создан", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
