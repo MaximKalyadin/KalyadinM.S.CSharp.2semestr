@@ -61,14 +61,19 @@ namespace PizzeriaFileImplement.Implements
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
             return source.Orders
-            .Where(rec => model == null || rec.Id == model.Id)
+            .Where(
+                rec => model == null
+                || rec.Id == model.Id
+                || model.DateFrom.HasValue && model.DateTo.HasValue && rec.TimeCreate >= model.DateFrom && rec.TimeCreate <= model.DateTo
+                || model.ClientId.HasValue && rec.ClientId == model.ClientId
+            )
             .Select(rec => new OrderViewModel
             {
                 Id = rec.Id,
                 Count = rec.Count,
                 TimeCreate = rec.TimeCreate,
                 TimeImplement = rec.TimeImplement,
-                PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
+                PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId)?.PizzaName,
                 PizzaId = rec.PizzaId,
                 Status = rec.Status,
                 ClientFIO = rec.ClientFIO,
