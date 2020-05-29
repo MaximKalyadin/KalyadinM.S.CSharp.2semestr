@@ -29,44 +29,7 @@ namespace PizzeriaView
             dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView.Columns.Add("Сумма заказа", "Сумма заказа");
         }
-        private void FormReportMaterialsToPizza_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                var dict = logic.GetOrders();
-                if (dict != null)
-                {
-                    Dictionary<string, List<ReportOrdersViewModel>> dictOrders = new Dictionary<string, List<ReportOrdersViewModel>>();
-                    dataGridView.Rows.Clear();
-                    foreach (var elem in dict)
-                    {
-                            if (!dictOrders.ContainsKey(elem.DateCreate.ToShortDateString()))
-                            {
-                                dictOrders.Add(elem.DateCreate.ToShortDateString(), new List<ReportOrdersViewModel>() { elem });
-                            }
-                            else
-                            {
-                                dictOrders[elem.DateCreate.ToShortDateString()].Add(elem);
-                            }
-                    }
-                    foreach (var order in dictOrders)
-                    {
-                        dataGridView.Rows.Add(order.Key, "", "");
-                        decimal totalPrice = 0;
-                        foreach (var pizza in order.Value)
-                        {
-                            dataGridView.Rows.Add("", pizza.PizzaName, pizza.Sum);
-                            totalPrice += pizza.Sum;
-                        }
-                        dataGridView.Rows.Add("Всего", "", totalPrice);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+
         private void ButtonSaveToExcel_Click(object sender, EventArgs e)
         {
             if (dateTimePickerFrom.Value.Date >= dateTimePickerTo.Value.Date)
@@ -93,6 +56,45 @@ namespace PizzeriaView
                         MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+            }
+        }
+
+        private void buttonMake_Click(object sender, EventArgs e)
+        {
+            if (dateTimePickerFrom.Value.Date >= dateTimePickerTo.Value.Date)
+            {
+                MessageBox.Show("Дата начала должна быть меньше даты окончания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                var dict = logic.GetOrders(new ReportBindingModel { DateFrom = dateTimePickerFrom.Value.Date, DateTo = dateTimePickerTo.Value.Date });
+
+                if (dict != null)
+                {
+                    dataGridView.Rows.Clear();
+
+                    foreach (var date in dict)
+                    {
+                        decimal dateSum = 0;
+
+                        dataGridView.Rows.Add(new object[] { date.Key, "", "" });
+
+                        foreach (var order in date)
+                        {
+                            dataGridView.Rows.Add(new object[] { "", order.PizzaName, order.Sum });
+                            dateSum += order.Sum;
+                        }
+
+                        dataGridView.Rows.Add(new object[] { "Итого", "", dateSum });
+                        dataGridView.Rows.Add(new object[] { });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
