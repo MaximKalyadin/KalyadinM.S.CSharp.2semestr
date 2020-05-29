@@ -65,15 +65,6 @@ namespace PizzeriaView
             try
             {
                 Program.ConfigGrid(logic.Read(null), dataGridView);
-                /*if (pizzaIngr != null)
-                {
-                    dataGridView.Rows.Clear();
-                    foreach (var pc in pizzaIngr)
-                    {
-                        dataGridView.Rows.Add(new object[] { pc.Key, pc.Value.Item1,
-pc.Value.Item2 });
-                    }
-                }*/
             }
             catch (Exception ex)
             {

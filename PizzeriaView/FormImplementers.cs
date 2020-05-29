@@ -29,13 +29,6 @@ namespace PizzeriaView
         private void LoadData()
         {
             Program.ConfigGrid(implementerLogic.Read(null), dataGridView);
-            /*var list = implementerLogic.Read(null);
-            if (list != null)
-            {
-                dataGridView.DataSource = list;
-                dataGridView.Columns[0].Visible = false;
-                dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            }*/
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)

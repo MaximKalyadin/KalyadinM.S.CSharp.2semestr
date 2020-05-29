@@ -11,7 +11,7 @@ namespace PizzeriaBusinessLogic.ViewModels
     public class ClientViewModel : BaseViewModel
     {
         [DataMember]
-        [Column(title: "ФИО Клиента", width: 150)]
+        [Column(title: "Фио Клиента", gridViewAutoSize: GridViewAutoSize.Fill)]
         public string ClientFIO { set; get; }
         [DataMember]
         public string Login { set; get; }

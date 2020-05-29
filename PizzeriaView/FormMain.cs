@@ -23,13 +23,14 @@ namespace PizzeriaView
         private readonly ReportLogic reportLogic;
         private readonly WorkModeling modeling;
         private readonly BackUpAbstractLogic backUpAbstractLogic;
-        public FormMain(MainLogic logic, IOrderLogic orderLogic, ReportLogic reportLogic, WorkModeling modeling)
+        public FormMain(MainLogic logic, IOrderLogic orderLogic, ReportLogic reportLogic, WorkModeling modeling, BackUpAbstractLogic backUpAbstractLogic)
         {
             InitializeComponent();
             this.logic = logic;
             this.orderLogic = orderLogic;
             this.reportLogic = reportLogic;
             this.modeling = modeling;
+            this.backUpAbstractLogic = backUpAbstractLogic;
         }
         private void FormMain_Load(object sender, EventArgs e)
         {
@@ -40,16 +41,6 @@ namespace PizzeriaView
             try
             {
                 Program.ConfigGrid(orderLogic.Read(null), dataGridView);
-                /*var list = orderLogic.Read(null);
-                if (list != null)
-                {
-                    dataGridView.DataSource = list;
-                    dataGridView.Columns[0].Visible = false;
-                    dataGridView.Columns[1].Visible = false;
-                    dataGridView.Columns[9].Visible = false;
-                    dataGridView.Columns[11].Visible = false;
-                    dataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-                }*/
                 dataGridView.Update();
             }
             catch (Exception ex)

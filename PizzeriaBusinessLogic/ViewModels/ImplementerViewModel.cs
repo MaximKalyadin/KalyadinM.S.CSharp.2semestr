@@ -8,7 +8,7 @@ namespace PizzeriaBusinessLogic.ViewModels
 {
     public class ImplementerViewModel : BaseViewModel
     {
-        [Column(title: "ФИО Исполнителя", width: 150)]
+        [Column(title: "ФИО Исполнителя", width: 300)]
         public string ImplementerFIO { get; set; }
         [Column(title: "Время на заказ", width: 100)]
         public int WorkingTime { get; set; }

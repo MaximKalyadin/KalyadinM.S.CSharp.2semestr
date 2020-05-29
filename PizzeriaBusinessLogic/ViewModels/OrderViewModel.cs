@@ -13,7 +13,7 @@ namespace PizzeriaBusinessLogic.ViewModels
         [DataMember]
         public int PizzaId { get; set; }
         [DataMember]
-        [Column(title: "Пицца", gridViewAutoSize: GridViewAutoSize.Fill)]
+        [Column(title: "Пицца", width: 150)]
         public string PizzaName { get; set; }
         [DataMember]
         [Column(title: "Количество", width: 100)]
