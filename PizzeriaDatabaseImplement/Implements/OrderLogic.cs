@@ -16,10 +16,10 @@ namespace PizzeriaDatabaseImplement.Implements
         {
             using (var context = new PizzeriaDatabase())
             {
-                Order order = context.Orders.FirstOrDefault(rec => rec.Id != model.Id);
+                Order order;
                 if (model.Id.HasValue)
                 {
-                    order = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+                    order = context.Orders.ToList().FirstOrDefault(rec => rec.Id == model.Id);
                     if (order == null)
                     {
                         throw new Exception("Элемент не найден");
@@ -30,9 +30,10 @@ namespace PizzeriaDatabaseImplement.Implements
                     order = new Order();
                     context.Orders.Add(order);
                 }
-
-                order.Status = model.Status;
+                order.ClientFIO = model.ClientFIO;
+                order.ClientId = model.ClientId;
                 order.PizzaId = model.PizzaId;
+                order.Status = model.Status;
                 order.Count = model.Count;
                 order.Sum = model.Sum;
                 order.TimeCreate = model.TimeCreate;
@@ -48,33 +49,34 @@ namespace PizzeriaDatabaseImplement.Implements
                 if (element != null)
                 {
                     context.Orders.Remove(element);
-                    context.SaveChanges();
                 }
                 else
                 {
                     throw new Exception("Элемент не найден");
                 }
+                context.SaveChanges();
             }
         }
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
             using (var context = new PizzeriaDatabase())
             {
-                return context.Orders
-                .Where(rec => model == null || rec.Id == model.Id)
+                return context.Orders.Where(rec => model == null || rec.Id == model.Id || (rec.TimeCreate >= model.DateFrom)
+                && (rec.TimeCreate <= model.DateTo) || model.ClientId == rec.ClientId)
                 .Include(ord => ord.Pizza)
-                .Select(rec => new OrderViewModel
+                .Select(rec => new OrderViewModel()
                 {
                     Id = rec.Id,
+                    PizzaId = rec.PizzaId,
+                    ClientFIO = rec.ClientFIO,
+                    ClientId = rec.ClientId,
+                    PizzaName = context.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
                     Count = rec.Count,
                     TimeCreate = rec.TimeCreate,
                     TimeImplement = rec.TimeImplement,
-                    PizzaName = rec.Pizza.PizzaName,
-                    PizzaId = rec.PizzaId,
                     Status = rec.Status,
                     Sum = rec.Sum
-                })
-                .ToList();
+                }).ToList();
             }
         }
     }

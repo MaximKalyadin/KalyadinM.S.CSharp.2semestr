@@ -16,5 +16,7 @@ namespace PizzeriyListImplement.Models
         public OrderStatus Status { get; set; }
         public DateTime TimeCreate { get; set; }
         public DateTime? TimeImplement { get; set; }
+        public int ClientId { set; get; }
+        public string ClientFIO { set; get; }
     }
 }

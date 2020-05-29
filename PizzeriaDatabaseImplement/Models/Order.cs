@@ -19,7 +19,12 @@ namespace PizzeriaDatabaseImplement.Models
         public OrderStatus Status { get; set; }
         [Required]
         public DateTime TimeCreate { get; set; }
+        [Required]
+        public int ClientId { set; get; }
+        [Required]
+        public string ClientFIO { set; get; }
         public DateTime? TimeImplement { get; set; }
         public virtual Pizza Pizza { get; set; }
+        public virtual Client Client { set; get; }
     }
 }

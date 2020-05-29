@@ -11,11 +11,9 @@ namespace PizzeriaBusinessLogic.BusinessLogic
     public class MainLogic
     {
         private readonly IOrderLogic orderLogic;
-        private readonly IIngredientLogic ingredientLogic;
-        public MainLogic(IOrderLogic orderLogic, IIngredientLogic ingredientLogic)
+        public MainLogic(IOrderLogic orderLogic)
         {
             this.orderLogic = orderLogic;
-            this.ingredientLogic = ingredientLogic;
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {
@@ -25,6 +23,8 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Count = model.Count,
                 Sum = model.Sum,
                 TimeCreate = DateTime.Now,
+                ClientId = model.ClientId,
+                ClientFIO = model.ClientFIO,
                 Status = OrderStatus.Принят
             });
         }
@@ -50,6 +50,8 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Sum = order.Sum,
                 TimeCreate = order.TimeCreate,
                 TimeImplement = DateTime.Now,
+                ClientId = order.ClientId,
+                ClientFIO = order.ClientFIO,
                 Status = OrderStatus.Выполняется
             });
         }
@@ -72,6 +74,8 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Sum = order.Sum,
                 TimeCreate = order.TimeCreate,
                 TimeImplement = order.TimeImplement,
+                ClientId = order.ClientId,
+                ClientFIO = order.ClientFIO,
                 Status = OrderStatus.Готов
             });
         }
@@ -94,6 +98,8 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Sum = order.Sum,
                 TimeCreate = order.TimeCreate,
                 TimeImplement = order.TimeImplement,
+                ClientId = order.ClientId,
+                ClientFIO = order.ClientFIO,
                 Status = OrderStatus.Оплачен
             });
         }
