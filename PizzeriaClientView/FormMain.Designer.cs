@@ -74,14 +74,15 @@
             this.изменитьToolStripMenuItem.Name = "изменитьToolStripMenuItem";
             this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(92, 24);
             this.изменитьToolStripMenuItem.Text = "Изменить";
-            this.изменитьToolStripMenuItem.Click += new System.EventHandler(this.RefreshOrderListToolStripMenuItem_Click);
+            this.обновитьToolStripMenuItem.Click += new System.EventHandler(this.UpdateDataToolStripMenuItem_Click);
             // 
             // обновитьToolStripMenuItem
             // 
             this.обновитьToolStripMenuItem.Name = "обновитьToolStripMenuItem";
             this.обновитьToolStripMenuItem.Size = new System.Drawing.Size(92, 24);
             this.обновитьToolStripMenuItem.Text = "Обновить";
-            this.обновитьToolStripMenuItem.Click += new System.EventHandler(this.UpdateDataToolStripMenuItem_Click);
+            this.изменитьToolStripMenuItem.Click += new System.EventHandler(this.RefreshOrderListToolStripMenuItem_Click);
+            
             // 
             // письмаToolStripMenuItem
             // 
