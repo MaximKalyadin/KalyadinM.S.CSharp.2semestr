@@ -65,8 +65,7 @@ namespace PizzeriaFileImplement.Implements
                 rec => model == null
                 || rec.Id == model.Id
                 || model.DateFrom.HasValue && model.DateTo.HasValue && rec.TimeCreate >= model.DateFrom && rec.TimeCreate <= model.DateTo
-                || model.ClientId.HasValue && rec.ClientId == model.ClientId
-            )
+                || model.ClientId.HasValue && rec.ClientId == model.ClientId)
             .Select(rec => new OrderViewModel
             {
                 Id = rec.Id,
