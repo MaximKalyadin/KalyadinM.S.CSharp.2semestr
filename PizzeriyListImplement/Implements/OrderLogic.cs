@@ -65,9 +65,14 @@ namespace PizzeriyListImplement.Implements
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
             List<OrderViewModel> result = new List<OrderViewModel>();
+
             foreach (var order in source.Orders)
             {
-                if (model != null)
+                if (
+                    model != null && order.Id == model.Id
+                    || model.DateFrom.HasValue && model.DateTo.HasValue && order.TimeCreate >= model.DateFrom && order.TimeCreate <= model.DateTo
+                    || model.ClientId.HasValue && order.ClientId == model.ClientId
+                )
                 {
                     if (order.Id == model.Id && model.Id.HasValue)
                     {
@@ -84,9 +89,12 @@ namespace PizzeriyListImplement.Implements
                     else if (model.ImplementerId.HasValue && order.ImplementerId == model.ImplementerId.Value && order.Status == OrderStatus.Выполняется)
                         result.Add(CreateViewModel(order));
                     continue;
+
                 }
+
                 result.Add(CreateViewModel(order));
             }
+
             return result;
         }
 
