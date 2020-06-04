@@ -27,9 +27,10 @@ namespace PizzeriaDatabaseImplement.Implements
                 }
                 else
                 {
+                    order = new Order();
                     context.Orders.Add(order);
                 }
-                order.PizzaId = model.PizzaId;
+
                 order.Status = model.Status;
                 order.PizzaId = model.PizzaId;
                 order.Count = model.Count;

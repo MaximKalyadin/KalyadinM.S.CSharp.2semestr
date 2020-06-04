@@ -11,9 +11,11 @@ namespace PizzeriaBusinessLogic.BusinessLogic
     public class MainLogic
     {
         private readonly IOrderLogic orderLogic;
-        public MainLogic(IOrderLogic orderLogic)
+        private readonly IIngredientLogic ingredientLogic;
+        public MainLogic(IOrderLogic orderLogic, IIngredientLogic ingredientLogic)
         {
             this.orderLogic = orderLogic;
+            this.ingredientLogic = ingredientLogic;
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {
