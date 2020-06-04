@@ -33,7 +33,7 @@ namespace PizzeriaBusinessLogic.ViewModels
         public DateTime? TimeImplement { get; set; }
         [DisplayName("№ Клиента")]
         [DataMember]
-        public int ClientId { set; get; }
+        public int? ClientId { set; get; }
         [DataMember]
         [DisplayName("ФИО клиента")]
         public string ClientFIO { set; get; }

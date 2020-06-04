@@ -70,13 +70,11 @@ namespace PizzeriaDatabaseImplement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ClientId")
+                    b.Property<int?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("PizzaId")
@@ -98,7 +96,7 @@ namespace PizzeriaDatabaseImplement.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("PizzaId");
 
                     b.ToTable("Orders");
                 });
@@ -147,6 +145,50 @@ namespace PizzeriaDatabaseImplement.Migrations
                     b.ToTable("PizzaIngredients");
                 });
 
+            modelBuilder.Entity("PizzeriaDatabaseImplement.Models.Sklad", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SkladName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sklads");
+                });
+
+            modelBuilder.Entity("PizzeriaDatabaseImplement.Models.SkladIngredient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SkaldId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SkladId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IngredientId");
+
+                    b.HasIndex("SkaldId");
+
+                    b.ToTable("SkladIngredients");
+                });
+
             modelBuilder.Entity("PizzeriaDatabaseImplement.Models.Order", b =>
                 {
                     b.HasOne("PizzeriaDatabaseImplement.Models.Client", "Client")
@@ -157,7 +199,9 @@ namespace PizzeriaDatabaseImplement.Migrations
 
                     b.HasOne("PizzeriaDatabaseImplement.Models.Pizza", "Pizza")
                         .WithMany("Order")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("PizzaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PizzeriaDatabaseImplement.Models.PizzaIngredient", b =>
@@ -173,6 +217,19 @@ namespace PizzeriaDatabaseImplement.Migrations
                         .HasForeignKey("PizzaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PizzeriaDatabaseImplement.Models.SkladIngredient", b =>
+                {
+                    b.HasOne("PizzeriaDatabaseImplement.Models.Ingredient", "Ingredient")
+                        .WithMany("SkladMaterials")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PizzeriaDatabaseImplement.Models.Sklad", "Sklad")
+                        .WithMany("SkladIngredients")
+                        .HasForeignKey("SkaldId");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
-using PizzeriaBusinessLogic.BusinessLogic;
 using PizzeriaBusinessLogic.Interfaces;
 using PizzeriaBusinessLogic.BindingModels;
+using PizzeriaBusinessLogic.BusinessLogic;
 
 namespace PizzeriaView
 {
@@ -20,18 +20,21 @@ namespace PizzeriaView
         public new IUnityContainer Container { get; set; }
         private readonly MainLogic logic;
         private readonly IOrderLogic orderLogic;
-        private readonly ReportLogic reportLogic;
-        public FormMain(MainLogic logic, IOrderLogic orderLogic, ReportLogic reportLogic)
+        private readonly ReportLogic report;
+
+        public FormMain(MainLogic logic, IOrderLogic orderLogic, ReportLogic report)
         {
             InitializeComponent();
             this.logic = logic;
             this.orderLogic = orderLogic;
-            this.reportLogic = reportLogic;
+            this.report = report;
         }
+
         private void FormMain_Load(object sender, EventArgs e)
         {
             LoadData();
         }
+
         private void LoadData()
         {
             try
@@ -57,18 +60,21 @@ namespace PizzeriaView
             var form = Container.Resolve<FormCountIngredients>();
             form.ShowDialog();
         }
-        private void пиццыToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void PizzaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = Container.Resolve<FormCountPizza>();
             form.ShowDialog();
         }
-        private void buttonCreateOrder_Click(object sender, EventArgs e)
+
+        private void ButtonCreateOrder_Click(object sender, EventArgs e)
         {
             var form = Container.Resolve<FormOrder>();
             form.ShowDialog();
             LoadData();
         }
-        private void buttonTakeOrderInWork_Click(object sender, EventArgs e)
+
+        private void ButtonTakeOrderInWork_Click(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
@@ -78,13 +84,14 @@ namespace PizzeriaView
                     logic.TakeOrderInWork(new ChangeStatusBindingModel { OrderId = id });
                     LoadData();
                 }
-catch (Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-        private void buttonOrderReady_Click(object sender, EventArgs e)
+
+        private void ButtonOrderReady_Click(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
@@ -100,7 +107,8 @@ catch (Exception ex)
                 }
             }
         }
-        private void buttonPayOrder_Click(object sender, EventArgs e)
+
+        private void ButtonPayOrder_Click(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
@@ -112,21 +120,24 @@ catch (Exception ex)
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK,
+                   MessageBoxIcon.Error);
                 }
             }
         }
-        private void buttonRef_Click(object sender, EventArgs e)
+
+        private void ButtonRef_Click(object sender, EventArgs e)
         {
             LoadData();
         }
+
         private void списокИнгредиентовToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var dialog = new SaveFileDialog { Filter = "docx|*.docx" })
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    reportLogic.SavePizzaToWordFile(new ReportBindingModel
+                    report.SavePizzaToWordFile(new ReportBindingModel
                     {
                         FileName = dialog.FileName
                     });
@@ -142,13 +153,53 @@ catch (Exception ex)
             form.ShowDialog();
         }
 
-        private void списокПиццToolStripMenuItem_Click(object sender, EventArgs e)
+        private void списокЗаказовToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = Container.Resolve<FormReportPizzaIngredient>();
             form.ShowDialog();
         }
 
-        private void KлиентыToolStripMenuItem_Click(object sender, EventArgs e)
+        private void складToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormSklad>();
+            form.ShowDialog();
+        }
+
+        private void AddSkladToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormSkladAddIngredients>();
+            form.ShowDialog();
+        }
+
+        private void ингредиентыПоСкладамToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormReportSklad>();
+            form.ShowDialog();
+        }
+
+        private void ингредиентыНаСкладахToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormReportIngredientSklad>();
+            form.ShowDialog();
+        }
+
+        private void cкладыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new SaveFileDialog { Filter = "docx|*.docx" })
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    report.SaveSkladToWordFile(new ReportBindingModel
+                    {
+                        FileName = dialog.FileName
+                    });
+                    MessageBox.Show("Выполнено", "Успех", MessageBoxButtons.OK,
+                   MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void клиентыToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             var form = Container.Resolve<FormClient>();
             form.ShowDialog();

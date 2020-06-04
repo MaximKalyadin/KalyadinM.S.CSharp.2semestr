@@ -9,6 +9,10 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.Linq;
 using PizzeriaBusinessLogic.HelperModels;
 using PizzeriaBusinessLogic.ViewModels;
+using MigraDoc.DocumentObjectModel;
+using Font = DocumentFormat.OpenXml.Spreadsheet.Font;
+using Borders = DocumentFormat.OpenXml.Spreadsheet.Borders;
+using Border = DocumentFormat.OpenXml.Spreadsheet.Border;
 
 namespace PizzeriaBusinessLogic.BusinessLogic
 {
@@ -85,20 +89,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     StyleIndex = 0U
                 });
                 uint rowIndex = 3;
-                //собираем информацию по заказам в словарь
-                Dictionary<string, List<ReportOrdersViewModel>> dictOrders = new Dictionary<string, List<ReportOrdersViewModel>>();
-                foreach (var elem in info.Orders)
-                {
-                        if (!dictOrders.ContainsKey(elem.DateCreate.ToShortDateString()))
-                        {
-                            dictOrders.Add(elem.DateCreate.ToShortDateString(), new List<ReportOrdersViewModel>() { elem });
-                        }
-                        else
-                        {
-                            dictOrders[elem.DateCreate.ToShortDateString()].Add(elem);
-                        }
-                }
-                foreach (var order in dictOrders)
+                foreach (var order in info.Orders)
                 {
                     InsertCellInWorksheet(new ExcelCellParameters
                     {
@@ -111,7 +102,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     });
                     rowIndex++;
                     decimal totalPrice = 0;
-                    foreach (var pizza in order.Value)
+                    foreach (var pizza in order)
                     {
                         InsertCellInWorksheet(new ExcelCellParameters
                         {
@@ -132,6 +123,137 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                             StyleIndex = 0U
                         });
                         totalPrice += pizza.Sum;
+                        rowIndex++;
+                    }
+                    InsertCellInWorksheet(new ExcelCellParameters
+                    {
+                        Worksheet = worksheetPart.Worksheet,
+                        ShareStringPart = shareStringPart,
+                        ColumnName = "A",
+                        RowIndex = rowIndex,
+                        Text = "Всего",
+                        StyleIndex = 0U
+                    });
+                    InsertCellInWorksheet(new ExcelCellParameters
+                    {
+                        Worksheet = worksheetPart.Worksheet,
+                        ShareStringPart = shareStringPart,
+                        ColumnName = "C",
+                        RowIndex = rowIndex,
+                        Text = totalPrice.ToString(),
+                        StyleIndex = 0U
+                    });
+                    rowIndex++;
+                }
+                workbookpart.Workbook.Save();
+            }
+        }
+
+        public static void CreateDoc(ExcelInfoSklad info)
+        {
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(info.FileName, SpreadsheetDocumentType.Workbook))
+            {
+                // Создаем книгу (в ней хранятся листы)
+                WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+                workbookpart.Workbook = new Workbook();
+                CreateStyles(workbookpart);
+                // Получаем/создаем хранилище текстов для книги
+                SharedStringTablePart shareStringPart = spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0
+                ? spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First() : spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
+                // Создаем SharedStringTable, если его нет
+                if (shareStringPart.SharedStringTable == null)
+                {
+                    shareStringPart.SharedStringTable = new SharedStringTable();
+                }
+                // Создаем лист в книгу
+                WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+                worksheetPart.Worksheet = new Worksheet(new SheetData());
+                // Добавляем лист в книгу
+                Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+                Sheet sheet = new Sheet()
+                {
+                    Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = 1,
+                    Name = "Лист"
+                };
+                sheets.Append(sheet);
+                InsertCellInWorksheet(new ExcelCellParameters
+                {
+                    Worksheet = worksheetPart.Worksheet,
+                    ShareStringPart = shareStringPart,
+                    ColumnName = "A",
+                    RowIndex = 1,
+                    Text = info.Title,
+                    StyleIndex = 2U
+                });
+                MergeCells(new ExcelMergeParameters
+                {
+                    Worksheet = worksheetPart.Worksheet,
+                    CellFromName = "A1",
+                    CellToName = "C1"
+                });
+                InsertCellInWorksheet(new ExcelCellParameters
+                {
+                    Worksheet = worksheetPart.Worksheet,
+                    ShareStringPart = shareStringPart,
+                    ColumnName = "A",
+                    RowIndex = 2,
+                    Text = "Склад",
+                    StyleIndex = 0U
+                });
+                InsertCellInWorksheet(new ExcelCellParameters
+                {
+                    Worksheet = worksheetPart.Worksheet,
+                    ShareStringPart = shareStringPart,
+                    ColumnName = "B",
+                    RowIndex = 2,
+                    Text = "Ингредиент",
+                    StyleIndex = 0U
+                });
+                InsertCellInWorksheet(new ExcelCellParameters
+                {
+                    Worksheet = worksheetPart.Worksheet,
+                    ShareStringPart = shareStringPart,
+                    ColumnName = "C",
+                    RowIndex = 2,
+                    Text = "Количество",
+                    StyleIndex = 0U
+                });
+                uint rowIndex = 3;
+                foreach (var sklad in info.Sklads)
+                {
+                    InsertCellInWorksheet(new ExcelCellParameters
+                    {
+                        Worksheet = worksheetPart.Worksheet,
+                        ShareStringPart = shareStringPart,
+                        ColumnName = "A",
+                        RowIndex = rowIndex,
+                        Text = sklad.SkladName,
+                        StyleIndex = 0U
+                    });
+                    rowIndex++;
+                    decimal totalPrice = 0;
+                    foreach (var ingredient in sklad.Ingredients)
+                    {
+                        InsertCellInWorksheet(new ExcelCellParameters
+                        {
+                            Worksheet = worksheetPart.Worksheet,
+                            ShareStringPart = shareStringPart,
+                            ColumnName = "B",
+                            RowIndex = rowIndex,
+                            Text = ingredient.Key,
+                            StyleIndex = 0U
+                        });
+                        InsertCellInWorksheet(new ExcelCellParameters
+                        {
+                            Worksheet = worksheetPart.Worksheet,
+                            ShareStringPart = shareStringPart,
+                            ColumnName = "C",
+                            RowIndex = rowIndex,
+                            Text = ingredient.Value.ToString(),
+                            StyleIndex = 0U
+                        });
+                        totalPrice += ingredient.Value;
                         rowIndex++;
                     }
                     InsertCellInWorksheet(new ExcelCellParameters
@@ -377,7 +499,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 cell = newCell;
             }
             // вставляем новый текст
-            cellParameters.ShareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new Text(cellParameters.Text)));
+            cellParameters.ShareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new DocumentFormat.OpenXml.Math.Text(cellParameters.Text)));
             cellParameters.ShareStringPart.SharedStringTable.Save();
             cell.CellValue = new CellValue((cellParameters.ShareStringPart.SharedStringTable.Elements<SharedStringItem>().Count() - 1).ToString());
             cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);

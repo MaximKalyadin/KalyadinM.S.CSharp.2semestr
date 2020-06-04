@@ -20,7 +20,7 @@ namespace PizzeriaDatabaseImplement.Models
         [Required]
         public DateTime TimeCreate { get; set; }
         [Required]
-        public int ClientId { set; get; }
+        public int? ClientId { set; get; }
         [Required]
         public string ClientFIO { set; get; }
         public DateTime? TimeImplement { get; set; }

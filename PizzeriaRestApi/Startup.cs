@@ -32,6 +32,8 @@ namespace PizzeriaRestApi
             services.AddTransient<IClientLogic, ClientLogic>();
             services.AddTransient<IOrderLogic, OrderLogic>();
             services.AddTransient<IPizzaLogic, PizzaLogic>();
+            services.AddTransient<IIngredientLogic, IngredientLogic>();
+            services.AddTransient<ISkladLogic, SkladLogic>();
             services.AddTransient<MainLogic>();
             services.AddControllers();
         }
