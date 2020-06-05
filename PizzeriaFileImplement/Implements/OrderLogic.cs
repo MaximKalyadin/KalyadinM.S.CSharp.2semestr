@@ -45,7 +45,6 @@ namespace PizzeriaFileImplement.Implements
             order.TimeImplement = model.TimeImplement;
             order.ClientFIO = model.ClientFIO;
             order.ClientId = model.ClientId;
-            order.ImplementerFIO = model.ImplementerFIO;
             order.ImplementerId = model.ImplementerId;
         }
         public void Delete(OrderBindingModel model)
@@ -67,7 +66,7 @@ namespace PizzeriaFileImplement.Implements
             .Where(rec => model == null || model.Id.HasValue && rec.Id == model.Id && rec.ClientId == model.ClientId ||
             (model.DateTo.HasValue && model.DateFrom.HasValue && rec.TimeCreate >= model.DateFrom && rec.TimeCreate <= model.DateTo) ||
             (model.ClientId.HasValue && rec.ClientId == model.ClientId) ||
-            (model.FreeOrders.HasValue && model.FreeOrders.Value && !(rec.ImplementerFIO != null)) ||
+            (model.FreeOrder.HasValue && model.FreeOrder.Value && !rec.ImplementerId.HasValue) ||
                 (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId.Value && rec.Status == OrderStatus.Выполняется))
             .Select(rec => new OrderViewModel
             {
@@ -77,7 +76,7 @@ namespace PizzeriaFileImplement.Implements
                 ClientFIO = rec.ClientFIO,
                 ClientId = rec.ClientId,
                 ImplementerId = rec.ImplementerId,
-                ImplementerFIO = !string.IsNullOrEmpty(rec.ImplementerFIO) ? rec.ImplementerFIO : string.Empty,
+                ImplementerFIO = source.Implementers.FirstOrDefault(i => i.Id == rec.ImplementerId)?.ImplementerFIO,
                 Count = rec.Count,
                 TimeCreate = rec.TimeCreate,
                 TimeImplement = rec.TimeImplement,

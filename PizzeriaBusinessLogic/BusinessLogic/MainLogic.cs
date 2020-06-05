@@ -53,7 +53,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     Sum = order.Sum,
                     ClientId = order.ClientId,
                     ClientFIO = order.ClientFIO,
-                    ImplementerFIO = model.ImplementerFIO,
                     ImplementerId = model.ImplementerId.Value,
                     TimeCreate = order.TimeCreate,
                     TimeImplement = DateTime.Now,
@@ -82,7 +81,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 TimeImplement = order.TimeImplement,
                 ClientId = order.ClientId,
                 ClientFIO = order.ClientFIO,
-                ImplementerFIO = order.ImplementerFIO,
                 ImplementerId = order.ImplementerId.Value,
                 Status = OrderStatus.Готов
             });
@@ -108,7 +106,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 TimeImplement = order.TimeImplement,
                 ClientId = order.ClientId,
                 ClientFIO = order.ClientFIO,
-                ImplementerFIO = order.ImplementerFIO,
                 ImplementerId = order.ImplementerId.Value,
                 Status = OrderStatus.Оплачен
             });
