@@ -71,7 +71,7 @@
             this.Controls.Add(this.buttonSaveToPdf);
             this.Controls.Add(this.buttonMake);
             this.Name = "FormReportIngredientSklad";
-            this.Text = "FormReportIngredientSklad";
+            this.Text = "Ингредиенты на складах";
             this.Load += new System.EventHandler(this.FormReportIngredientSklad_Load);
             this.ResumeLayout(false);
 

@@ -29,30 +29,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             });
         }
 
-        public void TakeOrderInWorkDataBase(ChangeStatusBindingModel model)
-        {
-            var order = orderLogic.Read(new OrderBindingModel { Id = model.OrderId })?[0];
-            if (order == null)
-            {
-                throw new Exception("Не найден заказ");
-            }
-            (skladLogic as ISkladLigicRemove).RemoveIngredients(order.PizzaId, order.Count);
-            if (order.Status != OrderStatus.Принят)
-            {
-                throw new Exception("Заказ не в статусе \"Принят\"");
-            }
-            orderLogic.CreateOrUpdate(new OrderBindingModel
-            {
-                Id = order.Id,
-                PizzaId = order.PizzaId,
-                Count = order.Count,
-                Sum = order.Sum,
-                TimeCreate = order.TimeCreate,
-                TimeImplement = DateTime.Now,
-                Status = OrderStatus.Выполняется
-            }); ;
-        }
-
         public void TakeOrderInWork(ChangeStatusBindingModel model)
         {
             var order = orderLogic.Read(new OrderBindingModel

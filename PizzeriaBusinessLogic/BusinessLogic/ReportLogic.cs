@@ -23,32 +23,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             this.skladLogic = skladLogic;
         }
 
-        public List<ReportIngredientPizzaViewModel> GetProductComponent()
-        {
-            var components = ingredientLogic.Read(null);
-            var products = pizzaLogic.Read(null);
-            var list = new List<ReportIngredientPizzaViewModel>();
-            foreach (var component in components)
-            {
-                var record = new ReportIngredientPizzaViewModel
-                {
-                    IngredientName = component.IngredientName,
-                    Pizzas = new List<Tuple<string, int>>(),
-                    TotalCount = 0
-                };
-                foreach (var product in products)
-                {
-                    if (product.PizzaIngredients.ContainsKey(component.Id))
-                    {
-                        record.Pizzas.Add(new Tuple<string, int>(product.PizzaName, product.PizzaIngredients[component.Id].Item2));
-                        record.TotalCount += product.PizzaIngredients[component.Id].Item2;
-                    }
-                }
-                list.Add(record);
-            }
-            return list;
-        }
-
         public List<ReportPizzaIngredientViewModel> GetPizzaIngredients()
         {
             List<ReportPizzaIngredientViewModel> reports = new List<ReportPizzaIngredientViewModel>();
@@ -67,13 +41,14 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             return reports;
         }
 
-        public List<ReportOrdersViewModel> GetOrders(ReportBindingModel model)
+        public List<IGrouping<string, ReportOrdersViewModel>> GetOrders(ReportBindingModel model)
         {
             return orderLogic.Read(new OrderBindingModel
             {
                 DateFrom = model.DateFrom,
                 DateTo = model.DateTo
             })
+            .ToList()
             .Select(x => new ReportOrdersViewModel
             {
                 DateCreate = x.TimeCreate,
@@ -82,6 +57,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Sum = x.Sum,
                 Status = x.Status
             })
+            .GroupBy(x => x.DateCreate.ToShortDateString())
            .ToList();
         }
 
@@ -113,20 +89,6 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             return reportMaterialStorages;
         }
 
-        public List<ReportOrdersViewModel> GetOrders()
-        {
-            return orderLogic.Read(null)
-            .Select(x => new ReportOrdersViewModel
-            {
-                DateCreate = x.TimeCreate,
-                PizzaName = x.PizzaName,
-                Count = x.Count,
-                Sum = x.Sum,
-                Status = x.Status
-            })
-           .ToList();
-        }
-
         public void SavePizzaToWordFile(ReportBindingModel model)
         {
             SaveToWord.CreateDoc(new WordInfo
@@ -153,7 +115,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             {
                 FileName = model.FileName,
                 Title = "Заказы",
-                Orders = GetOrders()
+                Orders = GetOrders(model)
             });
         }
 

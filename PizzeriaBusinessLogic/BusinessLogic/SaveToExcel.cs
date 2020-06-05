@@ -85,20 +85,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     StyleIndex = 0U
                 });
                 uint rowIndex = 3;
-                //собираем информацию по заказам в словарь
-                Dictionary<string, List<ReportOrdersViewModel>> dictOrders = new Dictionary<string, List<ReportOrdersViewModel>>();
-                foreach (var elem in info.Orders)
-                {
-                        if (!dictOrders.ContainsKey(elem.DateCreate.ToShortDateString()))
-                        {
-                            dictOrders.Add(elem.DateCreate.ToShortDateString(), new List<ReportOrdersViewModel>() { elem });
-                        }
-                        else
-                        {
-                            dictOrders[elem.DateCreate.ToShortDateString()].Add(elem);
-                        }
-                }
-                foreach (var order in dictOrders)
+                foreach (var order in info.Orders)
                 {
                     InsertCellInWorksheet(new ExcelCellParameters
                     {
@@ -111,7 +98,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     });
                     rowIndex++;
                     decimal totalPrice = 0;
-                    foreach (var pizza in order.Value)
+                    foreach (var pizza in order)
                     {
                         InsertCellInWorksheet(new ExcelCellParameters
                         {
@@ -250,7 +237,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                             ShareStringPart = shareStringPart,
                             ColumnName = "B",
                             RowIndex = rowIndex,
-                            Text = ingredient.Value.Item1,
+                            Text = ingredient.Key,
                             StyleIndex = 0U
                         });
                         InsertCellInWorksheet(new ExcelCellParameters
@@ -259,7 +246,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                             ShareStringPart = shareStringPart,
                             ColumnName = "C",
                             RowIndex = rowIndex,
-                            Text = ingredient.Value.Item2.ToString(),
+                            Text = ingredient.Value.ToString(),
                             StyleIndex = 0U
                         });
                         totalPrice += ingredient.Value.Item2;
