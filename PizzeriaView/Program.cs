@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
 using Unity.Lifetime;
-
+using PizzeriaBusinessLogic.Interfaces;
+using PizzeriaBusinessLogic.BusinessLogic;
 
 namespace PizzeriaView
 {
