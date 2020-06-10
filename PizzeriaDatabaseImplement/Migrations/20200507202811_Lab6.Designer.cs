@@ -10,8 +10,8 @@ using PizzeriaDatabaseImplement;
 namespace PizzeriaDatabaseImplement.Migrations
 {
     [DbContext(typeof(PizzeriaDatabase))]
-    [Migration("20200422152426_Lab5")]
-    partial class Lab5
+    [Migration("20200507202811_Lab6")]
+    partial class Lab6
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,6 +45,27 @@ namespace PizzeriaDatabaseImplement.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("PizzeriaDatabaseImplement.Models.Implementer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImplementerFIO")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PauseTime")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkTime")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Implementers");
+                });
+
             modelBuilder.Entity("PizzeriaDatabaseImplement.Models.Ingredient", b =>
                 {
                     b.Property<int>("Id")
@@ -72,10 +93,17 @@ namespace PizzeriaDatabaseImplement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ClientId")
+                    b.Property<int?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImplementerFIO")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ImplementerId")
                         .HasColumnType("int");
 
                     b.Property<int?>("OrderId")
@@ -99,6 +127,8 @@ namespace PizzeriaDatabaseImplement.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("ImplementerId");
 
                     b.HasIndex("OrderId");
 
@@ -156,6 +186,10 @@ namespace PizzeriaDatabaseImplement.Migrations
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PizzeriaDatabaseImplement.Models.Implementer", "Implementer")
+                        .WithMany("Orders")
+                        .HasForeignKey("ImplementerId");
 
                     b.HasOne("PizzeriaDatabaseImplement.Models.Pizza", "Pizza")
                         .WithMany("Order")

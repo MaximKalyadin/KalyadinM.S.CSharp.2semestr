@@ -7,6 +7,7 @@ using PizzeriaBusinessLogic.Interfaces;
 using PizzeriaBusinessLogic.BindingModels;
 using PizzeriaBusinessLogic.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using PizzeriaBusinessLogic.Enums;
 
 namespace PizzeriaDatabaseImplement.Implements
 {
@@ -36,6 +37,7 @@ namespace PizzeriaDatabaseImplement.Implements
                 order.Status = model.Status;
                 order.Count = model.Count;
                 order.Sum = model.Sum;
+                order.ImplementerId = model.ImplementerId;
                 order.TimeCreate = model.TimeCreate;
                 order.TimeImplement = model.TimeImplement;
                 context.SaveChanges();
@@ -62,15 +64,20 @@ namespace PizzeriaDatabaseImplement.Implements
             using (var context = new PizzeriaDatabase())
             {
                 return context.Orders.Where(rec => model == null || rec.Id == model.Id || (rec.TimeCreate >= model.DateFrom)
-                && (rec.TimeCreate <= model.DateTo) || model.ClientId == rec.ClientId)
+                && (rec.TimeCreate <= model.DateTo) || (model.ClientId == rec.ClientId) ||
+                (model.FreeOrder.HasValue && model.FreeOrder.Value && !rec.ImplementerId.HasValue) ||
+                (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId.Value && rec.Status == OrderStatus.Выполняется))
                 .Include(ord => ord.Pizza)
+                .Include(ord => ord.Implementer)
                 .Select(rec => new OrderViewModel()
                 {
                     Id = rec.Id,
                     PizzaId = rec.PizzaId,
                     ClientFIO = rec.ClientFIO,
                     ClientId = rec.ClientId,
-                    PizzaName = context.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
+                    PizzaName = context.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName, 
+                    ImplementerId = rec.ImplementerId,
+                    ImplementerFIO = rec.Implementer.ImplementerFIO,
                     Count = rec.Count,
                     TimeCreate = rec.TimeCreate,
                     TimeImplement = rec.TimeImplement,

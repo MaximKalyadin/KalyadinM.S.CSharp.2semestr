@@ -21,12 +21,14 @@ namespace PizzeriaView
         private readonly MainLogic logic;
         private readonly IOrderLogic orderLogic;
         private readonly ReportLogic reportLogic;
-        public FormMain(MainLogic logic, IOrderLogic orderLogic, ReportLogic reportLogic)
+        private readonly WorkModeling modeling;
+        public FormMain(MainLogic logic, IOrderLogic orderLogic, ReportLogic reportLogic, WorkModeling modeling)
         {
             InitializeComponent();
             this.logic = logic;
             this.orderLogic = orderLogic;
             this.reportLogic = reportLogic;
+            this.modeling = modeling;
         }
         private void FormMain_Load(object sender, EventArgs e)
         {
@@ -42,7 +44,8 @@ namespace PizzeriaView
                     dataGridView.DataSource = list;
                     dataGridView.Columns[0].Visible = false;
                     dataGridView.Columns[1].Visible = false;
-                    dataGridView.Columns[8].Visible = false;
+                    dataGridView.Columns[9].Visible = false;
+                    dataGridView.Columns[11].Visible = false;
                     dataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
                 }
                 dataGridView.Update();
@@ -151,6 +154,17 @@ catch (Exception ex)
         private void KлиентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = Container.Resolve<FormClient>();
+            form.ShowDialog();
+        }
+
+        private void запускРаботToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            modeling.DoWork();
+        }
+
+        private void исполнителиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormImplementers>();
             form.ShowDialog();
         }
     }
