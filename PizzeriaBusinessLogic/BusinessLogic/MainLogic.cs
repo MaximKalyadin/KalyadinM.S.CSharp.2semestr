@@ -28,6 +28,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Status = OrderStatus.Принят
             });
         }
+
         public void TakeOrderInWork(ChangeStatusBindingModel model)
         {
             var order = orderLogic.Read(new OrderBindingModel
