@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
 using Unity.Lifetime;
-using PizzeriaBusinessLogic.Interfaces;
-using PizzeriaBusinessLogic.BusinessLogic;
+
 
 namespace PizzeriaView
 {
@@ -35,8 +34,10 @@ namespace PizzeriaView
            HierarchicalLifetimeManager());
             currentContainer.RegisterType<IPizzaLogic, PizzaLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<MainLogic>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<ISkladLogic, SkladLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<ReportLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<IClientLogic, ClientLogic>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<ISkladLogic, SkladLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<IImplementerLogic, ImplementerLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<WorkModeling>(new HierarchicalLifetimeManager());
             return currentContainer;

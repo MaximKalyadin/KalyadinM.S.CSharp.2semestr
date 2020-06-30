@@ -13,10 +13,12 @@ namespace PizzeriaBusinessLogic.BusinessLogic
     {
         private readonly IPizzaLogic pizzaLogic;
         private readonly IOrderLogic orderLogic;
-        public ReportLogic(IPizzaLogic pizzaLogic, IIngredientLogic ingredientLogic, IOrderLogic orderLLogic)
+        private readonly ISkladLogic skladLogic;
+        public ReportLogic(IPizzaLogic pizzaLogic, IIngredientLogic ingredientLogic, IOrderLogic orderLLogic, ISkladLogic skladLogic)
         {
             this.pizzaLogic = pizzaLogic;
             this.orderLogic = orderLLogic;
+            this.skladLogic = skladLogic;
         }
 
         public List<ReportPizzaIngredientViewModel> GetPizzaIngredients()
@@ -37,13 +39,14 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             return reports;
         }
 
-        public List<ReportOrdersViewModel> GetOrders(ReportBindingModel model)
+        public List<IGrouping<string, ReportOrdersViewModel>> GetOrders(ReportBindingModel model)
         {
             return orderLogic.Read(new OrderBindingModel
             {
                 DateFrom = model.DateFrom,
                 DateTo = model.DateTo
             })
+             .ToList()
             .Select(x => new ReportOrdersViewModel
             {
                 DateCreate = x.TimeCreate,
@@ -52,7 +55,36 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Sum = x.Sum,
                 Status = x.Status
             })
+            .GroupBy(x => x.DateCreate.ToShortDateString())
            .ToList();
+        }
+
+        public List<ReportSkladViewModel> GetSklads()
+        {
+            return skladLogic.Read(null).Select(s => new ReportSkladViewModel()
+            {
+                SkladName = s.SkladName,
+                Ingredients = s.SkladIngredients
+            }).ToList();
+        }
+
+        public List<ReportIngredientSkladViewModel> GetIngredientSklads()
+        {
+            var storages = skladLogic.Read(null);
+            List<ReportIngredientSkladViewModel> reportMaterialStorages = new List<ReportIngredientSkladViewModel>();
+            foreach (var storage in storages)
+            {
+                foreach (var material in storage.SkladIngredients)
+                {
+                    reportMaterialStorages.Add(new ReportIngredientSkladViewModel()
+                    {
+                        SkladName = storage.SkladName,
+                        IngredientName = material.Key,
+                        Count = material.Value
+                    });
+                }
+            }
+            return reportMaterialStorages;
         }
 
         public void SavePizzaToWordFile(ReportBindingModel model)
@@ -62,6 +94,16 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 FileName = model.FileName,
                 Title = "Пиццы",
                 Pizzas = pizzaLogic.Read(null)
+            });
+        }
+
+        public void SaveSkladToWordFile(ReportBindingModel model)
+        {
+            SaveToWord.CreateDoc(new WordInfoSklad
+            {
+                FileName = model.FileName,
+                Title = "Хранилища",
+                Sklads = skladLogic.Read(null)
             });
         }
 
@@ -77,6 +119,16 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             });
         }
 
+        public void SaveSkladToExcelFile(ReportBindingModel model)
+        {
+            SaveToExcel.CreateDoc(new ExcelInfoSklad
+            {
+                FileName = model.FileName,
+                Title = "Cклад",
+                Sklads = GetSklads()
+            });
+        }
+
         public void SavePizzaIngredientsToPdfFile(ReportBindingModel model)
         {
             SaveToPdf.CreateDoc(new PdfInfo
@@ -84,6 +136,16 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 FileName = model.FileName,
                 Title = "Пицца",
                 Pizzas = GetPizzaIngredients()
+            });
+        }
+
+        public void SaveIngredientSkladsToPdfFile(ReportBindingModel model)
+        {
+            SaveToPdf.CreateDoc(new PdfInfoIngredientSklad
+            {
+                FileName = model.FileName,
+                Title = "Ингредиент на складах",
+                IngredientSklads = GetIngredientSklads()
             });
         }
     }

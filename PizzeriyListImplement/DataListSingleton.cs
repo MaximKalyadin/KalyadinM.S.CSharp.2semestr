@@ -14,6 +14,8 @@ namespace PizzeriyListImplement
         public List<Order> Orders { get; set; }
         public List<Pizza> Pizza { get; set; }
         public List<PizzaIngredient> PizzaIngredients { get; set; }
+        public List<Sklad> Sklads { get; set; }
+        public List<SkladIngredients> SkladIngredients { get; set; }
         public List<Client> Clients { set; get; }
         public List<Implementer> Implementers { set; get; }
 
@@ -23,6 +25,8 @@ namespace PizzeriyListImplement
             Orders = new List<Order>();
             Pizza = new List<Pizza>();
             PizzaIngredients = new List<PizzaIngredient>();
+            Sklads = new List<Sklad>();
+            SkladIngredients = new List<SkladIngredients>();
             Clients = new List<Client>();
             Implementers = new List<Implementer>();
         }

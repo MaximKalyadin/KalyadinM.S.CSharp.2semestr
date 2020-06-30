@@ -4,6 +4,7 @@ using System.Text;
 using PizzeriaBusinessLogic.Interfaces;
 using PizzeriaBusinessLogic.Enums;
 using PizzeriaBusinessLogic.BindingModels;
+using PizzeriaBusinessLogic.ViewModels;
 
 
 namespace PizzeriaBusinessLogic.BusinessLogic
@@ -12,9 +13,11 @@ namespace PizzeriaBusinessLogic.BusinessLogic
     {
         private readonly IOrderLogic orderLogic;
         private readonly object locker = new object();
-        public MainLogic(IOrderLogic orderLogic)
+        private readonly ISkladLogic skladLogic;
+        public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic)
         {
             this.orderLogic = orderLogic;
+            this.skladLogic = skladLogic;
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {
@@ -46,19 +49,22 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 {
                     throw new Exception("У заказа уже есть исполнитель");
                 }
-                orderLogic.CreateOrUpdate(new OrderBindingModel
+                if (skladLogic.RemoveIngredients(order))
                 {
-                    Id = order.Id,
-                    PizzaId = order.PizzaId,
-                    Count = order.Count,
-                    Sum = order.Sum,
-                    ClientId = order.ClientId,
-                    ClientFIO = order.ClientFIO,
-                    ImplementerId = model.ImplementerId.Value,
-                    TimeCreate = order.TimeCreate,
-                    TimeImplement = DateTime.Now,
-                    Status = OrderStatus.Выполняется
-                });
+                    orderLogic.CreateOrUpdate(new OrderBindingModel
+                    {
+                        Id = order.Id,
+                        PizzaId = order.PizzaId,
+                        Count = order.Count,
+                        Sum = order.Sum,
+                        ClientId = order.ClientId,
+                        ClientFIO = order.ClientFIO,
+                        ImplementerId = model.ImplementerId.Value,
+                        TimeCreate = order.TimeCreate,
+                        TimeImplement = DateTime.Now,
+                        Status = OrderStatus.Выполняется
+                    });
+                }
             }
         }
         public void FinishOrder(ChangeStatusBindingModel model)
@@ -110,6 +116,10 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 ImplementerId = order.ImplementerId.Value,
                 Status = OrderStatus.Оплачен
             });
+        }
+        public void AddIngredients(AddIngredientBindingModels models)
+        {
+            skladLogic.AddIngredientToSklad(models);
         }
     }
 }
