@@ -85,20 +85,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     StyleIndex = 0U
                 });
                 uint rowIndex = 3;
-                //собираем информацию по заказам в словарь
-                Dictionary<string, List<ReportOrdersViewModel>> dictOrders = new Dictionary<string, List<ReportOrdersViewModel>>();
-                foreach (var elem in info.Orders)
-                {
-                        if (!dictOrders.ContainsKey(elem.DateCreate.ToShortDateString()))
-                        {
-                            dictOrders.Add(elem.DateCreate.ToShortDateString(), new List<ReportOrdersViewModel>() { elem });
-                        }
-                        else
-                        {
-                            dictOrders[elem.DateCreate.ToShortDateString()].Add(elem);
-                        }
-                }
-                foreach (var order in dictOrders)
+                foreach (var order in info.Orders)
                 {
                     InsertCellInWorksheet(new ExcelCellParameters
                     {
@@ -106,12 +93,12 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                         ShareStringPart = shareStringPart,
                         ColumnName = "A",
                         RowIndex = rowIndex,
-                        Text = order.Key,
+                        Text = order.Key.ToString(),
                         StyleIndex = 0U
                     });
                     rowIndex++;
                     decimal totalPrice = 0;
-                    foreach (var pizza in order.Value)
+                    foreach (var pizza in order)
                     {
                         InsertCellInWorksheet(new ExcelCellParameters
                         {
