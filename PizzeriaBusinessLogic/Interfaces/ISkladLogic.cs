@@ -12,6 +12,6 @@ namespace PizzeriaBusinessLogic.Interfaces
         void CreateOrUpdate(SkladBindingModel model);
         void Delete(SkladBindingModel model);
         void AddIngredientToSklad(AddIngredientBindingModels model);
-        bool RemoveIngredients(OrderViewModel order);
+        void RemoveIngredients(OrderViewModel order);
     }
 }

@@ -6,6 +6,8 @@ using PizzeriaBusinessLogic.ViewModels;
 using PizzeriaBusinessLogic.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using PizzeriaBusinessLogic.Enums;
 
 namespace PizzeriaBusinessLogic.BusinessLogic
 {
@@ -36,27 +38,49 @@ namespace PizzeriaBusinessLogic.BusinessLogic
 
         private async void WorkerWorkAsync(ImplementerViewModel implementer, List<OrderViewModel> orders)
         {
-            // ищем заказы, которые уже в работе (вдруг исполнителя прервали)
             var runOrders = await Task.Run(() => orderLogic.Read(new OrderBindingModel
             {
                 ImplementerId = implementer.Id
             }));
             foreach (var order in runOrders)
             {
-                // делаем работу заново
                 Thread.Sleep(implementer.WorkingTime * rnd.Next(1, 5) * order.Count);
                 mainLogic.FinishOrder(new ChangeStatusBindingModel
                 {
                     OrderId = order.Id
                 });
-                // отдыхаем
                 Thread.Sleep(implementer.PauseTime);
             }
+            var ordersWithoutIngredient = await Task.Run(() => orderLogic.Read(new OrderBindingModel()
+            {
+                ImplementerId = implementer.Id,
+                Status = Enums.OrderStatus.Требуются_материалы
+            }));
+            await Task.Run(() =>
+            {
+                foreach (var order in ordersWithoutIngredient)
+                {
+                    mainLogic.TakeOrderInWork(new ChangeStatusBindingModel()
+                    {
+                        OrderId = order.Id,
+                        ImplementerId = implementer.Id
+                    });
+                    var updatedOrder = orderLogic.Read(new OrderBindingModel() { Id = order.Id })[0];
+                    if (updatedOrder.Status != Enums.OrderStatus.Требуются_материалы)
+                    {
+                        Thread.Sleep(implementer.WorkingTime * rnd.Next(1, 5) * order.Count);
+                        mainLogic.FinishOrder(new ChangeStatusBindingModel
+                        {
+                            OrderId = order.Id
+                        });
+                        Thread.Sleep(implementer.PauseTime);
+                    }
+                }
+            });
             await Task.Run(() =>
             {
                 foreach (var order in orders)
                 {
-                    // пытаемся назначить заказ на исполнителя
                     try
                     {
                         mainLogic.TakeOrderInWork(new ChangeStatusBindingModel
@@ -64,18 +88,20 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                             OrderId = order.Id,
                             ImplementerId = implementer.Id
                         });
-                        // делаем работу
-                        Thread.Sleep(implementer.WorkingTime * rnd.Next(1, 5) * order.Count);
-                        mainLogic.FinishOrder(new ChangeStatusBindingModel
+                        if (order.Status != Enums.OrderStatus.Требуются_материалы)
                         {
-                            OrderId = order.Id
-                        });
-                        // отдыхаем
-                        Thread.Sleep(implementer.PauseTime);
+                            Thread.Sleep(implementer.WorkingTime * rnd.Next(1, 5) * order.Count);
+                            mainLogic.FinishOrder(new ChangeStatusBindingModel
+                            {
+                                OrderId = order.Id
+                            });
+                            Thread.Sleep(implementer.PauseTime);
+                        }
                     }
-                    catch (Exception) { }
+                    catch (Exception ex) { }
                 }
             });
         }
+        
     }
 }

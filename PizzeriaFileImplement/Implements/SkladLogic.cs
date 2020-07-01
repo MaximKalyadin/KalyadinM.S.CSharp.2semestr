@@ -117,7 +117,7 @@ namespace PizzeriaFileImplement.Implements
             return true;
         }
 
-        public bool RemoveIngredients(OrderViewModel order)
+        public void RemoveIngredients(OrderViewModel order)
         {
             if (CheckingStoragedMaterials(order))
             {
@@ -139,10 +139,9 @@ namespace PizzeriaFileImplement.Implements
                         }
                     }
                 }
-                return true;
             }
             else
-                return false;
+                throw new Exception("Не хватает ингредиентов на складах!");
         }
     }
 }

@@ -135,7 +135,7 @@ namespace PizzeriyListImplement.Implements
             }
         }
 
-        bool ISkladLogic.RemoveIngredients(OrderViewModel order)
+        void ISkladLogic.RemoveIngredients(OrderViewModel order)
         {
             throw new NotImplementedException();
         }

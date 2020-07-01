@@ -66,7 +66,7 @@ namespace PizzeriaDatabaseImplement.Implements
                 return context.Orders.Where(rec => model == null || rec.Id == model.Id || (rec.TimeCreate >= model.DateFrom)
                 && (rec.TimeCreate <= model.DateTo) || (model.ClientId == rec.ClientId) ||
                 (model.FreeOrder.HasValue && model.FreeOrder.Value && !rec.ImplementerId.HasValue) ||
-                (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId.Value && rec.Status == OrderStatus.Выполняется))
+                (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId.Value && rec.Status == model.Status))
                 .Include(ord => ord.Pizza)
                 .Include(ord => ord.Implementer)
                 .Select(rec => new OrderViewModel()

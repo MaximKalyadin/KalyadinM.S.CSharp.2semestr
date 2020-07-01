@@ -41,16 +41,17 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 {
                     throw new Exception("Не найден заказ");
                 }
-                if (order.Status != OrderStatus.Принят)
+                if (order.Status != OrderStatus.Принят && order.Status != OrderStatus.Требуются_материалы)
                 {
-                    throw new Exception("Заказ не в статусе \"Принят\"");
+                    throw new Exception("Заказ не в статусе \"Принят\" или \"Требуются материалы\"");
                 }
-                if (order.ImplementerId.HasValue)
+                if (order.ImplementerId.HasValue && order.ImplementerId != model.ImplementerId)
                 {
                     throw new Exception("У заказа уже есть исполнитель");
                 }
-                if (skladLogic.RemoveIngredients(order))
+                try
                 {
+                    skladLogic.RemoveIngredients(order);
                     orderLogic.CreateOrUpdate(new OrderBindingModel
                     {
                         Id = order.Id,
@@ -63,6 +64,21 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                         TimeCreate = order.TimeCreate,
                         TimeImplement = DateTime.Now,
                         Status = OrderStatus.Выполняется
+                    });
+                } catch (Exception)
+                {
+                    orderLogic.CreateOrUpdate(new OrderBindingModel
+                    {
+                        Id = order.Id,
+                        PizzaId = order.PizzaId,
+                        Count = order.Count,
+                        Sum = order.Sum,
+                        ClientId = order.ClientId,
+                        ClientFIO = order.ClientFIO,
+                        ImplementerId = model.ImplementerId.Value,
+                        TimeCreate = order.TimeCreate,
+                        TimeImplement = DateTime.Now,
+                        Status = OrderStatus.Требуются_материалы
                     });
                 }
             }
