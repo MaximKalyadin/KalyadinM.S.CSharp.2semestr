@@ -6,6 +6,7 @@ using PizzeriaBusinessLogic.Enums;
 using PizzeriaBusinessLogic.BindingModels;
 using PizzeriaBusinessLogic.ViewModels;
 
+
 namespace PizzeriaBusinessLogic.BusinessLogic
 {
     public class MainLogic
@@ -25,36 +26,40 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Count = model.Count,
                 Sum = model.Sum,
                 TimeCreate = DateTime.Now,
+                ClientId = model.ClientId,
+                ClientFIO = model.ClientFIO,
                 Status = OrderStatus.Принят
             });
         }
 
         public void TakeOrderInWork(ChangeStatusBindingModel model)
         {
-            var order = orderLogic.Read(new OrderBindingModel
-            {
-                Id = model.OrderId
-            })?[0];
+            var order = orderLogic.Read(new OrderBindingModel { Id = model.OrderId })?[0];
             if (order == null)
             {
                 throw new Exception("Не найден заказ");
             }
-            (skladLogic as ISkladLigicRemove).RemoveIngredients(order.PizzaId, order.Count);
             if (order.Status != OrderStatus.Принят)
             {
                 throw new Exception("Заказ не в статусе \"Принят\"");
             }
-            orderLogic.CreateOrUpdate(new OrderBindingModel
+            if (skladLogic.RemoveIngredients(order))
             {
-                Id = order.Id,
-                PizzaId = order.PizzaId,
-                Count = order.Count,
-                Sum = order.Sum,
-                TimeCreate = order.TimeCreate,
-                TimeImplement = DateTime.Now,
-                Status = OrderStatus.Выполняется
-            });
+                orderLogic.CreateOrUpdate(new OrderBindingModel
+                {
+                    Id = order.Id,
+                    PizzaId = order.PizzaId,
+                    Count = order.Count,
+                    Sum = order.Sum,
+                    ClientId = order.ClientId,
+                    ClientFIO = order.ClientFIO,
+                    TimeCreate = order.TimeCreate,
+                    TimeImplement = DateTime.Now,
+                    Status = OrderStatus.Выполняется
+                });
+            }
         }
+
         public void FinishOrder(ChangeStatusBindingModel model)
         {
             var order = orderLogic.Read(new OrderBindingModel { Id = model.OrderId })?[0];
@@ -74,6 +79,8 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Sum = order.Sum,
                 TimeCreate = order.TimeCreate,
                 TimeImplement = order.TimeImplement,
+                ClientId = order.ClientId,
+                ClientFIO = order.ClientFIO,
                 Status = OrderStatus.Готов
             });
         }
@@ -96,25 +103,14 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Sum = order.Sum,
                 TimeCreate = order.TimeCreate,
                 TimeImplement = order.TimeImplement,
+                ClientId = order.ClientId,
+                ClientFIO = order.ClientFIO,
                 Status = OrderStatus.Оплачен
             });
         }
-        public void AddIngredients(SkladViewModel sklad, int count, IngredientViewModel material)
+        public void AddIngredients(AddIngredientBindingModels models)
         {
-            if (sklad.SkladIngredients.ContainsKey(material.Id))
-            {
-                sklad.SkladIngredients[material.Id] = (sklad.SkladIngredients[material.Id].Item1, sklad.SkladIngredients[material.Id].Item2 + count);
-            }
-            else
-            {
-                sklad.SkladIngredients.Add(material.Id, (material.IngredientName, count));
-            }
-            skladLogic.CreateOrUpdate(new SkladBindingModel()
-            {
-                Id = sklad.Id,
-                SkladName = sklad.SkladName,
-                SkladIngredients = sklad.SkladIngredients
-            });
+            skladLogic.AddIngredientToSklad(models);
         }
     }
 }

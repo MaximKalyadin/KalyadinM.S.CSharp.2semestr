@@ -16,6 +16,7 @@ namespace PizzeriyListImplement
         public List<PizzaIngredient> PizzaIngredients { get; set; }
         public List<Sklad> Sklads { get; set; }
         public List<SkladIngredients> SkladIngredients { get; set; }
+        public List<Client> Clients { set; get; }
         private DataListSingleton()
         {
             Ingredients = new List<Ingredient>();
@@ -24,6 +25,7 @@ namespace PizzeriyListImplement
             PizzaIngredients = new List<PizzaIngredient>();
             Sklads = new List<Sklad>();
             SkladIngredients = new List<SkladIngredients>();
+            Clients = new List<Client>();
         }
         public static DataListSingleton GetInstance()
         {

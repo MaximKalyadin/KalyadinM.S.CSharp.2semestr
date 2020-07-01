@@ -6,7 +6,6 @@ using PizzeriaBusinessLogic.ViewModels;
 using PizzeriaFileImplement.Models;
 using PizzeriaBusinessLogic.BindingModels;
 using System.Linq;
-using System.Text;
 
 namespace PizzeriaFileImplement.Implements
 {
@@ -27,29 +26,24 @@ namespace PizzeriaFileImplement.Implements
                 {
                     throw new Exception("Элемент не найден");
                 }
-                order.PizzaId = model.PizzaId;
-                order.Status = model.Status;
-                order.PizzaId = model.PizzaId;
-                order.Count = model.Count;
-                order.Sum = model.Sum;
-                order.TimeCreate = model.TimeCreate;
-                order.TimeImplement = model.TimeImplement;
             }
             else
             {
                 int maxId = source.Orders.Count > 0 ? source.Orders.Max(rec =>
                rec.Id) : 0;
                 order = new Order { Id = maxId + 1 };
-                order.PizzaId = model.PizzaId;
-                order.Status = model.Status;
-                order.PizzaId = model.PizzaId;
-                order.Count = model.Count;
-                order.Sum = model.Sum;
-                order.TimeCreate = model.TimeCreate;
-                order.TimeImplement = model.TimeImplement;
                 source.Orders.Add(order);
             }
 
+            order.PizzaId = model.PizzaId;
+            order.Status = model.Status;
+            order.PizzaId = model.PizzaId;
+            order.Count = model.Count;
+            order.Sum = model.Sum;
+            order.TimeCreate = model.TimeCreate;
+            order.TimeImplement = model.TimeImplement;
+            order.ClientFIO = model.ClientFIO;
+            order.ClientId = model.ClientId;
         }
         public void Delete(OrderBindingModel model)
         {
@@ -66,18 +60,23 @@ namespace PizzeriaFileImplement.Implements
         }
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
-            
             return source.Orders
-            .Where(rec => model == null || rec.Id == model.Id)
+            .Where(
+                rec => model == null
+                || rec.Id == model.Id
+                || model.DateFrom.HasValue && model.DateTo.HasValue && rec.TimeCreate >= model.DateFrom && rec.TimeCreate <= model.DateTo
+                || model.ClientId.HasValue && rec.ClientId == model.ClientId)
             .Select(rec => new OrderViewModel
             {
                 Id = rec.Id,
                 Count = rec.Count,
                 TimeCreate = rec.TimeCreate,
                 TimeImplement = rec.TimeImplement,
-                PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
+                PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId)?.PizzaName,
                 PizzaId = rec.PizzaId,
                 Status = rec.Status,
+                ClientFIO = rec.ClientFIO,
+                ClientId = rec.ClientId,
                 Sum = rec.Sum
             })
             .ToList();

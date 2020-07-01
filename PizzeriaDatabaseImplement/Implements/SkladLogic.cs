@@ -10,66 +10,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PizzeriaDatabaseImplement.Implements
 {
-    public class SkladLogic : ISkladLigicRemove
+    public class SkladLogic : ISkladLogic
     {
         public void CreateOrUpdate(SkladBindingModel model)
         {
             using (var context = new PizzeriaDatabase())
             {
-                using (var transaction = context.Database.BeginTransaction())
+                Sklad element = context.Sklads.FirstOrDefault(rec => rec.SkladName == model.SkladName && rec.Id != model.Id);
+                if (element != null)
                 {
-                    try
+                    throw new Exception("Уже есть изделие с таким названием");
+                }
+                if (model.Id.HasValue)
+                {
+                    element = context.Sklads.FirstOrDefault(rec => rec.Id == model.Id);
+                    if (element == null)
                     {
-                        Sklad element = context.Sklads.FirstOrDefault(rec => rec.SkladName == model.SkladName && rec.Id != model.Id);
-                        if (element != null)
-                        {
-                            throw new Exception("Уже есть изделие с таким названием");
-                        }
-                        if (model.Id.HasValue)
-                        {
-                            element = context.Sklads.FirstOrDefault(rec => rec.Id == model.Id);
-                            if (element == null)
-                            {
-                                throw new Exception("Элемент не найден");
-                            }
-                        }
-                        else
-                        {
-                            element = new Sklad();
-                            context.Sklads.Add(element);
-                        }
-                        element.SkladName = model.SkladName;
-                        context.SaveChanges();
-                        if (model.Id.HasValue)
-                        {
-                            var skladComponents = context.SkladIngredients.Where(rec => rec.SkladId == model.Id.Value).ToList();
-                            context.SkladIngredients.RemoveRange(skladComponents.Where(rec => !model.SkladIngredients.ContainsKey(rec.IngredientId)).ToList());
-                            context.SaveChanges();
-                            foreach (var updateComponent in skladComponents)
-                            {
-                                updateComponent.Count = model.SkladIngredients[updateComponent.IngredientId].Item2;
-                                model.SkladIngredients.Remove(updateComponent.IngredientId);
-                            }
-                            context.SaveChanges();
-                        }
-                        foreach (var pc in model.SkladIngredients)
-                        {
-                            context.SkladIngredients.Add(new SkladIngredient
-                            {
-                                SkladId = element.Id,
-                                IngredientId = pc.Key,
-                                Count = pc.Value.Item2
-                            });
-                            context.SaveChanges();
-                        }
-                        transaction.Commit();
-                    }
-                    catch (Exception)
-                    {
-                        transaction.Rollback();
-                        throw;
+                        throw new Exception("Элемент не найден");
                     }
                 }
+                else
+                {
+                    element = new Sklad();
+                    context.Sklads.Add(element);
+                }
+                element.SkladName = model.SkladName;
+                context.SaveChanges();
             }
         }
 
@@ -115,12 +81,12 @@ namespace PizzeriaDatabaseImplement.Implements
                     SkladName = rec.SkladName,
                     SkladIngredients = context.SkladIngredients.Include(recSM => recSM.Ingredient)
                     .Where(recSM => recSM.SkladId == rec.Id)
-                    .ToDictionary(recSM => recSM.IngredientId, recSM => (recSM.Ingredient?.IngredientName, recSM.Count))
+                    .ToDictionary(recSM => recSM.Ingredient.IngredientName, recSM => recSM.Count)
                 }).ToList();
             }
         }
 
-        public void RemoveIngredients(int pizzaId, int count)
+        public bool RemoveIngredients(OrderViewModel order)
         {
             using (var context = new PizzeriaDatabase())
             {
@@ -128,11 +94,11 @@ namespace PizzeriaDatabaseImplement.Implements
                 {
                     try
                     {
-                        var pizzaIngredients = context.PizzaIngredients.Where(dm => dm.PizzaId == pizzaId).ToList();
+                        var pizzaIngredients = context.PizzaIngredients.Where(dm => dm.PizzaId == order.PizzaId).ToList();
                         var skladIngredientss = context.SkladIngredients.ToList();
                         foreach (var ingredient in pizzaIngredients)
                         {
-                            var ingredientCount = ingredient.Count * count;
+                            var ingredientCount = ingredient.Count * order.Count;
                             foreach (var sm in skladIngredientss)
                             {
                                 if (sm.IngredientId == ingredient.IngredientId && sm.Count >= ingredientCount)
@@ -153,6 +119,7 @@ namespace PizzeriaDatabaseImplement.Implements
                                 throw new Exception("Не хватает материалов на складах!");
                         }
                         transaction.Commit();
+                        return true;
                     }
                     catch (Exception ex)
                     {
@@ -160,6 +127,25 @@ namespace PizzeriaDatabaseImplement.Implements
                         throw;
                     }
                 }
+            }
+        }
+
+        public void AddIngredientToSklad(AddIngredientBindingModels model)
+        {
+            using (var context = new PizzeriaDatabase())
+            {
+                var skladIngr = context.SkladIngredients
+                    .FirstOrDefault(sm => sm.IngredientId == model.IngredientId && sm.SkladId == model.SkladId);
+                if (skladIngr != null)
+                    skladIngr.Count += model.Count;
+                else
+                    context.SkladIngredients.Add(new SkladIngredient()
+                    {
+                        IngredientId = model.IngredientId,
+                        SkladId = model.SkladId,
+                        Count = model.Count
+                    });
+                context.SaveChanges();
             }
         }
     }

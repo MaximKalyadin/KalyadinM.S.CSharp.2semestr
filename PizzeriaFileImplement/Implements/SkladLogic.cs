@@ -30,31 +30,6 @@ namespace PizzeriaFileImplement.Implements
                 {
                     throw new Exception("Элемент не найден");
                 }
-                var skladIngredients = source.SkladIngredients.Where(sm => sm.SkladId == element.Id).ToList();
-                for (int i = 0; i < skladIngredients.Count; i++)
-                {
-                    if (model.SkladIngredients.ContainsKey(skladIngredients[i].IngredientId))
-                    {
-                        skladIngredients[i].Count = model.SkladIngredients[skladIngredients[i].IngredientId].Item2;
-                    }
-                    else
-                    {
-                        skladIngredients.RemoveAt(i);
-
-                    }
-                }
-                var keysIngredients = model.SkladIngredients.Keys;
-                int maxId = source.SkladIngredients.Count > 0 ? source.SkladIngredients.Count : 0;
-                foreach (var k in keysIngredients)
-                {
-                    if (!source.SkladIngredients.Where(sm => sm.SkladId == element.Id).Select(sm => sm.IngredientId).Contains(k)) source.SkladIngredients.Add(new SkladIngredient()
-                        {
-                            Id = ++maxId,
-                            IngredientId = k,
-                            SkladId = element.Id,
-                            Count = model.SkladIngredients[k].Item2
-                        });
-                }
             }
             else
             {
@@ -86,10 +61,88 @@ namespace PizzeriaFileImplement.Implements
                 SkladName = s.SkladName,
                 SkladIngredients = source.SkladIngredients
                     .Where(sm => sm.SkladId == s.Id)
-                    .Select(sm => (source.Ingredients.FirstOrDefault(m => m.Id == sm.IngredientId).IngredientName, sm.Count))
-                    .ToDictionary(k => source.Ingredients.FirstOrDefault(m => m.IngredientName == k.IngredientName).Id)
+                    .ToDictionary(k => source.Ingredients.FirstOrDefault(m => m.Id == k.IngredientId).IngredientName, k => k.Count)
             })
             .ToList();
+        }
+
+        public void AddIngredientToSklad(AddIngredientBindingModels model)
+        {
+            if (source.SkladIngredients.Count == 0)
+            {
+                source.SkladIngredients.Add(new SkladIngredient()
+                {
+                    Id = 1,
+                    IngredientId = model.IngredientId,
+                    SkladId = model.SkladId,
+                    Count = model.Count
+                });
+            }
+            else
+            {
+                var ingredient = source.SkladIngredients.FirstOrDefault(sm => sm.SkladId == model.SkladId && sm.IngredientId == model.IngredientId);
+                if (ingredient == null)
+                {
+                    source.SkladIngredients.Add(new SkladIngredient()
+                    {
+                        Id = source.SkladIngredients.Max(sm => sm.Id) + 1,
+                        IngredientId = model.IngredientId,
+                        SkladId = model.SkladId,
+                        Count = model.Count
+                    });
+                }
+                else
+                    ingredient.Count += model.Count;
+            }
+        }
+
+        private bool CheckingStoragedMaterials(OrderViewModel order)
+        {
+            var pizzaIngredient = source.PizzaIngredients.Where(dm => dm.PizzaId == order.PizzaId);
+            var ingredientSklad = new Dictionary<int, int>();
+            foreach (var sm in source.SkladIngredients)
+            {
+                if (ingredientSklad.ContainsKey(sm.IngredientId))
+                    ingredientSklad[sm.IngredientId] += sm.Count;
+                else
+                    ingredientSklad.Add(sm.IngredientId, sm.Count);
+            }
+
+            foreach (var dm in pizzaIngredient)
+            {
+                if (!ingredientSklad.ContainsKey(dm.IngredientId) || ingredientSklad[dm.IngredientId] < dm.Count * order.Count)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public bool RemoveIngredients(OrderViewModel order)
+        {
+            if (CheckingStoragedMaterials(order))
+            {
+                var pizzaIngredient = source.PizzaIngredients.Where(dm => dm.PizzaId == order.PizzaId);
+                foreach (var dm in pizzaIngredient)
+                {
+                    int IngrCount = dm.Count * order.Count;
+                    foreach (var sm in source.SkladIngredients)
+                    {
+                        if (sm.IngredientId == dm.IngredientId && sm.Count >= IngrCount)
+                        {
+                            sm.Count -= IngrCount;
+                            break;
+                        }
+                        else if (sm.IngredientId == dm.IngredientId && sm.Count < IngrCount)
+                        {
+                            IngrCount -= sm.Count;
+                            sm.Count = 0;
+                        }
+                    }
+                }
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

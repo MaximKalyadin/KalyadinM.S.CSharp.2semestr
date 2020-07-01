@@ -7,6 +7,6 @@ namespace PizzeriaBusinessLogic.ViewModels
     public class ReportSkladViewModel
     {
         public string SkladName { set; get; }
-        public Dictionary<int, (string, int)> Ingredients { set; get; }
+        public Dictionary<string, int> Ingredients { set; get; }
     }
 }

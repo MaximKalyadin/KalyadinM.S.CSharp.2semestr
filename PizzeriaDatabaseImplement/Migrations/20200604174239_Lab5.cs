@@ -3,10 +3,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PizzeriaDatabaseImplement.Migrations
 {
-    public partial class InitialCreateFirst : Migration
+    public partial class Lab5 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientFIO = table.Column<string>(nullable: false),
+                    Login = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Ingredients",
                 columns: table => new
@@ -58,18 +73,25 @@ namespace PizzeriaDatabaseImplement.Migrations
                     Sum = table.Column<decimal>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     TimeCreate = table.Column<DateTime>(nullable: false),
-                    TimeImplement = table.Column<DateTime>(nullable: true),
-                    OrderId = table.Column<int>(nullable: true)
+                    ClientId = table.Column<int>(nullable: false),
+                    ClientFIO = table.Column<string>(nullable: false),
+                    TimeImplement = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Pizzas_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_Orders_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_Pizzas_PizzaId",
+                        column: x => x.PizzaId,
                         principalTable: "Pizzas",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,9 +150,14 @@ namespace PizzeriaDatabaseImplement.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_OrderId",
+                name: "IX_Orders_ClientId",
                 table: "Orders",
-                column: "OrderId");
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_PizzaId",
+                table: "Orders",
+                column: "PizzaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PizzaIngredients_IngredientId",
@@ -163,6 +190,9 @@ namespace PizzeriaDatabaseImplement.Migrations
 
             migrationBuilder.DropTable(
                 name: "SkladIngredients");
+
+            migrationBuilder.DropTable(
+                name: "Clients");
 
             migrationBuilder.DropTable(
                 name: "Pizzas");

@@ -33,6 +33,11 @@ namespace PizzeriaView
 
         private void ButtonSaveToExcel_Click(object sender, EventArgs e)
         {
+            if (dateTimePickerFrom.Value.Date >= dateTimePickerTo.Value.Date)
+            {
+                MessageBox.Show("Дата начала должна быть меньше даты окончания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             using (var dialog = new SaveFileDialog { Filter = "xlsx|*.xlsx" })
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
@@ -41,7 +46,9 @@ namespace PizzeriaView
                     {
                         logic.SaveProductComponentToExcelFile(new ReportBindingModel
                         {
-                            FileName = dialog.FileName
+                            FileName = dialog.FileName,
+                            DateFrom = dateTimePickerFrom.Value,
+                            DateTo = dateTimePickerTo.Value
                         });
                         MessageBox.Show("Выполнено", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }

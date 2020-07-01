@@ -17,5 +17,7 @@ namespace PizzeriaBusinessLogic.BindingModels
         public DateTime? TimeImplement { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
+        public int? ClientId { set; get; }
+        public string ClientFIO { set; get; }
     }
 }

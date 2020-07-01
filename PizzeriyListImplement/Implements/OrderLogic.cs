@@ -14,7 +14,6 @@ namespace PizzeriyListImplement.Implements
     public class OrderLogic : IOrderLogic
     {
         private readonly DataListSingleton source;
-
         public OrderLogic()
         {
             source = DataListSingleton.GetInstance();
@@ -28,11 +27,6 @@ namespace PizzeriyListImplement.Implements
             };
             foreach (var order in source.Orders)
             {
-                if (order.TimeCreate == model.TimeCreate && order.Count == model.Count && order.PizzaId == model.PizzaId
-                    && order.Sum == model.Sum && order.Status == model.Status && order.Id != model.Id)
-                {
-                    throw new Exception("Уже есть такой заказ");
-                }
                 if (!model.Id.HasValue && order.Id >= tempOrder.Id)
                 {
                     tempOrder.Id = order.Id + 1;
@@ -72,19 +66,22 @@ namespace PizzeriyListImplement.Implements
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
             List<OrderViewModel> result = new List<OrderViewModel>();
+
             foreach (var order in source.Orders)
             {
-                if (model != null)
+                if (
+                    model != null && order.Id == model.Id
+                    || model.DateFrom.HasValue && model.DateTo.HasValue && order.TimeCreate >= model.DateFrom && order.TimeCreate <= model.DateTo
+                    || model.ClientId.HasValue && order.ClientId == model.ClientId
+                )
                 {
-                    if (order.Id == model.Id)
-                    {
-                        result.Add(CreateViewModel(order));
-                        break;
-                    }
-                    continue;
+                    result.Add(CreateViewModel(order));
+                    break;
                 }
+
                 result.Add(CreateViewModel(order));
             }
+
             return result;
         }
 
@@ -96,9 +93,10 @@ namespace PizzeriyListImplement.Implements
             order.PizzaId = model.PizzaId;
             order.Status = model.Status;
             order.Sum = model.Sum;
+            order.ClientId = model.ClientId;
+            order.ClientFIO = model.ClientFIO;
             return order;
         }
-
         private OrderViewModel CreateViewModel(Order order)
         {
             var pizzaName = source.Pizza.FirstOrDefault((n) => n.Id == order.PizzaId).PizzaName;
@@ -111,7 +109,9 @@ namespace PizzeriyListImplement.Implements
                 PizzaName = pizzaName,
                 PizzaId = order.PizzaId,
                 Status = order.Status,
-                Sum = order.Sum
+                Sum = order.Sum,
+                ClientId = order.ClientId,
+                ClientFIO = order.ClientFIO
             };
         }
     }

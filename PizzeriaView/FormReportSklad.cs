@@ -42,8 +42,8 @@ namespace PizzeriaView
                         int totalCount = 0;
                         foreach (var mat in storage.Ingredients)
                         {
-                            dataGridView.Rows.Add("", mat.Value.Item1, mat.Value.Item2);
-                            totalCount += mat.Value.Item2;
+                            dataGridView.Rows.Add("", mat.Key, mat.Value);
+                            totalCount += mat.Value;
                         }
                         dataGridView.Rows.Add("Всего", "", totalCount);
                     }

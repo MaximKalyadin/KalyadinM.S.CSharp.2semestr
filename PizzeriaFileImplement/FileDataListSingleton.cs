@@ -19,10 +19,12 @@ namespace PizzeriaFileImplement
         private readonly string PizzaIngredientFileName = "PizzaIngredient.xml";
         private readonly string SkladFileName = "Sklad.xml";
         private readonly string SkladIngredientFileName = "SkladIngredient.xml";
+        private readonly string ClientFileName = "Client.xml";
         public List<Ingredient> Ingredients { get; set; }
         public List<Order> Orders { get; set; }
         public List<Pizza> Pizzas { get; set; }
         public List<PizzaIngredient> PizzaIngredients { get; set; }
+        public List<Client> Clients { set; get; }
         public List<Sklad> Sklads { set; get; }
         public List<SkladIngredient> SkladIngredients { set; get; }
         private FileDataListSingleton()
@@ -33,6 +35,7 @@ namespace PizzeriaFileImplement
             PizzaIngredients = LoadPizzaIngredients();
             Sklads = LoadSklads();
             SkladIngredients = LoadSkladIngredients();
+            Clients = LoadClients();
         }
         public static FileDataListSingleton GetInstance()
         {
@@ -48,8 +51,27 @@ namespace PizzeriaFileImplement
             SaveOrders();
             SavePizza();
             SavePizzaIngredients();
-            SaveSkladIngredients();
-            SaveSklads();
+            SaveClients();
+        }
+        private List<Client> LoadClients()
+        {
+            var list = new List<Client>();
+            if (File.Exists(ClientFileName))
+            {
+                XDocument xDocument = XDocument.Load(ClientFileName);
+                var xElements = xDocument.Root.Elements("Client").ToList();
+                foreach (var elem in xElements)
+                {
+                    list.Add(new Client
+                    {
+                        Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                        ClientFIO = elem.Element("ClientFIO").Value,
+                        Login = elem.Element("Login").Value,
+                        Password = elem.Element("Password").Value
+                    });
+                }
+            }
+            return list;
         }
         private List<Ingredient> LoadIngredients()
         {
@@ -168,6 +190,24 @@ namespace PizzeriaFileImplement
                 }
             }
             return list;
+        }
+        private void SaveClients()
+        {
+            if (Clients != null)
+            {
+                var xElement = new XElement("Clients");
+                foreach (var client in Clients)
+                {
+                    xElement.Add(new XElement("Client",
+                    new XAttribute("Id", client.Id),
+                    new XElement("ClientFIO", client.ClientFIO),
+                    new XElement("Login", client.Login),
+                    new XElement("Password", client.Password)
+                    ));
+                }
+                XDocument xDocument = new XDocument(xElement);
+                xDocument.Save(ClientFileName);
+            }
         }
         private void SaveIngredients()
         {

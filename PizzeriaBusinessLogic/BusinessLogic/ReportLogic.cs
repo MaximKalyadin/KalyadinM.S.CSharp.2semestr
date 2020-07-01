@@ -11,14 +11,12 @@ namespace PizzeriaBusinessLogic.BusinessLogic
 {
     public class ReportLogic
     {
-        private readonly IIngredientLogic ingredientLogic;
         private readonly IPizzaLogic pizzaLogic;
         private readonly IOrderLogic orderLogic;
         private readonly ISkladLogic skladLogic;
         public ReportLogic(IPizzaLogic pizzaLogic, IIngredientLogic ingredientLogic, IOrderLogic orderLLogic, ISkladLogic skladLogic)
         {
             this.pizzaLogic = pizzaLogic;
-            this.ingredientLogic = ingredientLogic;
             this.orderLogic = orderLLogic;
             this.skladLogic = skladLogic;
         }
@@ -48,7 +46,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 DateFrom = model.DateFrom,
                 DateTo = model.DateTo
             })
-            .ToList()
+             .ToList()
             .Select(x => new ReportOrdersViewModel
             {
                 DateCreate = x.TimeCreate,
@@ -81,8 +79,8 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                     reportMaterialStorages.Add(new ReportIngredientSkladViewModel()
                     {
                         SkladName = storage.SkladName,
-                        IngredientName = material.Value.Item1,
-                        Count = material.Value.Item2
+                        IngredientName = material.Key,
+                        Count = material.Value
                     });
                 }
             }
@@ -115,6 +113,8 @@ namespace PizzeriaBusinessLogic.BusinessLogic
             {
                 FileName = model.FileName,
                 Title = "Заказы",
+                DateTo = model.DateTo,
+                DateFrom = model.DateFrom,
                 Orders = GetOrders(model)
             });
         }

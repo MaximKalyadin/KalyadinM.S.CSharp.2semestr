@@ -61,40 +61,40 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(193, 23);
+            this.label1.Location = new System.Drawing.Point(201, 18);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(15, 17);
+            this.label1.Size = new System.Drawing.Size(17, 17);
             this.label1.TabIndex = 2;
-            this.label1.Text = "c";
+            this.label1.Text = "С";
             // 
             // dateTimePickerTo
             // 
-            this.dateTimePickerTo.Location = new System.Drawing.Point(214, 23);
+            this.dateTimePickerTo.Location = new System.Drawing.Point(224, 18);
             this.dateTimePickerTo.Name = "dateTimePickerTo";
-            this.dateTimePickerTo.Size = new System.Drawing.Size(165, 22);
+            this.dateTimePickerTo.Size = new System.Drawing.Size(166, 22);
             this.dateTimePickerTo.TabIndex = 3;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(385, 23);
+            this.label2.Location = new System.Drawing.Point(396, 18);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(24, 17);
+            this.label2.Size = new System.Drawing.Size(26, 17);
             this.label2.TabIndex = 4;
-            this.label2.Text = "по";
+            this.label2.Text = "По";
             // 
             // dateTimePickerFrom
             // 
-            this.dateTimePickerFrom.Location = new System.Drawing.Point(415, 23);
+            this.dateTimePickerFrom.Location = new System.Drawing.Point(428, 18);
             this.dateTimePickerFrom.Name = "dateTimePickerFrom";
             this.dateTimePickerFrom.Size = new System.Drawing.Size(166, 22);
             this.dateTimePickerFrom.TabIndex = 5;
             // 
             // buttonToMake
             // 
-            this.buttonToMake.Location = new System.Drawing.Point(587, 12);
+            this.buttonToMake.Location = new System.Drawing.Point(634, 15);
             this.buttonToMake.Name = "buttonToMake";
-            this.buttonToMake.Size = new System.Drawing.Size(169, 39);
+            this.buttonToMake.Size = new System.Drawing.Size(154, 36);
             this.buttonToMake.TabIndex = 6;
             this.buttonToMake.Text = "Сформировать";
             this.buttonToMake.UseVisualStyleBackColor = true;

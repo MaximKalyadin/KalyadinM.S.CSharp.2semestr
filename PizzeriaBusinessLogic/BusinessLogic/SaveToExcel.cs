@@ -9,6 +9,10 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.Linq;
 using PizzeriaBusinessLogic.HelperModels;
 using PizzeriaBusinessLogic.ViewModels;
+using MigraDoc.DocumentObjectModel;
+using Font = DocumentFormat.OpenXml.Spreadsheet.Font;
+using Borders = DocumentFormat.OpenXml.Spreadsheet.Borders;
+using Border = DocumentFormat.OpenXml.Spreadsheet.Border;
 
 namespace PizzeriaBusinessLogic.BusinessLogic
 {
@@ -249,7 +253,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                             Text = ingredient.Value.ToString(),
                             StyleIndex = 0U
                         });
-                        totalPrice += ingredient.Value.Item2;
+                        totalPrice += ingredient.Value;
                         rowIndex++;
                     }
                     InsertCellInWorksheet(new ExcelCellParameters
@@ -495,7 +499,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 cell = newCell;
             }
             // вставляем новый текст
-            cellParameters.ShareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new Text(cellParameters.Text)));
+            cellParameters.ShareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new DocumentFormat.OpenXml.Math.Text(cellParameters.Text)));
             cellParameters.ShareStringPart.SharedStringTable.Save();
             cell.CellValue = new CellValue((cellParameters.ShareStringPart.SharedStringTable.Elements<SharedStringItem>().Count() - 1).ToString());
             cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);

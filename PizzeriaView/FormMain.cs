@@ -37,18 +37,25 @@ namespace PizzeriaView
 
         private void LoadData()
         {
-            var listOrders = orderLogic.Read(null);
-            if (listOrders != null)
+            try
             {
-                dataGridView.DataSource = listOrders;
-                dataGridView.Columns[0].Visible = false;
-                dataGridView.Columns[1].Visible = false;
-                dataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                dataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                var list = orderLogic.Read(null);
+                if (list != null)
+                {
+                    dataGridView.DataSource = list;
+                    dataGridView.Columns[0].Visible = false;
+                    dataGridView.Columns[1].Visible = false;
+                    dataGridView.Columns[8].Visible = false;
+                    dataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                }
+                dataGridView.Update();
             }
-            dataGridView.Update();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-        private void IngredientsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ингредиентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = Container.Resolve<FormCountIngredients>();
             form.ShowDialog();
@@ -74,7 +81,7 @@ namespace PizzeriaView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    logic.TakeOrderInWorkDataBase(new ChangeStatusBindingModel { OrderId = id });
+                    logic.TakeOrderInWork(new ChangeStatusBindingModel { OrderId = id });
                     LoadData();
                 }
                 catch (Exception ex)
@@ -190,6 +197,12 @@ namespace PizzeriaView
                    MessageBoxIcon.Information);
                 }
             }
+        }
+
+        private void клиентыToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormClient>();
+            form.ShowDialog();
         }
     }
 }

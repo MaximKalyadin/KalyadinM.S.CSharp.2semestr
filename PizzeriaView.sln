@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzeriyListImplement", "Pi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzeriaFileImplement", "PizzeriaFileImplement\PizzeriaFileImplement.csproj", "{BF98E0F6-39F9-44E3-B9E0-4260C3D32ABE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaDatabaseImplement", "PizzeriaDatabaseImplement\PizzeriaDatabaseImplement.csproj", "{37C33411-9C8D-416D-AEB7-4B0FCA4572A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzeriaDatabaseImplement", "PizzeriaDatabaseImplement\PizzeriaDatabaseImplement.csproj", "{37C33411-9C8D-416D-AEB7-4B0FCA4572A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzeriaRestApi", "PizzeriaRestApi\PizzeriaRestApi.csproj", "{45A0B48B-9FA6-4E35-8281-B0FBB2642024}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzeriaClientView", "PizzeriaClientView\PizzeriaClientView.csproj", "{8909C935-77EB-4A76-885D-AF54D12FF310}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaSkladManager", "PizzeriaSkladManager\PizzeriaSkladManager.csproj", "{1ACBEDD0-7541-47C5-AF24-71DC0B8250F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +45,18 @@ Global
 		{37C33411-9C8D-416D-AEB7-4B0FCA4572A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37C33411-9C8D-416D-AEB7-4B0FCA4572A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37C33411-9C8D-416D-AEB7-4B0FCA4572A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45A0B48B-9FA6-4E35-8281-B0FBB2642024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45A0B48B-9FA6-4E35-8281-B0FBB2642024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45A0B48B-9FA6-4E35-8281-B0FBB2642024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45A0B48B-9FA6-4E35-8281-B0FBB2642024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8909C935-77EB-4A76-885D-AF54D12FF310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8909C935-77EB-4A76-885D-AF54D12FF310}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8909C935-77EB-4A76-885D-AF54D12FF310}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8909C935-77EB-4A76-885D-AF54D12FF310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ACBEDD0-7541-47C5-AF24-71DC0B8250F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ACBEDD0-7541-47C5-AF24-71DC0B8250F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ACBEDD0-7541-47C5-AF24-71DC0B8250F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ACBEDD0-7541-47C5-AF24-71DC0B8250F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

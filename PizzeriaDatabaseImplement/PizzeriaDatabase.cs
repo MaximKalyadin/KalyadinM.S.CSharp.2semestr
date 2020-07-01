@@ -22,5 +22,6 @@ namespace PizzeriaDatabaseImplement
         public virtual DbSet<Order> Orders { set; get; }
         public virtual DbSet<Sklad> Sklads { set; get; }
         public virtual DbSet<SkladIngredient> SkladIngredients { set; get; }
+        public virtual DbSet<Client> Clients { set; get; }
     }
 }
