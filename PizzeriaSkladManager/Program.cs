@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace PizzeriaSkladManager
 {
@@ -20,15 +21,9 @@ namespace PizzeriaSkladManager
             Application.SetCompatibleTextRenderingDefault(false);
 
             ApiClient.Connect();
-
-            var form = new FormLogin();
-            if (form.ShowDialog() == DialogResult.OK &&
-                form.Password.Equals(ConfigurationManager.AppSettings["Password"]))
-            {
+            var formLogin = new FormLogin();
+            if (formLogin.ShowDialog() == DialogResult.OK)
                 Application.Run(new FormMain());
-            }
-            else
-                MessageBox.Show("Неверный логин!", "Ошибка", MessageBoxButtons.OK);
         }
     }
 }
