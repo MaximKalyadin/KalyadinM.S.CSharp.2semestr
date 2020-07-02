@@ -17,6 +17,5 @@ namespace PizzeriaFileImplement.Models
         public int? ClientId { set; get; }
         public string ClientFIO { set; get; }
         public int? ImplementerId { set; get; }
-        public string ImplementerFIO { set; get; }
     }
 }
