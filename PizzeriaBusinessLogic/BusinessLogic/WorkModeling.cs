@@ -62,8 +62,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                         mainLogic.TakeOrderInWork(new ChangeStatusBindingModel
                         {
                             OrderId = order.Id,
-                            ImplementerId = implementer.Id,
-                            ImplementerFIO = implementer.ImplementerFIO
+                            ImplementerId = implementer.Id
                         });
                         // делаем работу
                         Thread.Sleep(implementer.WorkingTime * rnd.Next(1, 5) * order.Count);
