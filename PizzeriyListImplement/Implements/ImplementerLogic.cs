@@ -87,6 +87,8 @@ namespace PizzeriyListImplement.Implements
         private Implementer CreateModel(ImplementerBindingModel model, Implementer implementer)
         {
             implementer.ImplementerFIO = model.ImplementerFIO;
+            implementer.PauseTime = model.PauseTime;
+            implementer.WorkTime = model.WorkingTime;
             return implementer;
         }
 
@@ -95,6 +97,8 @@ namespace PizzeriyListImplement.Implements
             return new ImplementerViewModel
             {
                 Id = implementer.Id,
+                PauseTime = implementer.PauseTime,
+                WorkingTime = implementer.WorkTime,
                 ImplementerFIO = implementer.ImplementerFIO
             };
         }
