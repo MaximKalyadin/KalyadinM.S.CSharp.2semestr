@@ -40,6 +40,8 @@ namespace PizzeriaFileImplement.Implements
                 source.Implementers.Add(tmp);
             }
             tmp.ImplementerFIO = model.ImplementerFIO;
+            tmp.PauseTime = model.PauseTime;
+            tmp.WorkTime = model.WorkingTime;
         }
 
         public void Delete(ImplementerBindingModel model)
@@ -62,7 +64,9 @@ namespace PizzeriaFileImplement.Implements
             .Select(rec => new ImplementerViewModel
             {
                 Id = rec.Id,
-                ImplementerFIO = rec.ImplementerFIO
+                ImplementerFIO = rec.ImplementerFIO,
+                WorkingTime = rec.WorkTime,
+                PauseTime = rec.PauseTime
             })
             .ToList();
         }

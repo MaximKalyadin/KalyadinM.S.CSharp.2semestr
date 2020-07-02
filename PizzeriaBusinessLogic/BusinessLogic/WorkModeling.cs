@@ -27,7 +27,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
         public void DoWork()
         {
             var implementers = implementerLogic.Read(null);
-            var orders = orderLogic.Read(new OrderBindingModel { FreeOrders = true });
+            var orders = orderLogic.Read(new OrderBindingModel { FreeOrder = true });
             foreach (var implementer in implementers)
             {
                 WorkerWorkAsync(implementer, orders);

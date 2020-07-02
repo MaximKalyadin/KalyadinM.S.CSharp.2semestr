@@ -84,7 +84,7 @@ namespace PizzeriyListImplement.Implements
                         result.Add(CreateViewModel(order));
                     else if (model.ClientId.HasValue && order.ClientId == model.ClientId)
                         result.Add(CreateViewModel(order));
-                    else if (model.FreeOrders.HasValue && model.FreeOrders.Value && !(order.ImplementerFIO != null))
+                    else if (model.FreeOrder.HasValue && model.FreeOrder.Value && !order.ImplementerId.HasValue)
                         result.Add(CreateViewModel(order));
                     else if (model.ImplementerId.HasValue && order.ImplementerId == model.ImplementerId.Value && order.Status == OrderStatus.Выполняется)
                         result.Add(CreateViewModel(order));
@@ -107,7 +107,6 @@ namespace PizzeriyListImplement.Implements
             order.Status = model.Status;
             order.Sum = model.Sum;
             order.ImplementerId = model.ImplementerId;
-            order.ImplementerFIO = model.ImplementerFIO;
             order.ClientId = model.ClientId;
             order.ClientFIO = model.ClientFIO;
             return order;
@@ -126,7 +125,7 @@ namespace PizzeriyListImplement.Implements
                 Status = order.Status,
                 Sum = order.Sum,
                 ImplementerId = order.ImplementerId,
-                ImplementerFIO = order.ImplementerFIO,
+                ImplementerFIO = source.Implementers.FirstOrDefault(i => i.Id == order.ImplementerId)?.ImplementerFIO,
                 ClientId = order.ClientId,
                 ClientFIO = order.ClientFIO
             };
