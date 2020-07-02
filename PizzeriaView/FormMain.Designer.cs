@@ -75,7 +75,7 @@
             this.buttonPayOrder.Name = "buttonPayOrder";
             this.buttonPayOrder.Size = new System.Drawing.Size(214, 31);
             this.buttonPayOrder.TabIndex = 4;
-            this.buttonPayOrder.Text = "Заказ оплчен";
+            this.buttonPayOrder.Text = "Заказ оплачен";
             this.buttonPayOrder.UseVisualStyleBackColor = true;
             this.buttonPayOrder.Click += new System.EventHandler(this.buttonPayOrder_Click);
             // 
