@@ -19,7 +19,6 @@ namespace PizzeriaBusinessLogic.BindingModels
         public DateTime? TimeImplement { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
-        public bool? FreeOrders { get; set; }
-        public string ImplementerFIO { set; get; }
+        public bool? FreeOrder { get; set; }
     }
 }
