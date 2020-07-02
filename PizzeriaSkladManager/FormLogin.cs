@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Text;
@@ -10,8 +11,6 @@ namespace PizzeriaSkladManager
 {
     public partial class FormLogin : Form
     {
-        public string Password { private set; get; }
-
         public FormLogin()
         {
             InitializeComponent();
@@ -21,12 +20,15 @@ namespace PizzeriaSkladManager
         {
             if (!string.IsNullOrEmpty(textBoxPassword.Text))
             {
-                Password = textBoxPassword.Text;
-                DialogResult = DialogResult.OK;
-                Close();
+                if (ConfigurationManager.AppSettings["Password"].Equals(textBoxPassword.Text))
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                else
+                    MessageBox.Show("Неверный пароль!!!", "Ошибка", MessageBoxButtons.OK);
             }
             else
-                MessageBox.Show("Неправильный пароль!", "Ошибка", MessageBoxButtons.OK);
+                MessageBox.Show("Пароль не может быть пустым!", "Ошибка", MessageBoxButtons.OK);
         }
     }
-}
