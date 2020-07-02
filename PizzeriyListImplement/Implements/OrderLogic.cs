@@ -98,7 +98,6 @@ namespace PizzeriyListImplement.Implements
             order.Status = model.Status;
             order.Sum = model.Sum;
             order.ImplementerId = model.ImplementerId;
-            order.ImplementerFIO = model.ImplementerFIO;
             order.ClientId = model.ClientId;
             order.ClientFIO = model.ClientFIO;
             return order;

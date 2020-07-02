@@ -45,7 +45,6 @@ namespace PizzeriaFileImplement.Implements
             order.TimeImplement = model.TimeImplement;
             order.ClientFIO = model.ClientFIO;
             order.ClientId = model.ClientId;
-            order.ImplementerFIO = model.ImplementerFIO;
             order.ImplementerId = model.ImplementerId;
         }
         public void Delete(OrderBindingModel model)

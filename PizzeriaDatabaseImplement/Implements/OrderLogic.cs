@@ -37,7 +37,6 @@ namespace PizzeriaDatabaseImplement.Implements
                 order.Status = model.Status;
                 order.Count = model.Count;
                 order.Sum = model.Sum;
-                order.ImplementerFIO = model.ImplementerFIO;
                 order.ImplementerId = model.ImplementerId;
                 order.TimeCreate = model.TimeCreate;
                 order.TimeImplement = model.TimeImplement;
