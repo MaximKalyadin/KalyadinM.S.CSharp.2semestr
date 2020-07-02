@@ -20,14 +20,15 @@ namespace PizzeriaView
         public new IUnityContainer Container { get; set; }
         private readonly MainLogic logic;
         private readonly IOrderLogic orderLogic;
-        private readonly ReportLogic report;
-
-        public FormMain(MainLogic logic, IOrderLogic orderLogic, ReportLogic report)
+        private readonly ReportLogic reportLogic;
+        private readonly WorkModeling modeling;
+        public FormMain(MainLogic logic, IOrderLogic orderLogic, ReportLogic reportLogic, WorkModeling modeling)
         {
             InitializeComponent();
             this.logic = logic;
             this.orderLogic = orderLogic;
-            this.report = report;
+            this.reportLogic = reportLogic;
+            this.modeling = modeling;
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -45,7 +46,8 @@ namespace PizzeriaView
                     dataGridView.DataSource = list;
                     dataGridView.Columns[0].Visible = false;
                     dataGridView.Columns[1].Visible = false;
-                    dataGridView.Columns[8].Visible = false;
+                    dataGridView.Columns[9].Visible = false;
+                    dataGridView.Columns[11].Visible = false;
                     dataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
                 }
                 dataGridView.Update();
@@ -137,7 +139,7 @@ namespace PizzeriaView
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    report.SavePizzaToWordFile(new ReportBindingModel
+                    reportLogic.SavePizzaToWordFile(new ReportBindingModel
                     {
                         FileName = dialog.FileName
                     });
@@ -189,7 +191,7 @@ namespace PizzeriaView
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    report.SaveSkladToWordFile(new ReportBindingModel
+                    reportLogic.SaveSkladToWordFile(new ReportBindingModel
                     {
                         FileName = dialog.FileName
                     });
@@ -202,6 +204,17 @@ namespace PizzeriaView
         private void клиентыToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             var form = Container.Resolve<FormClient>();
+            form.ShowDialog();
+        }
+
+        private void запускРаботToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            modeling.DoWork();
+        }
+
+        private void исполнителиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<FormImplementers>();
             form.ShowDialog();
         }
     }

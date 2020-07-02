@@ -86,7 +86,7 @@ namespace PizzeriaDatabaseImplement.Implements
             }
         }
 
-        public bool RemoveIngredients(OrderViewModel order)
+        public void RemoveIngredients(OrderViewModel order)
         {
             using (var context = new PizzeriaDatabase())
             {
@@ -119,7 +119,6 @@ namespace PizzeriaDatabaseImplement.Implements
                                 throw new Exception("Не хватает материалов на складах!");
                         }
                         transaction.Commit();
-                        return true;
                     }
                     catch (Exception ex)
                     {

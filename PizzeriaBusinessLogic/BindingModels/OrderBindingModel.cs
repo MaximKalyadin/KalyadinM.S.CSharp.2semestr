@@ -1,15 +1,17 @@
-﻿using System;
+﻿using PizzeriaBusinessLogic.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using PizzeriaBusinessLogic.Enums;
-
 
 namespace PizzeriaBusinessLogic.BindingModels
 {
     public class OrderBindingModel
     {
         public int? Id { get; set; }
+        public int? ClientId { get; set; }
+        public string ClientFIO { get; set; }
         public int PizzaId { get; set; }
+        public int? ImplementerId { get; set; }
         public int Count { get; set; }
         public decimal Sum { get; set; }
         public OrderStatus Status { get; set; }
@@ -17,7 +19,6 @@ namespace PizzeriaBusinessLogic.BindingModels
         public DateTime? TimeImplement { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
-        public int? ClientId { set; get; }
-        public string ClientFIO { set; get; }
+        public bool? FreeOrder { get; set; }
     }
 }

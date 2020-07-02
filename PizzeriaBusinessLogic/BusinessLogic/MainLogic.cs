@@ -12,6 +12,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
     public class MainLogic
     {
         private readonly IOrderLogic orderLogic;
+        private readonly object locker = new object();
         private readonly ISkladLogic skladLogic;
         public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic)
         {
@@ -31,35 +32,57 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Status = OrderStatus.Принят
             });
         }
-
         public void TakeOrderInWork(ChangeStatusBindingModel model)
         {
-            var order = orderLogic.Read(new OrderBindingModel { Id = model.OrderId })?[0];
-            if (order == null)
+            lock (locker)
             {
-                throw new Exception("Не найден заказ");
-            }
-            if (order.Status != OrderStatus.Принят)
-            {
-                throw new Exception("Заказ не в статусе \"Принят\"");
-            }
-            if (skladLogic.RemoveIngredients(order))
-            {
-                orderLogic.CreateOrUpdate(new OrderBindingModel
+                var order = orderLogic.Read(new OrderBindingModel { Id = model.OrderId })?[0];
+                if (order == null)
                 {
-                    Id = order.Id,
-                    PizzaId = order.PizzaId,
-                    Count = order.Count,
-                    Sum = order.Sum,
-                    ClientId = order.ClientId,
-                    ClientFIO = order.ClientFIO,
-                    TimeCreate = order.TimeCreate,
-                    TimeImplement = DateTime.Now,
-                    Status = OrderStatus.Выполняется
-                });
+                    throw new Exception("Не найден заказ");
+                }
+                if (order.Status != OrderStatus.Принят && order.Status != OrderStatus.Требуются_материалы)
+                {
+                    throw new Exception("Заказ не в статусе \"Принят\" или \"Требуются материалы\"");
+                }
+                if (order.ImplementerId.HasValue && order.ImplementerId != model.ImplementerId)
+                {
+                    throw new Exception("У заказа уже есть исполнитель");
+                }
+                try
+                {
+                    skladLogic.RemoveIngredients(order);
+                    orderLogic.CreateOrUpdate(new OrderBindingModel
+                    {
+                        Id = order.Id,
+                        PizzaId = order.PizzaId,
+                        Count = order.Count,
+                        Sum = order.Sum,
+                        ClientId = order.ClientId,
+                        ClientFIO = order.ClientFIO,
+                        ImplementerId = model.ImplementerId.Value,
+                        TimeCreate = order.TimeCreate,
+                        TimeImplement = DateTime.Now,
+                        Status = OrderStatus.Выполняется
+                    });
+                } catch (Exception)
+                {
+                    orderLogic.CreateOrUpdate(new OrderBindingModel
+                    {
+                        Id = order.Id,
+                        PizzaId = order.PizzaId,
+                        Count = order.Count,
+                        Sum = order.Sum,
+                        ClientId = order.ClientId,
+                        ClientFIO = order.ClientFIO,
+                        ImplementerId = model.ImplementerId.Value,
+                        TimeCreate = order.TimeCreate,
+                        TimeImplement = DateTime.Now,
+                        Status = OrderStatus.Требуются_материалы
+                    });
+                }
             }
         }
-
         public void FinishOrder(ChangeStatusBindingModel model)
         {
             var order = orderLogic.Read(new OrderBindingModel { Id = model.OrderId })?[0];
@@ -81,6 +104,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 TimeImplement = order.TimeImplement,
                 ClientId = order.ClientId,
                 ClientFIO = order.ClientFIO,
+                ImplementerId = order.ImplementerId.Value,
                 Status = OrderStatus.Готов
             });
         }
@@ -105,6 +129,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 TimeImplement = order.TimeImplement,
                 ClientId = order.ClientId,
                 ClientFIO = order.ClientFIO,
+                ImplementerId = order.ImplementerId.Value,
                 Status = OrderStatus.Оплачен
             });
         }

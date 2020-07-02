@@ -20,6 +20,7 @@ namespace PizzeriaFileImplement
         private readonly string SkladFileName = "Sklad.xml";
         private readonly string SkladIngredientFileName = "SkladIngredient.xml";
         private readonly string ClientFileName = "Client.xml";
+        private readonly string ImplementerFileName = "Implementer.xml";
         public List<Ingredient> Ingredients { get; set; }
         public List<Order> Orders { get; set; }
         public List<Pizza> Pizzas { get; set; }
@@ -27,6 +28,7 @@ namespace PizzeriaFileImplement
         public List<Client> Clients { set; get; }
         public List<Sklad> Sklads { set; get; }
         public List<SkladIngredient> SkladIngredients { set; get; }
+        public List<Implementer> Implementers { set; get; }
         private FileDataListSingleton()
         {
             Ingredients = LoadIngredients();
@@ -36,6 +38,7 @@ namespace PizzeriaFileImplement
             Sklads = LoadSklads();
             SkladIngredients = LoadSkladIngredients();
             Clients = LoadClients();
+            Implementers = LoadImplementers();
         }
         public static FileDataListSingleton GetInstance()
         {
@@ -52,6 +55,7 @@ namespace PizzeriaFileImplement
             SavePizza();
             SavePizzaIngredients();
             SaveClients();
+            SaveImplementers();
         }
         private List<Client> LoadClients()
         {
@@ -68,6 +72,25 @@ namespace PizzeriaFileImplement
                         ClientFIO = elem.Element("ClientFIO").Value,
                         Login = elem.Element("Login").Value,
                         Password = elem.Element("Password").Value
+                    });
+                }
+            }
+            return list;
+        }
+
+        private List<Implementer> LoadImplementers()
+        {
+            var list = new List<Implementer>();
+            if (File.Exists(ImplementerFileName))
+            {
+                XDocument xDocument = XDocument.Load(ImplementerFileName);
+                var xElements = xDocument.Root.Elements("Implementor").ToList();
+                foreach (var elem in xElements)
+                {
+                    list.Add(new Implementer
+                    {
+                        Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                        ImplementerFIO = elem.Element("ImplementerFIO").Value
                     });
                 }
             }
@@ -207,6 +230,22 @@ namespace PizzeriaFileImplement
                 }
                 XDocument xDocument = new XDocument(xElement);
                 xDocument.Save(ClientFileName);
+            }
+        }
+
+        private void SaveImplementers()
+        {
+            if (Implementers != null)
+            {
+                var xElement = new XElement("Implementers");
+                foreach (var implementer in Implementers)
+                {
+                    xElement.Add(new XElement("Implementer",
+                    new XAttribute("Id", implementer.Id),
+                    new XElement("ImplementerFIO", implementer.ImplementerFIO)));
+                }
+                XDocument xDocument = new XDocument(xElement);
+                xDocument.Save(ImplementerFileName);
             }
         }
         private void SaveIngredients()

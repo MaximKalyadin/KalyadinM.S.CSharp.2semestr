@@ -75,8 +75,22 @@ namespace PizzeriyListImplement.Implements
                     || model.ClientId.HasValue && order.ClientId == model.ClientId
                 )
                 {
-                    result.Add(CreateViewModel(order));
-                    break;
+                    if (order.Id == model.Id && model.Id.HasValue)
+                    {
+                        result.Add(CreateViewModel(order));
+                        break;
+                    }
+                    else if (model.DateFrom.HasValue && model.DateTo.HasValue && order.TimeCreate >= model.DateFrom &&
+                      order.TimeCreate <= model.DateTo)
+                        result.Add(CreateViewModel(order));
+                    else if (model.ClientId.HasValue && order.ClientId == model.ClientId)
+                        result.Add(CreateViewModel(order));
+                    else if (model.FreeOrder.HasValue && model.FreeOrder.Value && !order.ImplementerId.HasValue)
+                        result.Add(CreateViewModel(order));
+                    else if (model.ImplementerId.HasValue && order.ImplementerId == model.ImplementerId.Value && order.Status == OrderStatus.Выполняется)
+                        result.Add(CreateViewModel(order));
+                    continue;
+
                 }
 
                 result.Add(CreateViewModel(order));
@@ -93,6 +107,7 @@ namespace PizzeriyListImplement.Implements
             order.PizzaId = model.PizzaId;
             order.Status = model.Status;
             order.Sum = model.Sum;
+            order.ImplementerId = model.ImplementerId;
             order.ClientId = model.ClientId;
             order.ClientFIO = model.ClientFIO;
             return order;
@@ -110,6 +125,8 @@ namespace PizzeriyListImplement.Implements
                 PizzaId = order.PizzaId,
                 Status = order.Status,
                 Sum = order.Sum,
+                ImplementerId = order.ImplementerId,
+                ImplementerFIO = source.Implementers.FirstOrDefault(i => i.Id == order.ImplementerId)?.ImplementerFIO,
                 ClientId = order.ClientId,
                 ClientFIO = order.ClientFIO
             };

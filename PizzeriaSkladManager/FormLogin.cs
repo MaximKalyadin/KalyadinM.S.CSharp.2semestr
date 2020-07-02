@@ -32,4 +32,3 @@ namespace PizzeriaSkladManager
                 MessageBox.Show("Пароль не может быть пустым!", "Ошибка", MessageBoxButtons.OK);
         }
     }
-}
