@@ -19,24 +19,24 @@ namespace PizzeriaFileImplement.Implements
 
         public void CreateOrUpdate(ClientBindingModel model)
         {
-            Client element;
+            Client client;
             if (model.Id.HasValue)
             {
-                element = source.Clients.FirstOrDefault(rec => rec.Id == model.Id);
-                if (element == null)
-                {
-                    throw new Exception("Элемент не найден");
-                }
+                client = source.Clients.FirstOrDefault(rec => rec.Id == model.Id);
+                if (client == null)
+                    throw new Exception("Пользователь не найден");
             }
             else
             {
+                if (source.Clients.FirstOrDefault(c => c.Login == model.Login) != null)
+                    throw new Exception("Такой пользователь уже есть!");
                 int maxId = source.Clients.Count > 0 ? source.Clients.Max(rec => rec.Id) : 0;
-                element = new Client { Id = maxId + 1 };
-                source.Clients.Add(element);
+                client = new Client { Id = maxId + 1 };
+                source.Clients.Add(client);
             }
-            element.ClientFIO = model.ClientFIO;
-            element.Login = model.Login;
-            element.Password = model.Password;
+            client.ClientFIO = model.ClientFIO;
+            client.Login = model.Login;
+            client.Password = model.Password;
         }
 
         public void Delete(ClientBindingModel model)
@@ -55,7 +55,7 @@ namespace PizzeriaFileImplement.Implements
         public List<ClientViewModel> Read(ClientBindingModel model)
         {
             return source.Clients
-            .Where(rec => model == null || rec.Id == model.Id)
+            .Where(rec => model == null || (model.Id.HasValue && rec.Id == model.Id))
             .Select(rec => new ClientViewModel
             {
                 Id = rec.Id,

@@ -64,10 +64,12 @@ namespace PizzeriaDatabaseImplement.Implements
         {
             using (var context = new PizzeriaDatabase())
             {
-                return context.Orders.Where(rec => model == null || rec.Id == model.Id || (rec.TimeCreate >= model.DateFrom)
-                && (rec.TimeCreate <= model.DateTo) || (model.ClientId == rec.ClientId) ||
-                (model.FreeOrders.HasValue && model.FreeOrders.Value && !(rec.ImplementerFIO != null)) ||
-                (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId.Value && rec.Status == OrderStatus.Выполняется))
+                return context.Orders.Where(rec => model == null
+                                                    || (model.Id.HasValue && rec.Id == model.Id)
+                                                    || (model.DateFrom.HasValue && model.DateTo.HasValue && rec.TimeCreate >= model.DateFrom && rec.TimeCreate <= model.DateTo)
+                                                    || (model.ClientId.HasValue && model.ClientId == rec.ClientId)
+                                                    || (model.FreeOrders.HasValue && model.FreeOrders.Value && !rec.ImplementerId.HasValue)
+                                                    || (model.ImplementerId.HasValue && rec.ImplementerId == model.ImplementerId.Value && rec.Status == OrderStatus.Выполняется))
                 .Include(ord => ord.Pizza)
                 .Select(rec => new OrderViewModel()
                 {
@@ -75,9 +77,8 @@ namespace PizzeriaDatabaseImplement.Implements
                     PizzaId = rec.PizzaId,
                     ClientFIO = rec.ClientFIO,
                     ClientId = rec.ClientId,
-                    PizzaName = context.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName, 
-                    ImplementerId = rec.ImplementerId,
-                    ImplementerFIO = !string.IsNullOrEmpty(rec.ImplementerFIO) ? rec.ImplementerFIO : string.Empty,
+                    PizzaName = rec.Pizza.PizzaName,
+                    ImplementerFIO = rec.Implementer.ImplementerFIO,
                     Count = rec.Count,
                     TimeCreate = rec.TimeCreate,
                     TimeImplement = rec.TimeImplement,

@@ -1,13 +1,14 @@
 ﻿using PizzeriaBusinessLogic.BindingModels;
 using PizzeriaBusinessLogic.ViewModels;
 using PizzeriyListImplement.Models;
+using PizzeriaBusinessLogic.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace PizzeriyListImplement.Implements
 {
-    public class ClientLogic
+    public class ClientLogic : IClientLogic
     {
         private readonly DataListSingleton source;
 
@@ -24,6 +25,10 @@ namespace PizzeriyListImplement.Implements
             };
             foreach (var client in source.Clients)
             {
+                if (client.Login == model.Login && client.Id != model.Id)
+                {
+                    throw new Exception("Уже есть клиент с таким логином");
+                }
                 if (!model.Id.HasValue && client.Id >= tempComponent.Id)
                 {
                     tempComponent.Id = client.Id + 1;
@@ -82,6 +87,8 @@ namespace PizzeriyListImplement.Implements
         private Client CreateModel(ClientBindingModel model, Client client)
         {
             client.ClientFIO = model.ClientFIO;
+            client.Login = model.Login;
+            client.Password = model.Password;
             return client;
         }
 
@@ -90,7 +97,9 @@ namespace PizzeriyListImplement.Implements
             return new ClientViewModel
             {
                 Id = client.Id,
-                ClientFIO = client.ClientFIO
+                ClientFIO = client.ClientFIO,
+                Login = client.Login,
+                Password = client.Password
             };
         }
     }

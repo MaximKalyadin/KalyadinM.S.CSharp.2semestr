@@ -57,7 +57,7 @@ namespace PizzeriaFileImplement.Implements
         public List<IngredientViewModel> Read(IngredientBindingModel model)
         {
             return source.Ingredients
-            .Where(rec => model == null || rec.Id == model.Id)
+            .Where(rec => model == null || (model.Id.HasValue && rec.Id == model.Id))
             .Select(rec => new IngredientViewModel
             {
                 Id = rec.Id,

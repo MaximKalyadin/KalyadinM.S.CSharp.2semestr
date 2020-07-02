@@ -38,7 +38,7 @@ namespace PizzeriaDatabaseImplement.Implements
             using (var context = new PizzeriaDatabase())
             {
                 return context.MessageInfos
-                .Where(rec => model == null || rec.ClientId == model.ClientId)
+                .Where(rec => model == null || (model.ClientId.HasValue && rec.ClientId == model.ClientId))
                 .Select(rec => new MessageInfoViewModel
                 {
                     MessageId = rec.MessageId,

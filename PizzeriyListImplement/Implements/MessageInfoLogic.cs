@@ -19,74 +19,53 @@ namespace PizzeriyListImplement.Implements
 
         public void Create(MessageInfoBindingModel model)
         {
-            MessageInfo tempMessageInfo = new MessageInfo { MessageId = "" };
-
-            foreach (var messageInfo in source.MessageInfoes)
-            {
-                if (model.MessageId == messageInfo.MessageId)
-                {
+            MessageInfo messageInfo = new MessageInfo();
+            foreach (var message in source.MessageInfoes)
+                if (message.MessageId == model.MessageId)
                     throw new Exception("Уже есть письмо с таким идентификатором");
-                }
-            }
-
-            source.MessageInfoes.Add(CreateModel(model, tempMessageInfo));
+            int? clientId = null;
+            foreach (var client in source.Clients)
+                if (client.Login == model.FromMailAddress)
+                    clientId = client.Id;
+            messageInfo.Body = model.Body;
+            messageInfo.ClientId = clientId;
+            messageInfo.DateDelivery = model.DateDelivery;
+            messageInfo.SenderName = model.FromMailAddress;
+            messageInfo.Subject = model.Subject;
+            source.MessageInfoes.Add(messageInfo);
         }
 
         public List<MessageInfoViewModel> Read(MessageInfoBindingModel model)
         {
             List<MessageInfoViewModel> result = new List<MessageInfoViewModel>();
-
-            foreach (var messageInfo in source.MessageInfoes)
+            foreach (var message in source.MessageInfoes)
             {
                 if (model != null)
                 {
-                    if (model.ClientId.HasValue && messageInfo.ClientId == model.ClientId)
+                    if (message.ClientId.HasValue && message.ClientId.Value == model.ClientId.Value)
                     {
-                        result.Add(CreateViewModel(messageInfo));
+                        result.Add(new MessageInfoViewModel()
+                        {
+                            MessageId = message.MessageId,
+                            Body = message.Body,
+                            SenderName = message.SenderName,
+                            DateDelivery = message.DateDelivery,
+                            Subject = message.Subject
+                        });
+                        break;
                     }
-
                     continue;
                 }
-
-                result.Add(CreateViewModel(messageInfo));
-            }
-
-            return result;
-        }
-
-        private MessageInfo CreateModel(MessageInfoBindingModel model, MessageInfo MessageInfo)
-        {
-            int? clientId = null;
-
-            foreach (var client in source.Clients)
-            {
-                if (model.ClientId.HasValue && model.ClientId == client.Id)
+                result.Add(new MessageInfoViewModel()
                 {
-                    clientId = model.ClientId;
-                    break;
-                }
+                    MessageId = message.MessageId,
+                    Body = message.Body,
+                    SenderName = message.SenderName,
+                    DateDelivery = message.DateDelivery,
+                    Subject = message.Subject
+                });
             }
-
-            MessageInfo.MessageId = model.MessageId;
-            MessageInfo.ClientId = clientId;
-            MessageInfo.SenderName = model.FromMailAddress;
-            MessageInfo.DateDelivery = model.DateDelivery;
-            MessageInfo.Subject = model.Subject;
-            MessageInfo.Body = model.Body;
-
-            return MessageInfo;
-        }
-
-        private MessageInfoViewModel CreateViewModel(MessageInfo MessageInfo)
-        {
-            return new MessageInfoViewModel
-            {
-                MessageId = MessageInfo.MessageId,
-                SenderName = MessageInfo.SenderName,
-                DateDelivery = MessageInfo.DateDelivery,
-                Subject = MessageInfo.Subject,
-                Body = MessageInfo.Body
-            };
+            return result;
         }
     }
 }

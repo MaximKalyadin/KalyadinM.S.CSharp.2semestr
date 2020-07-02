@@ -15,21 +15,18 @@ namespace PizzeriaDatabaseImplement.Implements
         {
             using (var context = new PizzeriaDatabase())
             {
-                Client client = context.Clients.FirstOrDefault(c => c.Login == model.Login && c.Id != model.Id);
-                if (client != null)
-                    throw new Exception("Такой пользователь уже есть!");
-                if (model.Id.HasValue)
+                Client client;
+                if (!model.Id.HasValue)
                 {
-                    client = context.Clients.FirstOrDefault(rec => rec.Id == model.Id);
-                    if (client == null)
-                    {
-                        throw new Exception("Элемент не найден");
-                    }
+                    if (context.Clients.FirstOrDefault(c => c.Login == model.Login) != null)
+                        throw new Exception("Такой пользователь уже есть!");
+                    client = new Client();
                 }
                 else
                 {
-                    client = new Client();
-                    context.Clients.Add(client);
+                    client = context.Clients.FirstOrDefault(rec => rec.Id == model.Id);
+                    if (client == null)
+                        throw new Exception("Пользователь не найден!");
                 }
                 client.ClientFIO = model.ClientFIO;
                 client.Login = model.Login;
@@ -60,8 +57,9 @@ namespace PizzeriaDatabaseImplement.Implements
             using (var context = new PizzeriaDatabase())
             {
                 return context.Clients
-                .Where(rec => model == null || rec.Id == model.Id ||
-                rec.Login == model.Login && rec.Password == model.Password)
+                .Where(rec => model == null
+                              || (model.Id.HasValue && rec.Id == model.Id)
+                              || (rec.Login == model.Login && rec.Password == model.Password))
                 .Select(rec => new ClientViewModel
                 {
                     Id = rec.Id,

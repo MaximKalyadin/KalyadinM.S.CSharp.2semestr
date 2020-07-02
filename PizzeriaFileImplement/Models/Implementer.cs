@@ -8,5 +8,7 @@ namespace PizzeriaFileImplement.Models
     {
         public int Id { set; get; }
         public string ImplementerFIO { set; get; }
+        public int PauseTime { set; get; }
+        public int WorkTime { set; get; }
     }
 }

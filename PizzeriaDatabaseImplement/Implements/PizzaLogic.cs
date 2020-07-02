@@ -112,7 +112,7 @@ namespace PizzeriaDatabaseImplement.Implements
             using (var context = new PizzeriaDatabase())
             {
                 return context.Pizzas
-                .Where(rec => model == null || rec.Id == model.Id)
+                .Where(rec => model == null || (model.Id.HasValue && rec.Id == model.Id))
                 .ToList()
                 .Select(rec => new PizzaViewModel
                 {

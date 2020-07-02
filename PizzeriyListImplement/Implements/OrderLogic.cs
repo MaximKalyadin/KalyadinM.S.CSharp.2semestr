@@ -65,36 +65,27 @@ namespace PizzeriyListImplement.Implements
         public List<OrderViewModel> Read(OrderBindingModel model)
         {
             List<OrderViewModel> result = new List<OrderViewModel>();
-
             foreach (var order in source.Orders)
             {
-                if (
-                    model != null && order.Id == model.Id
-                    || model.DateFrom.HasValue && model.DateTo.HasValue && order.TimeCreate >= model.DateFrom && order.TimeCreate <= model.DateTo
-                    || model.ClientId.HasValue && order.ClientId == model.ClientId
-                )
+                if (model != null)
                 {
-                    if (order.Id == model.Id && model.Id.HasValue)
+                    if (model.Id.HasValue && order.Id == model.Id)
                     {
                         result.Add(CreateViewModel(order));
                         break;
                     }
-                    else if (model.DateFrom.HasValue && model.DateTo.HasValue && order.TimeCreate >= model.DateFrom &&
-                      order.TimeCreate <= model.DateTo)
+                    if (model.DateFrom.HasValue && model.DateTo.HasValue && order.TimeCreate >= model.DateFrom && order.TimeCreate <= model.DateTo)
                         result.Add(CreateViewModel(order));
                     else if (model.ClientId.HasValue && order.ClientId == model.ClientId)
                         result.Add(CreateViewModel(order));
-                    else if (model.FreeOrders.HasValue && model.FreeOrders.Value && !(order.ImplementerFIO != null))
+                    else if (model.FreeOrders.HasValue && model.FreeOrders.Value && !order.ImplementerId.HasValue)
                         result.Add(CreateViewModel(order));
                     else if (model.ImplementerId.HasValue && order.ImplementerId == model.ImplementerId.Value && order.Status == OrderStatus.Выполняется)
                         result.Add(CreateViewModel(order));
                     continue;
-
                 }
-
                 result.Add(CreateViewModel(order));
             }
-
             return result;
         }
 
@@ -112,6 +103,7 @@ namespace PizzeriyListImplement.Implements
             order.ClientFIO = model.ClientFIO;
             return order;
         }
+
         private OrderViewModel CreateViewModel(Order order)
         {
             var pizzaName = source.Pizza.FirstOrDefault((n) => n.Id == order.PizzaId).PizzaName;
@@ -126,7 +118,7 @@ namespace PizzeriyListImplement.Implements
                 Status = order.Status,
                 Sum = order.Sum,
                 ImplementerId = order.ImplementerId,
-                ImplementerFIO = order.ImplementerFIO,
+                ImplementerFIO = source.Implementers.FirstOrDefault(i => i.Id == order.ImplementerId)?.ImplementerFIO,
                 ClientId = order.ClientId,
                 ClientFIO = order.ClientFIO
             };
