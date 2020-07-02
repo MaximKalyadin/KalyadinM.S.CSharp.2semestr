@@ -34,6 +34,7 @@
             this.dateTimePickerTo = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.dateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
+            this.buttonMake = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -89,11 +90,22 @@
             this.dateTimePickerFrom.Size = new System.Drawing.Size(166, 22);
             this.dateTimePickerFrom.TabIndex = 5;
             // 
+            // buttonMake
+            // 
+            this.buttonMake.Location = new System.Drawing.Point(628, 14);
+            this.buttonMake.Name = "buttonMake";
+            this.buttonMake.Size = new System.Drawing.Size(134, 34);
+            this.buttonMake.TabIndex = 6;
+            this.buttonMake.Text = "Сформировать";
+            this.buttonMake.UseVisualStyleBackColor = true;
+            this.buttonMake.Click += new System.EventHandler(this.button1_Click);
+            // 
             // FormReportIngredientPizza
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.buttonMake);
             this.Controls.Add(this.dateTimePickerFrom);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.dateTimePickerTo);
@@ -102,7 +114,6 @@
             this.Controls.Add(this.buttonSaveToExcel);
             this.Name = "FormReportIngredientPizza";
             this.Text = "Ингредиенты по пиццам";
-            this.Load += new System.EventHandler(this.FormReportMaterialsToPizza_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -117,5 +128,6 @@
         private System.Windows.Forms.DateTimePicker dateTimePickerTo;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DateTimePicker dateTimePickerFrom;
+        private System.Windows.Forms.Button buttonMake;
     }
 }
