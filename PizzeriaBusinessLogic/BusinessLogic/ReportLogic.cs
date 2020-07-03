@@ -46,7 +46,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 DateFrom = model.DateFrom,
                 DateTo = model.DateTo
             })
-             .ToList()
+            .ToList()
             .Select(x => new ReportOrdersViewModel
             {
                 DateCreate = x.TimeCreate,

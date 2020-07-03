@@ -5,6 +5,7 @@ using PizzeriaBusinessLogic.Interfaces;
 using PizzeriaBusinessLogic.Enums;
 using PizzeriaBusinessLogic.BindingModels;
 using PizzeriaBusinessLogic.ViewModels;
+using PizzeriaBusinessLogic.HelperModels;
 
 
 namespace PizzeriaBusinessLogic.BusinessLogic
@@ -12,12 +13,14 @@ namespace PizzeriaBusinessLogic.BusinessLogic
     public class MainLogic
     {
         private readonly IOrderLogic orderLogic;
+        private readonly IClientLogic clientLogic;
         private readonly object locker = new object();
         private readonly ISkladLogic skladLogic;
-        public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic)
+        public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic, IClientLogic clientLogic)
         {
             this.orderLogic = orderLogic;
             this.skladLogic = skladLogic;
+            this.clientLogic = clientLogic;
         }
         public void CreateOrder(CreateOrderBindingModel model)
         {
@@ -30,6 +33,12 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 ClientId = model.ClientId,
                 ClientFIO = model.ClientFIO,
                 Status = OrderStatus.Принят
+            });
+            MailLogic.MailSendAsync(new MailSendInfo
+            {
+                MailAddress = clientLogic.Read(new ClientBindingModel { Id = model.ClientId })?[0]?.Login,
+                Subject = $"Новый заказ",
+                Text = $"Заказ принят."
             });
         }
         public void TakeOrderInWork(ChangeStatusBindingModel model)
@@ -65,6 +74,13 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                         TimeImplement = DateTime.Now,
                         Status = OrderStatus.Выполняется
                     });
+                    MailLogic.MailSendAsync(new MailSendInfo
+                    {
+                        MailAddress = clientLogic.Read(new ClientBindingModel { Id = order.ClientId })?[0]?.Login,
+                        Subject = $"Заказ №{order.Id}",
+                        Text = $"Заказ №{order.Id} передан в работу."
+                    });
+
                 } catch (Exception)
                 {
                     orderLogic.CreateOrUpdate(new OrderBindingModel
@@ -79,6 +95,12 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                         TimeCreate = order.TimeCreate,
                         TimeImplement = DateTime.Now,
                         Status = OrderStatus.Требуются_материалы
+                    });
+                    MailLogic.MailSendAsync(new MailSendInfo
+                    {
+                        MailAddress = clientLogic.Read(new ClientBindingModel { Id = order.ClientId })?[0]?.Login,
+                        Subject = $"Заказ №{order.Id}",
+                        Text = $"Заказ №{order.Id} требует материалы."
                     });
                 }
             }
@@ -107,6 +129,12 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 ImplementerId = order.ImplementerId.Value,
                 Status = OrderStatus.Готов
             });
+            MailLogic.MailSendAsync(new MailSendInfo
+            {
+                MailAddress = clientLogic.Read(new ClientBindingModel { Id = order.ClientId })?[0]?.Login,
+                Subject = $"Заказ №{order.Id}",
+                Text = $"Заказ №{order.Id} готов."
+            });
         }
         public void PayOrder(ChangeStatusBindingModel model)
         {
@@ -131,6 +159,12 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 ClientFIO = order.ClientFIO,
                 ImplementerId = order.ImplementerId.Value,
                 Status = OrderStatus.Оплачен
+            });
+            MailLogic.MailSendAsync(new MailSendInfo
+            {
+                MailAddress = clientLogic.Read(new ClientBindingModel { Id = order.ClientId })?[0]?.Login,
+                Subject = $"Заказ №{order.Id}",
+                Text = $"Заказ №{order.Id} оплачен."
             });
         }
         public void AddIngredients(AddIngredientBindingModels models)

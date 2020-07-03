@@ -97,7 +97,7 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                         ShareStringPart = shareStringPart,
                         ColumnName = "A",
                         RowIndex = rowIndex,
-                        Text = order.Key,
+                        Text = order.Key.ToString(),
                         StyleIndex = 0U
                     });
                     rowIndex++;

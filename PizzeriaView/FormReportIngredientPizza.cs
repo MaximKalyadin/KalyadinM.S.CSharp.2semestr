@@ -29,8 +29,7 @@ namespace PizzeriaView
             dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView.Columns.Add("Сумма заказа", "Сумма заказа");
         }
-
-
+        
         private void ButtonSaveToExcel_Click(object sender, EventArgs e)
         {
             if (dateTimePickerFrom.Value.Date >= dateTimePickerTo.Value.Date)
@@ -60,32 +59,38 @@ namespace PizzeriaView
             }
         }
 
-        private void buttonToMake_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
+            if (dateTimePickerFrom.Value.Date >= dateTimePickerTo.Value.Date)
+            {
+                MessageBox.Show("Дата начала должна быть меньше даты окончания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             try
             {
-                if (dateTimePickerFrom.Value <= dateTimePickerTo.Value)
-                {
-                    var orders = logic.GetOrders(new ReportBindingModel()
-                    {
-                        DateFrom = dateTimePickerFrom.Value,
-                        DateTo = dateTimePickerTo.Value
-                    });
+                var dict = logic.GetOrders(new ReportBindingModel { DateFrom = dateTimePickerFrom.Value.Date, DateTo = dateTimePickerTo.Value.Date });
 
-                    foreach (var orderGroup in orders)
+                if (dict != null)
+                {
+                    dataGridView.Rows.Clear();
+
+                    foreach (var date in dict)
                     {
-                        dataGridView.Rows.Add(orderGroup.Key, "", "");
-                        decimal sum = 0;
-                        foreach (var order in orderGroup)
+                        decimal dateSum = 0;
+
+                        dataGridView.Rows.Add(new object[] { date.Key, "", "" });
+
+                        foreach (var order in date)
                         {
-                            dataGridView.Rows.Add("", order.PizzaName, order.Sum);
-                            sum += order.Sum;
+                            dataGridView.Rows.Add(new object[] { "", order.PizzaName, order.Sum });
+                            dateSum += order.Sum;
                         }
-                        dataGridView.Rows.Add("Всего:", "", sum);
+
+                        dataGridView.Rows.Add(new object[] { "Итого", "", dateSum });
+                        dataGridView.Rows.Add(new object[] { });
                     }
                 }
-                else
-                    MessageBox.Show("Начало периода не должно превышать его конец", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
