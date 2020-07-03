@@ -19,11 +19,13 @@ namespace PizzeriaRestApi.Controllers
         private readonly IOrderLogic _order;
         private readonly IPizzaLogic _product;
         private readonly MainLogic _main;
-        public MainController(IOrderLogic order, IPizzaLogic product, MainLogic main)
+        private readonly IIngredientLogic ingredientLogic;
+        public MainController(IOrderLogic order, IPizzaLogic product, MainLogic main, IIngredientLogic ingredientLogic)
         {
             _order = order;
             _product = product;
             _main = main;
+            this.ingredientLogic = ingredientLogic;
         }
         [HttpGet]
         public List<PizzaModel> GetProductList() => _product.Read(null)?.Select(rec => Convert(rec)).ToList();
@@ -43,5 +45,7 @@ namespace PizzeriaRestApi.Controllers
                 Price = model.Price
             };
         }
+        [HttpGet]
+        public List<IngredientViewModel> GetIngredients() => ingredientLogic.Read(null);
     }
 }

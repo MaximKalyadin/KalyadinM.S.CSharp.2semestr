@@ -4,6 +4,7 @@ using System.Text;
 using PizzeriaBusinessLogic.Interfaces;
 using PizzeriaBusinessLogic.Enums;
 using PizzeriaBusinessLogic.BindingModels;
+using PizzeriaBusinessLogic.ViewModels;
 using PizzeriaBusinessLogic.HelperModels;
 
 
@@ -14,9 +15,11 @@ namespace PizzeriaBusinessLogic.BusinessLogic
         private readonly IOrderLogic orderLogic;
         private readonly IClientLogic clientLogic;
         private readonly object locker = new object();
-        public MainLogic(IOrderLogic orderLogic, IClientLogic clientLogic)
+        private readonly ISkladLogic skladLogic;
+        public MainLogic(IOrderLogic orderLogic, ISkladLogic skladLogic, IClientLogic clientLogic)
         {
             this.orderLogic = orderLogic;
+            this.skladLogic = skladLogic;
             this.clientLogic = clientLogic;
         }
         public void CreateOrder(CreateOrderBindingModel model)
@@ -47,33 +50,59 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 {
                     throw new Exception("Не найден заказ");
                 }
-                if (order.Status != OrderStatus.Принят)
+                if (order.Status != OrderStatus.Принят && order.Status != OrderStatus.Требуются_материалы)
                 {
-                    throw new Exception("Заказ не в статусе \"Принят\"");
+                    throw new Exception("Заказ не в статусе \"Принят\" или \"Требуются материалы\"");
                 }
-                if (order.ImplementerId.HasValue)
+                if (order.ImplementerId.HasValue && order.ImplementerId != model.ImplementerId)
                 {
                     throw new Exception("У заказа уже есть исполнитель");
                 }
-                orderLogic.CreateOrUpdate(new OrderBindingModel
+                try
                 {
-                    Id = order.Id,
-                    PizzaId = order.PizzaId,
-                    Count = order.Count,
-                    Sum = order.Sum,
-                    ClientId = order.ClientId,
-                    ClientFIO = order.ClientFIO,
-                    ImplementerId = model.ImplementerId.Value,
-                    TimeCreate = order.TimeCreate,
-                    TimeImplement = DateTime.Now,
-                    Status = OrderStatus.Выполняется
-                });
-                MailLogic.MailSendAsync(new MailSendInfo
+                    skladLogic.RemoveIngredients(order);
+                    orderLogic.CreateOrUpdate(new OrderBindingModel
+                    {
+                        Id = order.Id,
+                        PizzaId = order.PizzaId,
+                        Count = order.Count,
+                        Sum = order.Sum,
+                        ClientId = order.ClientId,
+                        ClientFIO = order.ClientFIO,
+                        ImplementerId = model.ImplementerId.Value,
+                        TimeCreate = order.TimeCreate,
+                        TimeImplement = DateTime.Now,
+                        Status = OrderStatus.Выполняется
+                    });
+                    MailLogic.MailSendAsync(new MailSendInfo
+                    {
+                        MailAddress = clientLogic.Read(new ClientBindingModel { Id = order.ClientId })?[0]?.Login,
+                        Subject = $"Заказ №{order.Id}",
+                        Text = $"Заказ №{order.Id} передан в работу."
+                    });
+
+                } catch (Exception)
                 {
-                    MailAddress = clientLogic.Read(new ClientBindingModel { Id = order.ClientId })?[0]?.Login,
-                    Subject = $"Заказ №{order.Id}",
-                    Text = $"Заказ №{order.Id} передан в работу."
-                });
+                    orderLogic.CreateOrUpdate(new OrderBindingModel
+                    {
+                        Id = order.Id,
+                        PizzaId = order.PizzaId,
+                        Count = order.Count,
+                        Sum = order.Sum,
+                        ClientId = order.ClientId,
+                        ClientFIO = order.ClientFIO,
+                        ImplementerId = model.ImplementerId.Value,
+                        TimeCreate = order.TimeCreate,
+                        TimeImplement = DateTime.Now,
+                        Status = OrderStatus.Требуются_материалы
+                    });
+                    MailLogic.MailSendAsync(new MailSendInfo
+                    {
+                        MailAddress = clientLogic.Read(new ClientBindingModel { Id = order.ClientId })?[0]?.Login,
+                        Subject = $"Заказ №{order.Id}",
+                        Text = $"Заказ №{order.Id} требует материалы."
+                    });
+                }
             }
         }
         public void FinishOrder(ChangeStatusBindingModel model)
@@ -137,6 +166,10 @@ namespace PizzeriaBusinessLogic.BusinessLogic
                 Subject = $"Заказ №{order.Id}",
                 Text = $"Заказ №{order.Id} оплачен."
             });
+        }
+        public void AddIngredients(AddIngredientBindingModels models)
+        {
+            skladLogic.AddIngredientToSklad(models);
         }
     }
 }

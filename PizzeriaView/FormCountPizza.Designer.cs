@@ -97,7 +97,7 @@
             this.Controls.Add(this.buttonAdd);
             this.Controls.Add(this.dataGridView);
             this.Name = "FormCountPizza";
-            this.Text = "FormCountPizza";
+            this.Text = "Пицца";
             this.Load += new System.EventHandler(this.FormCountPizza_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);

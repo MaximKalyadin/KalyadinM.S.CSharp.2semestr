@@ -12,6 +12,6 @@ namespace PizzeriaBusinessLogic.HelperModels
         public string Title { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
-        public List<IGrouping<DateTime, OrderViewModel>> Orders { get; set; }
+        public List<IGrouping<string, ReportOrdersViewModel>> Orders { get; set; }
     }
 }
