@@ -15,7 +15,6 @@ namespace PizzeriaFileImplement.Models
         public DateTime TimeCreate { get; set; }
         public DateTime? TimeImplement { get; set; }
         public int? ClientId { set; get; }
-        public string ClientFIO { set; get; }
         public int? ImplementerId { set; get; }
     }
 }

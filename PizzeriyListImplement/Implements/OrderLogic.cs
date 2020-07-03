@@ -99,7 +99,6 @@ namespace PizzeriyListImplement.Implements
             order.Sum = model.Sum;
             order.ImplementerId = model.ImplementerId;
             order.ClientId = model.ClientId;
-            order.ClientFIO = model.ClientFIO;
             return order;
         }
 
@@ -119,7 +118,7 @@ namespace PizzeriyListImplement.Implements
                 ImplementerId = order.ImplementerId,
                 ImplementerFIO = source.Implementers.FirstOrDefault(i => i.Id == order.ImplementerId)?.ImplementerFIO,
                 ClientId = order.ClientId,
-                ClientFIO = order.ClientFIO
+                ClientFIO = source.Clients.FirstOrDefault(i=> i.Id == order.ClientId)?.ClientFIO
             };
         }
     }

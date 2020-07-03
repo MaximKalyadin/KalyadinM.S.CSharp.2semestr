@@ -31,7 +31,6 @@ namespace PizzeriaDatabaseImplement.Implements
                     order = new Order();
                     context.Orders.Add(order);
                 }
-                order.ClientFIO = model.ClientFIO;
                 order.ClientId = model.ClientId;
                 order.PizzaId = model.PizzaId;
                 order.Status = model.Status;
@@ -74,7 +73,7 @@ namespace PizzeriaDatabaseImplement.Implements
                 {
                     Id = rec.Id,
                     PizzaId = rec.PizzaId,
-                    ClientFIO = rec.ClientFIO,
+                    ClientFIO = rec.Client.ClientFIO,
                     ClientId = rec.ClientId,
                     PizzaName = rec.Pizza.PizzaName,
                     ImplementerFIO = rec.Implementer.ImplementerFIO,

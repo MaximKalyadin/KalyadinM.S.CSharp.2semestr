@@ -21,8 +21,6 @@ namespace PizzeriaDatabaseImplement.Models
         public DateTime TimeCreate { get; set; }
         [Required]
         public int? ClientId { set; get; }
-        [Required]
-        public string ClientFIO { set; get; }
         public int? ImplementerId { set; get; }
         public DateTime? TimeImplement { get; set; }
         public virtual Pizza Pizza { get; set; }

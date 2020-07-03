@@ -43,7 +43,6 @@ namespace PizzeriaFileImplement.Implements
             order.Sum = model.Sum;
             order.TimeCreate = model.TimeCreate;
             order.TimeImplement = model.TimeImplement;
-            order.ClientFIO = model.ClientFIO;
             order.ClientId = model.ClientId;
             order.ImplementerId = model.ImplementerId;
         }
@@ -74,7 +73,7 @@ namespace PizzeriaFileImplement.Implements
                 Id = rec.Id,
                 PizzaId = rec.PizzaId,
                 PizzaName = source.Pizzas.FirstOrDefault((r) => r.Id == rec.PizzaId).PizzaName,
-                ClientFIO = rec.ClientFIO,
+                ClientFIO = source.Clients.FirstOrDefault(recC => recC.Id == rec.ClientId)?.ClientFIO,
                 ClientId = rec.ClientId,
                 ImplementerId = rec.ImplementerId,
                 ImplementerFIO = source.Implementers.FirstOrDefault(i => i.Id == rec.ImplementerId)?.ImplementerFIO,

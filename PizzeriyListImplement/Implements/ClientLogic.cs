@@ -72,7 +72,15 @@ namespace PizzeriyListImplement.Implements
             {
                 if (model != null)
                 {
-                    if (client.Id == model.Id)
+                    if (model.Id.HasValue)
+                    {
+                        if (client.Id == model.Id)
+                        {
+                            result.Add(CreateViewModel(client));
+                            break;
+                        }
+                    }
+                    else if (client.Login == model.Login && client.Password == model.Password)
                     {
                         result.Add(CreateViewModel(client));
                         break;
