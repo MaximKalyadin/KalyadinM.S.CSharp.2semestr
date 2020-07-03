@@ -15,7 +15,9 @@ namespace PizzeriaDatabaseImplement.Implements
         {
             using (var context = new PizzeriaDatabase())
             {
-                Client client;
+                Client client = context.Clients.FirstOrDefault(c => c.Login == model.Login && c.Id != model.Id);
+                if (client != null)
+                    throw new Exception("Такой пользователь уже есть!");
                 if (model.Id.HasValue)
                 {
                     client = context.Clients.FirstOrDefault(rec => rec.Id == model.Id);

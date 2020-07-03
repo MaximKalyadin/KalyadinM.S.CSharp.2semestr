@@ -49,5 +49,10 @@ namespace PizzeriaClientView
         {
             LoadList();
         }
+        private void письмаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new FormMessege();
+            form.ShowDialog();
+        }
     }
 }

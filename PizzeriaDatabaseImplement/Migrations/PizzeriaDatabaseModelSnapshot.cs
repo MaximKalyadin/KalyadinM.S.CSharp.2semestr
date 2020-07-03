@@ -80,6 +80,33 @@ namespace PizzeriaDatabaseImplement.Migrations
                     b.ToTable("Ingredients");
                 });
 
+            modelBuilder.Entity("PizzeriaDatabaseImplement.Models.MessageInfo", b =>
+                {
+                    b.Property<string>("MessageId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateDelivery")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SenderName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("MessageInfos");
+                });
+
             modelBuilder.Entity("PizzeriaDatabaseImplement.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -175,6 +202,13 @@ namespace PizzeriaDatabaseImplement.Migrations
                     b.HasIndex("PizzaId");
 
                     b.ToTable("PizzaIngredients");
+                });
+
+            modelBuilder.Entity("PizzeriaDatabaseImplement.Models.MessageInfo", b =>
+                {
+                    b.HasOne("PizzeriaDatabaseImplement.Models.Client", "Client")
+                        .WithMany("MessageInfos")
+                        .HasForeignKey("ClientId");
                 });
 
             modelBuilder.Entity("PizzeriaDatabaseImplement.Models.Order", b =>
