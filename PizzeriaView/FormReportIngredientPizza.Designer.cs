@@ -100,6 +100,16 @@
             this.buttonMake.UseVisualStyleBackColor = true;
             this.buttonMake.Click += new System.EventHandler(this.buttonMake_Click);
             // 
+            // buttonMake
+            // 
+            this.buttonMake.Location = new System.Drawing.Point(628, 14);
+            this.buttonMake.Name = "buttonMake";
+            this.buttonMake.Size = new System.Drawing.Size(134, 34);
+            this.buttonMake.TabIndex = 6;
+            this.buttonMake.Text = "Сформировать";
+            this.buttonMake.UseVisualStyleBackColor = true;
+            this.buttonMake.Click += new System.EventHandler(this.button1_Click);
+            // 
             // FormReportIngredientPizza
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
