@@ -51,5 +51,19 @@ namespace PizzeriaFileImplement.Implements
             })
            .ToList();
         }
+
+        public List<MessageInfoViewModel> ReadPage(MessagePageBindingModel model)
+        {
+            return source.MessageInfoes
+            .Where(m => !model.ClientId.HasValue || (model.ClientId.HasValue && m.ClientId == model.ClientId))
+            .Skip(5 * model.pageNumber).Take(5).Select(m => new MessageInfoViewModel()
+            {
+                SenderName = m.SenderName,
+                Subject = m.Subject,
+                Body = m.Body,
+                DateDelivery = m.DateDelivery,
+                MessageId = m.MessageId
+            }).ToList();
+        }
     }
 }

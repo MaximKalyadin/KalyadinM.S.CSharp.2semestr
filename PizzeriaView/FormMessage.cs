@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
 using PizzeriaBusinessLogic.ViewModels;
+using PizzeriaBusinessLogic.BindingModels;
 
 namespace PizzeriaView
 {
     public partial class FormMessage : Form
     {
         private readonly IMessageInfoLogic logic;
-        private List<MessageInfoViewModel> messageInfos;
         private int page = 0;
         public FormMessage(IMessageInfoLogic logic)
         {
@@ -31,8 +31,7 @@ namespace PizzeriaView
         {
             try
             {
-                messageInfos = logic.Read(null);
-                dataGridView.DataSource = messageInfos.Take(5).ToList();
+                dataGridView.DataSource = logic.ReadPage(new MessagePageBindingModel() { pageNumber = page });
                 dataGridView.Columns[0].Visible = false;
                 dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
                 dataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -46,14 +45,14 @@ namespace PizzeriaView
 
         private void buttonNext_Click(object sender, EventArgs e)
         {
-            dataGridView.DataSource = messageInfos.Skip(++page * 5).Take(5).ToList();
+            dataGridView.DataSource = logic.ReadPage(new MessagePageBindingModel() { pageNumber = ++page });
             labelPage.Text = $"Страница: {page}";
         }
 
         private void buttonNazad_Click(object sender, EventArgs e)
         {
             if (page == 0) return;
-            dataGridView.DataSource = messageInfos.Skip(--page * 5).Take(5).ToList();
+            dataGridView.DataSource = logic.ReadPage(new MessagePageBindingModel() { pageNumber = --page });
             labelPage.Text = $"Страница: {page}";
         }
     }

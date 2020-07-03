@@ -10,5 +10,6 @@ namespace PizzeriaBusinessLogic.Interfaces
     {
         List<MessageInfoViewModel> Read(MessageInfoBindingModel model);
         void Create(MessageInfoBindingModel model);
+        List<MessageInfoViewModel> ReadPage(MessagePageBindingModel model);
     }
 }

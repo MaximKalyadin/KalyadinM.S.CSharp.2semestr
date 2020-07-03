@@ -12,7 +12,6 @@ namespace PizzeriaClientView
 {
     public partial class FormMessege : Form
     {
-        private List<MessageInfoViewModel> message;
         private int page = 0;
         public FormMessege()
         {
@@ -25,8 +24,7 @@ namespace PizzeriaClientView
         {
             try
             {
-                message = APIClient.GetRequest<List<MessageInfoViewModel>>($"api/client/getmessages?clientid={Program.Client.Id}");
-                dataGridView.DataSource = message.Take(5).ToList();
+                dataGridView.DataSource = APIClient.GetRequest<List<MessageInfoViewModel>>($"api/client/getpageofmessages?clientid={Program.Client.Id}&pagenumber={page}");
                 dataGridView.Columns[0].Visible = false;
                 dataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
@@ -38,14 +36,14 @@ namespace PizzeriaClientView
         }
         private void buttonNext_Click(object sender, EventArgs e)
         {
-            dataGridView.DataSource = message.Skip(++page * 5).Take(5).ToList();
+            dataGridView.DataSource = APIClient.GetRequest<List<MessageInfoViewModel>>($"api/client/getpageofmessages?clientid={Program.Client.Id}&pagenumber={++page}");
             labelPage.Text = $"Страница: {page}";
         }
 
         private void buttonNazad_Click(object sender, EventArgs e)
         {
             if (page == 0) return;
-            dataGridView.DataSource = message.Skip(--page * 5).Take(5).ToList();
+            dataGridView.DataSource = APIClient.GetRequest<List<MessageInfoViewModel>>($"api/client/getpageofmessages?clientid={Program.Client.Id}&pagenumber={--page}");
             labelPage.Text = $"Страница: {page}";
         }
     }

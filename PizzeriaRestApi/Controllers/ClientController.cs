@@ -39,6 +39,8 @@ namespace PizzeriaRestApi.Controllers
             CheckData(model);
             _logic.CreateOrUpdate(model);
         }
+        public List<MessageInfoViewModel> GetPageOfMessages(int clientId, int pageNumber) =>
+        _messageLogic.ReadPage(new MessagePageBindingModel() { ClientId = clientId, pageNumber = pageNumber });
         private void CheckData(ClientBindingModel model)
         {
             if (!Regex.IsMatch(model.Login, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))

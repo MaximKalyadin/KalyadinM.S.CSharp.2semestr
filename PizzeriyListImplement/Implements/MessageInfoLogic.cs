@@ -76,7 +76,10 @@ namespace PizzeriyListImplement.Implements
 
             return MessageInfo;
         }
-
+        public List<MessageInfoViewModel> ReadPage(MessagePageBindingModel model)
+        {
+            throw new NotImplementedException();
+        }
         private MessageInfoViewModel CreateViewModel(MessageInfo MessageInfo)
         {
             return new MessageInfoViewModel
