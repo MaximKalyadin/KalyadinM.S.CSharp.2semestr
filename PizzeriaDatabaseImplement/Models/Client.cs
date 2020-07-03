@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+
+namespace PizzeriaDatabaseImplement.Models
+{
+    public class Client
+    {
+        public int Id { set; get; }
+        [Required]
+        public string ClientFIO { set; get; }
+        [Required]
+        public string Login { set; get; }
+        [Required]
+        public string Password { set; get; }
+        [ForeignKey("ClientId")]
+        public virtual List<Order> Orders { set; get; }
+        [ForeignKey("ClientId")]
+        public virtual List<MessageInfo> MessageInfos { get; set; }
+    }
+}
