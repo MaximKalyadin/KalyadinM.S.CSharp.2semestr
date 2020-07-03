@@ -1,6 +1,7 @@
 ﻿using PizzeriaBusinessLogic.BindingModels;
 using PizzeriaBusinessLogic.ViewModels;
 using PizzeriaFileImplement.Models;
+using PizzeriaBusinessLogic.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace PizzeriaFileImplement.Implements
 {
-    public class ClientLogic
+    public class ClientLogic : IClientLogic
     {
         private readonly FileDataListSingleton source;
 
