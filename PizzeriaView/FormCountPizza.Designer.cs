@@ -64,7 +64,7 @@
             this.buttonRef.TabIndex = 7;
             this.buttonRef.Text = "Изменить";
             this.buttonRef.UseVisualStyleBackColor = true;
-            this.buttonRef.Click += new System.EventHandler(this.buttonRef_Click);
+            this.buttonRef.Click += new System.EventHandler(this.buttonUpd_Click);
             // 
             // buttonAdd
             // 
@@ -97,7 +97,7 @@
             this.Controls.Add(this.buttonAdd);
             this.Controls.Add(this.dataGridView);
             this.Name = "FormCountPizza";
-            this.Text = "FormCountPizza";
+            this.Text = "Пицца";
             this.Load += new System.EventHandler(this.FormCountPizza_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);

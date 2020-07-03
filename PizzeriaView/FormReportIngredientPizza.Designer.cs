@@ -31,9 +31,9 @@
             this.buttonSaveToExcel = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
-            this.dateTimePickerTo = new System.Windows.Forms.DateTimePicker();
-            this.label2 = new System.Windows.Forms.Label();
             this.dateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dateTimePickerTo = new System.Windows.Forms.DateTimePicker();
             this.buttonMake = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -67,12 +67,12 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "С";
             // 
-            // dateTimePickerTo
+            // dateTimePickerFrom
             // 
-            this.dateTimePickerTo.Location = new System.Drawing.Point(224, 18);
-            this.dateTimePickerTo.Name = "dateTimePickerTo";
-            this.dateTimePickerTo.Size = new System.Drawing.Size(166, 22);
-            this.dateTimePickerTo.TabIndex = 3;
+            this.dateTimePickerFrom.Location = new System.Drawing.Point(224, 18);
+            this.dateTimePickerFrom.Name = "dateTimePickerFrom";
+            this.dateTimePickerFrom.Size = new System.Drawing.Size(166, 22);
+            this.dateTimePickerFrom.TabIndex = 3;
             // 
             // label2
             // 
@@ -83,12 +83,22 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "По";
             // 
-            // dateTimePickerFrom
+            // dateTimePickerTo
             // 
-            this.dateTimePickerFrom.Location = new System.Drawing.Point(428, 18);
-            this.dateTimePickerFrom.Name = "dateTimePickerFrom";
-            this.dateTimePickerFrom.Size = new System.Drawing.Size(166, 22);
-            this.dateTimePickerFrom.TabIndex = 5;
+            this.dateTimePickerTo.Location = new System.Drawing.Point(428, 18);
+            this.dateTimePickerTo.Name = "dateTimePickerTo";
+            this.dateTimePickerTo.Size = new System.Drawing.Size(166, 22);
+            this.dateTimePickerTo.TabIndex = 5;
+            // 
+            // buttonMake
+            // 
+            this.buttonMake.Location = new System.Drawing.Point(600, 15);
+            this.buttonMake.Name = "buttonMake";
+            this.buttonMake.Size = new System.Drawing.Size(188, 36);
+            this.buttonMake.TabIndex = 6;
+            this.buttonMake.Text = "Сформировать";
+            this.buttonMake.UseVisualStyleBackColor = true;
+            this.buttonMake.Click += new System.EventHandler(this.buttonMake_Click);
             // 
             // buttonMake
             // 
@@ -106,9 +116,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.buttonMake);
-            this.Controls.Add(this.dateTimePickerFrom);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.dateTimePickerTo);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.dateTimePickerFrom);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.buttonSaveToExcel);
@@ -125,9 +135,9 @@
         private System.Windows.Forms.Button buttonSaveToExcel;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DateTimePicker dateTimePickerTo;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DateTimePicker dateTimePickerFrom;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DateTimePicker dateTimePickerTo;
         private System.Windows.Forms.Button buttonMake;
     }
 }

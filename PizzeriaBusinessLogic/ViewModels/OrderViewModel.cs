@@ -4,42 +4,41 @@ using System.Text;
 using System.ComponentModel;
 using PizzeriaBusinessLogic.Enums;
 using System.Runtime.Serialization;
+using PizzeriaBusinessLogic.Attributes;
 
 namespace PizzeriaBusinessLogic.ViewModels
 {
-    public class OrderViewModel
+    public class OrderViewModel : BaseViewModel
     {
-        [DataMember]
-        public int Id { get; set; }
         [DataMember]
         public int PizzaId { get; set; }
         [DataMember]
-        [DisplayName("Пицца")]
+        [Column(title: "Пицца", width: 150)]
         public string PizzaName { get; set; }
         [DataMember]
-        [DisplayName("Количество")]
+        [Column(title: "Количество", width: 100)]
         public int Count { get; set; }
         [DataMember]
-        [DisplayName("Сумма")]
+        [Column(title: "Сумма", width: 50)]
         public decimal Sum { get; set; }
-        [DisplayName("Рабочий")]
+        [Column(title: "Исполнитель", width: 150)]
         public string ImplementerFIO { set; get; }
         [DataMember]
-        [DisplayName("Статус")]
+        [Column(title: "Статус", width: 100)]
         public OrderStatus Status { get; set; }
         [DataMember]
-        [DisplayName("Время создания")]
+        [Column(title: "Время создания", width: 100)]
         public DateTime TimeCreate { get; set; }
         [DataMember]
-        [DisplayName("Время выполнения")]
+        [Column(title: "Время выполнения", width: 100)]
         public DateTime? TimeImplement { get; set; }
-        [DisplayName("№ Клиента")]
         [DataMember]
         public int? ClientId { set; get; }
         [DataMember]
-        [DisplayName("ФИО клиента")]
+        [Column(title: "Клиент", width: 150)]
         public string ClientFIO { set; get; }
 
         public int? ImplementerId { set; get; }
+        public override List<string> Properties() => new List<string> { "Id", "ClientFIO", "PizzaName", "ImplementerFIO", "Count", "Sum", "Status", "TimeCreate", "TimeImplement" };
     }
 }

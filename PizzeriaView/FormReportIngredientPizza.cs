@@ -29,10 +29,9 @@ namespace PizzeriaView
             dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView.Columns.Add("Сумма заказа", "Сумма заказа");
         }
-        
         private void ButtonSaveToExcel_Click(object sender, EventArgs e)
         {
-            if (dateTimePickerFrom.Value.Date >= dateTimePickerTo.Value.Date)
+            if (dateTimePickerTo.Value.Date <= dateTimePickerFrom.Value.Date)
             {
                 MessageBox.Show("Дата начала должна быть меньше даты окончания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -58,10 +57,9 @@ namespace PizzeriaView
                 }
             }
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonMake_Click(object sender, EventArgs e)
         {
-            if (dateTimePickerFrom.Value.Date >= dateTimePickerTo.Value.Date)
+            if (dateTimePickerTo.Value.Date <= dateTimePickerFrom.Value.Date)
             {
                 MessageBox.Show("Дата начала должна быть меньше даты окончания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

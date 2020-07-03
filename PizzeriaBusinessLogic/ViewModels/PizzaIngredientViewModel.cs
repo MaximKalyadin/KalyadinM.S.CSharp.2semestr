@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
+using PizzeriaBusinessLogic.Attributes;
 
 namespace PizzeriaBusinessLogic.ViewModels
 {
-    public class PizzaIngredientViewModel
+    public class PizzaIngredientViewModel : BaseViewModel
     {
-        public int Id { get; set; }
         public int PizzaId { get; set; }
         public int IngredientId { get; set; }
-        [DisplayName("Ингредиент")]
+        [Column(title: "Ингредиент", gridViewAutoSize: GridViewAutoSize.Fill)]
         public string IngredientName { get; set; }
-        [DisplayName("Количество")]
+        [Column(title: "Количество", width: 100)]
         public int Count { get; set; }
+        public override List<string> Properties() => new List<string> { "Id", "IngredientName", "Count" };
     }
 }
